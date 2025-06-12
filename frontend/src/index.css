@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@theme {
+  --color-damul-main-50: #f2f9ec;
+  --color-damul-main-100: #e2f2d5;
+  --color-damul-main-200: #c5e6b0;
+  --color-damul-main-300: #97d174;
+  --color-damul-main-400: #7fc259;
+  --color-damul-main-500: #60a73b;
+  --color-damul-main-600: #49852b;
+  --color-damul-main-700: #396625;
+  --color-damul-main-800: #315222;
+}
+
+@font-face {
+  font-family: "SUITE-Regular";
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-2@1.0/SUITE-Regular.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+
+body {
+  font-family: "SUITE-Regular";
+  overflow-y: scroll;
+}
