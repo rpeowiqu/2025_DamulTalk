@@ -2,6 +2,8 @@ name: DamulTalk CI/CD
 
 on:
   pull_request:
+    branches:
+      - main
   push:
     branches:
       - main
@@ -36,7 +38,7 @@ jobs:
             echo "changed=false" >> $GITHUB_OUTPUT
           fi
 
-  frontend:
+  frontend-test:
     needs: detect-changes
     if: needs.detect-changes.outputs.frontend == 'true'
 
@@ -50,12 +52,13 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm
 
-      - run: cd frontend && pnpm install
-      - run: cd frontend && pnpm run lint
-      - run: cd frontend && pnpm run test
-      - run: cd frontend && pnpm run build
+      - run: |
+          cd frontend
+          pnpm install
+          pnpm run lint
+          pnpm run test
 
-  backend:
+  backend-test:
     needs: detect-changes
     if: needs.detect-changes.outputs.backend == 'true'
 
@@ -84,5 +87,121 @@ jobs:
       - name: Test with Gradle
         run: cd backend && ./gradlew test
 
-      - name: Build with Gradle
+  frontend-build:
+    needs: frontend-test
+    if: github.event_name == 'push' && needs.frontend-test.result == 'success'
+
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '22.11.0'
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Frontend Build
+        run: |
+          cd frontend
+          pnpm install
+          pnpm run build
+
+      - name: Docker Build & Push Frontend Docker Image
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+        run: |
+          cd frontend
+          docker build -t $DOCKERHUB_USERNAME/damulTalk-frontend:latest .
+          echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin
+          docker push $DOCKERHUB_USERNAME/damulTalk-frontend:latest
+
+  backend-build:
+    needs: backend-test
+    if: github.event_name == 'push' && needs.backend-test.result == 'success'
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: 'temurin'
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: gradle-${{ runner.os }}-
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x backend/gradlew
+
+      - name: Build Backend
         run: cd backend && ./gradlew clean build
+
+      - name: Docker Build & Push Backend Image
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+        run: |
+          cd backend
+          docker build -t $DOCKERHUB_USERNAME/damulTalk-backend:latest .
+          echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin
+          docker push $DOCKERHUB_USERNAME/damulTalk-backend:latest
+
+  frontend-deploy:
+    needs: frontend-build
+    if: github.event_name == 'push' && needs.frontend-build.result == 'success'
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Deploy Frontend Image
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USER: ${{ secrets.EC2_USER }}
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        run: |
+          echo "$SSH_PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+          
+          ssh -i private_key.pem $EC2_USER@EC2_HOST << EOF
+            docker login -u $DOCKERHUB_USERNAME
+          
+            docker pull $DOCKERHUB_USERNAME/damulTalk-frontend:latest
+            docker stop damulTalk-frontend || true
+            docker rm damulTalk-frontend || true
+            docker run -d --name damulTalk-frontend -p 3000:3000 $DOCKERHUB_USERNAME/damulTalk-frontend:latest
+          EOF
+
+  backend-deploy:
+    needs: backend-build
+    if: github.event_name == 'push' && needs.backend-build.result == 'success'
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Deploy Backend Image
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USER: ${{ secrets.EC2_USER }}
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        run: |
+          echo "$SSH_PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+          
+          ssh -i private_key.pem $EC2_USER@EC2_HOST << EOF
+            docker login -u $DOCKERHUB_USERNAME
+          
+            docker pull $DOCKERHUB_USERNAME/damulTalk-backend:latest
+            docker stop damulTalk-backend || true
+            docker rm damulTalk-backend || true
+            docker run -d --name damulTalk-backend -p 8080:8080 $DOCKERHUB_USERNAME/damulTalk-backend:latest
+          EOF
