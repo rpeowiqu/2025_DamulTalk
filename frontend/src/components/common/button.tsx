@@ -4,7 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/utils/style";
 
 const buttonVariants = cva(
-  "cursor-pointer rounded-xl px-5 py-3 text-lg font-bold text-white transition-color duration-300",
+  "cursor-pointer rounded-xl px-5 py-3 text-lg font-bold text-white transition-color duration-300 disabled:bg-neutral-200",
   {
     variants: {
       variant: {
