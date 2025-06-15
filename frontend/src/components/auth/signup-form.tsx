@@ -54,7 +54,7 @@ const SignupForm = () => {
   };
 
   return (
-    <div className="flex h-full flex-col gap-10">
+    <div className="flex h-full flex-col gap-10 bg-white">
       <StepProgress
         value={(100 / (SignupStep.LENGTH - 1)) * step}
         stepCount={SignupStep.LENGTH}
