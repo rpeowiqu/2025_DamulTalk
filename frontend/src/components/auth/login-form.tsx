@@ -4,7 +4,7 @@ import Button from "@/components/common/button";
 
 const LoginForm = () => {
   return (
-    <form className="flex h-full flex-col justify-between">
+    <form className="flex h-full flex-col justify-between bg-white">
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-2">
           <label htmlFor="email" className="text-lg font-bold">
