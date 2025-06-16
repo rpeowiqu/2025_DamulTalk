@@ -1,0 +1,9 @@
+spring:
+    application:
+        name: "backend"
+
+    datasource:
+        url: "jdbc:mysql://${RDS_ENDPOINT}:3306/${DATABASE_NAME}?useSSL=false&serverTimezone=Asia/Seoul"
+        username: "${RDS_USERNAME}"
+        password: "${RDS_PASSWORD}"
+        driver-class-name: "com.mysql.cj.jdbc.Driver"
