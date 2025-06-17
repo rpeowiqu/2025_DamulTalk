@@ -1,14 +1,14 @@
-import DefaultPortraitImage from "@/assets/images/boy-portrait.png";
+import defaultPortraitImage from "@/assets/images/boy-portrait.png";
 import { cn } from "@/utils/style";
 
 interface UserPortraitProps {
-  profileImage?: string;
+  profileImageUrl?: string;
   online?: boolean;
   className?: string;
 }
 
 const UserPortrait = ({
-  profileImage,
+  profileImageUrl,
   online,
   className,
 }: UserPortraitProps) => {
@@ -16,7 +16,7 @@ const UserPortrait = ({
     <div className={cn("relative size-12", className)}>
       <div className="overflow-hidden rounded-full border border-neutral-200">
         <img
-          src={profileImage || DefaultPortraitImage}
+          src={profileImageUrl || defaultPortraitImage}
           alt="프로필 이미지"
           className="size-full object-cover"
         />

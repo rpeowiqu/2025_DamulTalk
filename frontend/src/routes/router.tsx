@@ -8,7 +8,7 @@ const router = createBrowserRouter([
     element: <MainLayout />,
     children: [
       {
-        path: "/profile",
+        path: "/profile/:userId",
         element: <ProfilePage />,
       },
     ],

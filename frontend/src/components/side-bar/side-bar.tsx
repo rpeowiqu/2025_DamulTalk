@@ -8,7 +8,7 @@ const SideBar = () => {
   const [currentTab, setCurrentTab] = useState<SideBarTabType>("FRIEND");
 
   return (
-    <aside className="flex border-r border-neutral-200">
+    <aside className="sticky top-0 flex h-dvh border-r border-neutral-200">
       <SideBarTab currentTab={currentTab} setCurrentTab={setCurrentTab} />
       <SideBarContent currentTab={currentTab} />
     </aside>

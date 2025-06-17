@@ -1,4 +1,4 @@
-import UserItem from "@/components/user/UserItem";
+import UserItem from "@/components/user/user-item";
 
 interface FriendListProps {
   visibleStatus: boolean;
@@ -6,10 +6,11 @@ interface FriendListProps {
 
 const FriendList = ({ visibleStatus }: FriendListProps) => {
   return (
-    <div className="flex flex-col gap-4">
-      {Array.from({ length: 10 }).map((_, index) => (
+    <div className="flex flex-col gap-2">
+      {Array.from({ length: 8 }).map((_, index) => (
         <UserItem
           key={index}
+          userId={index + 1}
           nickname={`토마토러버전종우${index + 1}`}
           online={visibleStatus ? true : undefined}
         />
