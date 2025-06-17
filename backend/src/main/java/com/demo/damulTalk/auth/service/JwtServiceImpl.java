@@ -2,7 +2,7 @@ package com.demo.damulTalk.auth.service;
 
 import com.demo.damulTalk.exception.BusinessException;
 import com.demo.damulTalk.exception.ErrorCode;
-import com.demo.damulTalk.member.domain.Member;
+import com.demo.damulTalk.user.domain.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -65,7 +65,7 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public boolean isValidRefreshToken(String token, Member user) {
+    public boolean isValidRefreshToken(String token, User user) {
         String username = extractUsername(token);
         if(!username.equals(user.getUsername())) {
             throw new BusinessException(
@@ -122,13 +122,13 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public String generateAccessToken(Member user) {
+    public String generateAccessToken(User user) {
         String accessToken = generateToken(user, accessTokenExpiration);
         return accessToken;
     }
 
     @Override
-    public String generateRefreshToken(Member user) {
+    public String generateRefreshToken(User user) {
         String refreshToken = generateToken(user, refreshTokenExpiration);
         saveRefreshToken(user.getUsername(), refreshToken);
         return refreshToken;
@@ -150,7 +150,7 @@ public class JwtServiceImpl implements JwtService {
                 .compact();
     }
 
-    private String generateToken(Member user, long expireTime) { // JWT 토큰 생성 (사용자 정보와 만료 시간 포함)
+    private String generateToken(User user, long expireTime) { // JWT 토큰 생성 (사용자 정보와 만료 시간 포함)
         return Jwts
                 .builder()
                 .subject(user.getUsername())
@@ -191,7 +191,7 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public Map<String, String> rotateTokens(String oldRefreshToken, Member user) {
+    public Map<String, String> rotateTokens(String oldRefreshToken, User user) {
         if(!isValidRefreshToken(oldRefreshToken, user)) {
             throw new BusinessException(
                     ErrorCode.INVALID_TOKEN,
@@ -229,9 +229,9 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public Member getUserInfoFromToken(String token) {
+    public User getUserInfoFromToken(String token) {
         Claims claims = extractAllClaims(token);
-        return Member.builder()
+        return User.builder()
                 .memberId(claims.get("memberId", Integer.class))
                 .username(claims.get("username", String.class))
                 .build();

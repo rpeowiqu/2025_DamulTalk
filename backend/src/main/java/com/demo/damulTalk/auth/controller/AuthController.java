@@ -1,6 +1,6 @@
 package com.demo.damulTalk.auth.controller;
 
-import com.demo.damulTalk.member.service.MemberService;
+import com.demo.damulTalk.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class AuthController {
 
-    private final MemberService memberService;
+    private final UserService userService;
 
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody SignupRequest request) {
         log.info("[AuthController] signup 메서드 시작");
-        memberService.signup(request);
+        userService.signup(request);
         return ResponseEntity.ok().build();
     }
 }

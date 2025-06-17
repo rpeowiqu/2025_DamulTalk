@@ -1,4 +1,4 @@
-package com.demo.damulTalk.member.domain;
+package com.demo.damulTalk.user.domain;
 
 import lombok.*;
 
@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Member {
+public class User {
 
     private Integer memberId;
     private String username;

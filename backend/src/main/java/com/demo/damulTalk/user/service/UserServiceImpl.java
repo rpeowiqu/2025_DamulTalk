@@ -1,10 +1,10 @@
-package com.demo.damulTalk.member.service;
+package com.demo.damulTalk.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class MemberServiceImpl implements MemberService {
+public class UserServiceImpl implements UserService {
 
 }

@@ -1,8 +1,8 @@
 package com.demo.damulTalk.filter;
 
 import com.demo.damulTalk.auth.service.JwtService;
-import com.demo.damulTalk.member.domain.Member;
-import com.demo.damulTalk.member.service.CustomUserDetailsService;
+import com.demo.damulTalk.user.domain.User;
+import com.demo.damulTalk.user.service.CustomUserDetailsService;
 import com.demo.damulTalk.util.CookieUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -95,7 +95,7 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
 
     private void handleExpiredToken(HttpServletResponse response, String refreshToken) {
         if(refreshToken != null) {
-            Member user = (Member) userDetailsService.loadUserByUsername(
+            User user = (User) userDetailsService.loadUserByUsername(
                     jwtService.extractUsername(refreshToken));
 
             Map<String, String> tokens = jwtService.rotateTokens(refreshToken, user);

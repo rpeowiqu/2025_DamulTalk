@@ -1,9 +1,8 @@
-package com.demo.damulTalk.member.service;
+package com.demo.damulTalk.user.service;
 
-import com.demo.damulTalk.member.domain.Member;
-import com.demo.damulTalk.member.mapper.MemberMapper;
+import com.demo.damulTalk.user.domain.User;
+import com.demo.damulTalk.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,18 +14,18 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final MemberMapper memberMapper;
+    private final UserMapper userMapper;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Member member = memberMapper.findByUsername(username);
-        if(member == null) {
+        User user = userMapper.findByUsername(username);
+        if(user == null) {
             throw new UsernameNotFoundException(username);
         }
 
-        return User.builder()
-                .username(member.getUsername())
-                .password(member.getPassword())
+        return org.springframework.security.core.userdetails.User.builder()
+                .username(user.getUsername())
+                .password(user.getPassword())
                 .authorities(Collections.emptyList())
                 .build();
     }

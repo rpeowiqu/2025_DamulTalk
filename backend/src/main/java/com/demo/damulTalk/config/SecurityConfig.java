@@ -5,7 +5,7 @@ import com.demo.damulTalk.filter.JwtVerificationFilter;
 import com.demo.damulTalk.handler.CustomLogoutHandler;
 import com.demo.damulTalk.handler.LoginFailureHandler;
 import com.demo.damulTalk.handler.LoginSuccessHandler;
-import com.demo.damulTalk.member.service.CustomUserDetailsService;
+import com.demo.damulTalk.user.service.CustomUserDetailsService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

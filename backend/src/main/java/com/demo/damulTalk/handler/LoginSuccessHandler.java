@@ -1,7 +1,7 @@
 package com.demo.damulTalk.handler;
 
 import com.demo.damulTalk.auth.service.JwtService;
-import com.demo.damulTalk.member.domain.Member;
+import com.demo.damulTalk.user.domain.User;
 import com.demo.damulTalk.util.CookieUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,10 +28,10 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         log.info("[LoginSuccessHandler] 로그인 성공 핸들러 실행");
-        Member member = (Member) authentication.getPrincipal();
+        User user = (User) authentication.getPrincipal();
 
-        String accessToken = jwtService.generateAccessToken(member);
-        String refreshToken = jwtService.generateRefreshToken(member);
+        String accessToken = jwtService.generateAccessToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
         log.info("[LoginSuccessHandler] 토큰 생성 완료");
 
         response.setHeader("Authorization", "Bearer " + accessToken);
