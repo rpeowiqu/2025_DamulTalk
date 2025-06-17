@@ -20,19 +20,20 @@ const SideBarFriendContent = () => {
 
       <Accordion
         type="multiple"
+        defaultValue={["friends", "friend-request"]}
         className="scroll-hidden flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto">
         <AccordionItem value="friends" className="flex flex-col gap-4">
+          <AccordionItem value="friend-request" className="flex flex-col gap-4">
+            <AccordionTrigger>친구 요청 2건</AccordionTrigger>
+            <AccordionContent>
+              <FriendRequestList />
+            </AccordionContent>
+          </AccordionItem>
+
           <AccordionTrigger>친구 8명</AccordionTrigger>
           <AccordionContent className="flex flex-col gap-4">
             <SearchBar onSearch={(keyword) => console.log(keyword)} />
             <FriendList visibleStatus={true} />
-          </AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem value="friend-request" className="flex flex-col gap-4">
-          <AccordionTrigger>친구 요청 2건</AccordionTrigger>
-          <AccordionContent>
-            <FriendRequestList />
           </AccordionContent>
         </AccordionItem>
       </Accordion>
