@@ -2,7 +2,7 @@ import FriendRequestItem from "./friend-request-item";
 
 const FriendRequestList = () => {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-2">
       {Array.from({ length: 2 }).map((_, index) => (
         <FriendRequestItem
           userId={index + 1}
