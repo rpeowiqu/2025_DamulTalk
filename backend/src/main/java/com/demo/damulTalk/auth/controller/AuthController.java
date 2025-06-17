@@ -1,5 +1,6 @@
 package com.demo.damulTalk.auth.controller;
 
+import com.demo.damulTalk.user.dto.SignupRequest;
 import com.demo.damulTalk.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
