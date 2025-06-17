@@ -1,5 +1,7 @@
 package com.demo.damulTalk.auth.service;
 
+import com.demo.damulTalk.exception.BusinessException;
+import com.demo.damulTalk.exception.ErrorCode;
 import com.demo.damulTalk.member.domain.Member;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
