@@ -6,7 +6,7 @@
 <mapper namespace="com.demo.damulTalk.mapper.UserMapper">
 
     <select id="findByUsername" resultMap="UserResultMap">
-        SELECT * FROM members WHERE username = #{username}
+        SELECT * FROM users WHERE username = #{username}
     </select>
 
 

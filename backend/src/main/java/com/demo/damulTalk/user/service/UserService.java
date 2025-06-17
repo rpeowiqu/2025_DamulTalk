@@ -1,7 +1,9 @@
 package com.demo.damulTalk.user.service;
 
+import com.demo.damulTalk.user.dto.SignupRequest;
+
 public interface UserService {
 
-    signup(SignupRequest request);
+    void signup(SignupRequest request);
 
 }
