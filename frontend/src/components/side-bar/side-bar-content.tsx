@@ -1,6 +1,7 @@
 import UserItem from "@/components/user/user-item";
 import SettingButton from "@/components/user/setting-button";
 import SideBarFriendContent from "@/components/side-bar/side-bar-friend-content";
+import SideBarChatContent from "@/components/side-bar/side-bar-chat-content";
 import LogoutButton from "@/components/user/logout-button";
 import type { SideBarTabType } from "@/types/side-bar/type";
 
@@ -13,10 +14,8 @@ const SideBarContent = ({ currentTab }: SideBarContentProps) => {
     switch (currentTab) {
       case "FRIEND":
         return <SideBarFriendContent />;
-      case "CHATTING":
-        return (
-          <div className="text-center text-neutral-300">채팅 목록 내용</div>
-        );
+      case "CHAT":
+        return <SideBarChatContent />;
     }
   };
 

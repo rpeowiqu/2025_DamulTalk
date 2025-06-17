@@ -12,7 +12,7 @@ interface SideBarTabProps {
 
 const tabs = [
   { type: "FRIEND", label: "친구", icon: UsersIcon },
-  { type: "CHATTING", label: "채팅", icon: ChatIcon },
+  { type: "CHAT", label: "채팅", icon: ChatIcon },
 ] as const;
 
 const SideBarTab = ({ currentTab, setCurrentTab }: SideBarTabProps) => {

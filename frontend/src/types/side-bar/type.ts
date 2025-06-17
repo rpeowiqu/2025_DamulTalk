@@ -1,1 +1,1 @@
-export type SideBarTabType = "FRIEND" | "CHATTING";
+export type SideBarTabType = "FRIEND" | "CHAT";
