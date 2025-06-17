@@ -95,8 +95,8 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
 
     private void handleExpiredToken(HttpServletResponse response, String refreshToken) {
         if(refreshToken != null) {
-            Member user = ((CustomUserDetails) userDetailsService.loadUserByUsername(
-                    jwtService.extractUsername(refreshToken))).getMember();
+            Member user = (Member) userDetailsService.loadUserByUsername(
+                    jwtService.extractUsername(refreshToken));
 
             Map<String, String> tokens = jwtService.rotateTokens(refreshToken, user);
             if(tokens != null) {
