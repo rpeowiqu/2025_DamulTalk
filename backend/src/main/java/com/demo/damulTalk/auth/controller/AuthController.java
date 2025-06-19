@@ -24,4 +24,19 @@ public class AuthController {
         userService.signup(request);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/duplicates/username")
+    public ResponseEntity<?> checkDuplicatesUsername(@RequestBody ValidValue value) {
+        log.info("[AuthController] 이메일 중복확인 시작");
+        userService.checkDuplicatesUsername(value);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/duplicates/nickname")
+    public ResponseEntity<?> checkDuplicatesNickname(@RequestBody ValidValue value) {
+        log.info("[AuthController] 닉네임 중복확인 시작");
+        userService.checkDuplicatesNickname(value);
+        return ResponseEntity.ok().build();
+    }
+
 }

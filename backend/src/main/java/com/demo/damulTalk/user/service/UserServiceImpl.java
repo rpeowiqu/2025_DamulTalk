@@ -39,7 +39,6 @@ public class UserServiceImpl implements UserService {
     private void validateSignupForm(SignupRequest request) {
         log.info("[UserService] 회원가입 요청 validation 시작");
 
-        // 1️⃣ username 중복 체크
         User existingUserByUsername = userMapper.findByUsername(request.getUsername());
         if (existingUserByUsername != null) {
             log.info("[UserService] 이미 존재하는 username - {}", request.getUsername());
@@ -49,7 +48,6 @@ public class UserServiceImpl implements UserService {
             );
         }
 
-        // 2️⃣ nickname 길이 체크
         if (request.getNickname().length() > 12) {
             log.info("[UserService] 닉네임 길이 초과 - {}", request.getNickname());
             throw new BusinessException(
@@ -58,7 +56,6 @@ public class UserServiceImpl implements UserService {
             );
         }
 
-        // 3️⃣ nickname 중복 체크
         User existingUserByNickname = userMapper.findByNickname(request.getNickname());
         if (existingUserByNickname != null) {
             log.info("[UserService] 이미 존재하는 닉네임 - {}", request.getNickname());
