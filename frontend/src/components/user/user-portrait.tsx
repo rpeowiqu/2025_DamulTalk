@@ -18,7 +18,7 @@ const UserPortrait = ({
         <img
           src={profileImageUrl || defaultPortraitImage}
           alt="프로필 이미지"
-          className="size-full object-cover"
+          className="size-full bg-white object-cover"
         />
       </div>
 

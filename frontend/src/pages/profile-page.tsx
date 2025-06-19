@@ -1,10 +1,9 @@
+import ProfileHeader from "@/components/profile/profile-header";
+
 const ProfilePage = () => {
   return (
-    <div>
-      <div className="bg-damul-main-50 h-96"></div>
-      <div className="bg-damul-main-100 h-96"></div>
-      <div className="bg-damul-main-50 h-96"></div>
-      <div className="bg-damul-main-100 h-96"></div>
+    <div className="bg-white p-6">
+      <ProfileHeader />
     </div>
   );
 };
