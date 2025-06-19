@@ -4,7 +4,7 @@ import UserPortrait from "@/components/user/user-portrait";
 const ProfileHeader = () => {
   return (
     <div>
-      <div className="h-60">
+      <div className="h-54">
         <img
           src={defaultProfileBackground}
           alt="프로필 배경"
