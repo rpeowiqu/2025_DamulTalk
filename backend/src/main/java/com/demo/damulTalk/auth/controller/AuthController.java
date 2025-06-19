@@ -1,5 +1,6 @@
 package com.demo.damulTalk.auth.controller;
 
+import com.demo.damulTalk.auth.dto.ValidValue;
 import com.demo.damulTalk.user.dto.SignupRequest;
 import com.demo.damulTalk.user.service.UserService;
 import lombok.RequiredArgsConstructor;

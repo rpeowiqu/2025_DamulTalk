@@ -1,5 +1,6 @@
 package com.demo.damulTalk.user.service;
 
+import com.demo.damulTalk.auth.dto.ValidValue;
 import com.demo.damulTalk.exception.BusinessException;
 import com.demo.damulTalk.exception.ErrorCode;
 import com.demo.damulTalk.user.domain.User;
@@ -34,6 +35,30 @@ public class UserServiceImpl implements UserService {
 
 
         userMapper.insertUser(user);
+    }
+
+    public void checkDuplicatesUsername(ValidValue value) {
+        log.info("[AuthController] username 중복확인 시작");
+
+        User user = userMapper.findByUsername(value.getValue());
+        if (user != null) {
+            throw new BusinessException(
+                    ErrorCode.EXISTING_USER,
+                    "이미 존재하는 유저입니다."
+            );
+        }
+    }
+
+    public void checkDuplicatesNickname(ValidValue value) {
+        log.info("[AuthController] nickname 중복확인 시작");
+
+        User user = userMapper.findByNickname(value.getValue());
+        if (user != null) {
+            throw new BusinessException(
+                    ErrorCode.EXISTING_USER,
+                    "이미 존재하는 유저입니다."
+            );
+        }
     }
 
     private void validateSignupForm(SignupRequest request) {
