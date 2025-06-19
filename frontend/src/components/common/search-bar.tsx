@@ -19,9 +19,11 @@ const SearchBar = ({ onSearch, className, ...props }: SearchBarProps) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="group flex items-center gap-3 rounded-xl bg-neutral-100 px-4 py-3 ring-neutral-500 ring-inset focus-within:ring-2">
+      className="group ring-damul-main-300 flex items-center gap-3 rounded-xl bg-neutral-100 px-4 py-3 ring-inset focus-within:ring-2">
       <SearchIcon
-        className={cn("text-neutral-300 group-focus-within:text-neutral-500")}
+        className={cn(
+          "group-focus-within:text-damul-main-300 text-neutral-300",
+        )}
       />
       <input
         name="search-keyword"

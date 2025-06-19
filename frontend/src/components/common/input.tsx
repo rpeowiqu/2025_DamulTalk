@@ -9,7 +9,7 @@ const Input = ({
   return (
     <input
       className={cn(
-        "w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 ring-inset placeholder:text-neutral-300 focus:ring-2 focus:outline-none",
+        "ring-damul-main-300 w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 ring-inset placeholder:text-neutral-300 focus:ring-2 focus:outline-none",
         className,
       )}
       {...props}
