@@ -4,8 +4,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import UserSearchButton from "@/components/user/user-search-button";
 import SearchBar from "@/components/common/search-bar";
-import UserSearchIcon from "@/components/icon/user-search-icon";
 import FilterIcon from "@/components/icon/filter-icon";
 import FriendList from "@/components/user/friend-list";
 import FriendRequestList from "@/components/user/friend-request-list";
@@ -14,7 +14,7 @@ const SideBarFriendContent = () => {
   return (
     <>
       <div className="flex justify-end gap-4 text-neutral-500">
-        <UserSearchIcon />
+        <UserSearchButton />
         <FilterIcon />
       </div>
 

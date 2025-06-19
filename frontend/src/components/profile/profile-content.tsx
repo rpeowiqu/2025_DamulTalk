@@ -14,7 +14,7 @@ const ProfileContent = () => {
 
           <li>
             <p className="font-bold">상태 메시지</p>
-            <p className="whitespace-pre-line text-neutral-500">
+            <p className="whitespace-pre-wrap text-neutral-500">
               {
                 "안녕하세요, 반갑습니다.\n팀 50일에서 다믈랭에 이어 메신저 서비스인 다믈톡을 개발 중에 있습니다.\n많은 관심 부탁드립니다."
               }
@@ -27,8 +27,8 @@ const ProfileContent = () => {
 
       <div className="flex min-w-64 flex-col gap-4">
         <h1 className="text-xl font-bold">친구</h1>
+        <SearchBar onSearch={(keyword) => console.log(keyword)} />
         <div className="scroll-hidden flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto">
-          <SearchBar onSearch={(keyword) => console.log(keyword)} />
           <FriendList visibleStatus={false} />
         </div>
       </div>
