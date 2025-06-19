@@ -11,7 +11,7 @@ const RightDirectionIcon = ({ className }: IconProps) => {
       className={className}>
       <path
         d="M9.5 6L15.5 12L9.5 18"
-        stroke="black"
+        stroke="currentColor"
         stroke-width="2"
         stroke-linecap="round"
         stroke-linejoin="round"
