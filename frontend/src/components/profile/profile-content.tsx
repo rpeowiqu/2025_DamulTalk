@@ -1,3 +1,4 @@
+import SearchBar from "@/components/common/search-bar";
 import FriendList from "@/components/user/friend-list";
 
 const ProfileContent = () => {
@@ -26,7 +27,8 @@ const ProfileContent = () => {
 
       <div className="flex min-w-64 flex-col gap-4">
         <h1 className="text-xl font-bold">친구</h1>
-        <div className="scroll-hidden min-h-0 flex-1 overflow-y-auto">
+        <div className="scroll-hidden flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto">
+          <SearchBar onSearch={(keyword) => console.log(keyword)} />
           <FriendList visibleStatus={false} />
         </div>
       </div>
