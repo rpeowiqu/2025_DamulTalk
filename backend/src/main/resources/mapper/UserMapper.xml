@@ -5,10 +5,17 @@
 
 <mapper namespace="com.demo.damulTalk.mapper.UserMapper">
 
-    <select id="findByUsername" resultMap="UserResultMap">
+    <select id="findByUsername">
         SELECT * FROM users WHERE username = #{username}
     </select>
 
+    <select id="findByNickname">
+        SELECT * FROM users WHERE nickname = #{nickname}
+    </select>
 
+    <insert id="insertUser" parameterType="com.demo.damulTalk.user.domain.User">
+        INSERT INTO users (username, password, nickname, joined_at)
+        VALUES (#{username}, #{password}, #{nickname}, #{joinedAt})
+    </insert>
 
 </mapper>

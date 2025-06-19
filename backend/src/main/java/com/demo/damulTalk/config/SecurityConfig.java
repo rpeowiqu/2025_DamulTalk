@@ -20,6 +20,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -34,7 +35,6 @@ public class SecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
     private final JwtVerificationFilter jwtVerificationFilter;
-    private final JwtService jwtService;
     private final LoginSuccessHandler loginSuccessHandler;
     private final LoginFailureHandler loginFailureHandler;
     private final CustomLogoutHandler logoutHandler;
@@ -64,7 +64,7 @@ public class SecurityConfig {
                             .failureHandler(loginFailureHandler);
                     log.debug("[SecurityConfig] 폼 로그인 설정 완료");
                 })
-                .addFilterBefore(jwtVerificationFilter)
+                .addFilterBefore(jwtVerificationFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(session -> {
                     log.info("[SecurityConfig] 세션 관리 정책 설정: STATELESS");
                     session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -79,7 +79,7 @@ public class SecurityConfig {
                 })
                 .logout(l -> l
                         .logoutUrl("/api/v1/auth/logout")
-                        .addLogoutHandler(customLogoutHandler)
+                        .addLogoutHandler(logoutHandler)
                         .logoutSuccessHandler((request, response, authentication) -> {
                             response.setStatus(200);
                         })

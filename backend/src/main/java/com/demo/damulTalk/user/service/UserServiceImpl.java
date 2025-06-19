@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
                 .build();
 
 
-        userMapper.saveUser(user);
+        userMapper.insertUser(user);
     }
 
     private void validateSignupForm(SignupRequest request) {

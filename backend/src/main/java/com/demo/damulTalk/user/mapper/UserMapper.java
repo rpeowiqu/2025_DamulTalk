@@ -8,4 +8,8 @@ public interface UserMapper {
 
     User findByUsername(String username);
 
+    User findByNickname(String nickname);
+
+    int insertUser(User user);
+
 }
