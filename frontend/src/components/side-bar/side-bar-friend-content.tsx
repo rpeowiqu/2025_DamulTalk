@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import {
   Accordion,
   AccordionContent,
@@ -5,17 +7,35 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import UserSearchButton from "@/components/user/user-search-button";
+import FilterButton from "@/components/common/filter-button";
 import SearchBar from "@/components/common/search-bar";
-import FilterIcon from "@/components/icon/filter-icon";
 import FriendList from "@/components/user/friend-list";
 import FriendRequestList from "@/components/user/friend-request-list";
 
+const friendFilters = [
+  {
+    label: "닉네임 오름차순",
+    value: "nickname-ascending",
+  },
+  {
+    label: "닉네임 내림차순",
+    value: "nickname-descending",
+  },
+];
+
 const SideBarFriendContent = () => {
+  const [selectedFilter, setSelectedFilter] = useState("nickname-ascending");
+
   return (
     <>
       <div className="flex justify-end gap-4 text-neutral-500">
         <UserSearchButton />
-        <FilterIcon />
+        <FilterButton
+          title="친구 목록 정렬 방식"
+          filters={friendFilters}
+          selected={selectedFilter}
+          onSelect={setSelectedFilter}
+        />
       </div>
 
       <Accordion
