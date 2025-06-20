@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 interface UseModalOptions {
   modalKey: string;
@@ -7,30 +8,49 @@ interface UseModalOptions {
 }
 
 const useModal = ({ modalKey, onOpen, onClose }: UseModalOptions) => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    const handlePopstate = () => {
-      setIsOpen(false);
-    };
-
-    window.addEventListener("popstate", handlePopstate);
-    return () => {
-      window.removeEventListener("popstate", handlePopstate);
-    };
-  }, []);
+    const modals = searchParams.getAll("modal");
+    setIsOpen(modals.includes(modalKey));
+  }, [searchParams]);
 
   useEffect(() => {
     if (isOpen) {
-      history.pushState({ modalKey }, "", window.location.pathname);
       onOpen?.();
-    } else if (history.state.modalKey === modalKey) {
-      history.back();
+    } else {
       onClose?.();
     }
   }, [isOpen]);
 
-  return { isOpen, setIsOpen };
+  const openModal = () => {
+    const modals = searchParams.getAll("modal");
+    if (!modals.includes(modalKey)) {
+      const newParams = new URLSearchParams(searchParams);
+      newParams.append("modal", modalKey);
+      setSearchParams(newParams);
+    }
+  };
+
+  const closeModal = () => {
+    const modals = searchParams.getAll("modal");
+    if (!modals.includes(modalKey)) {
+      return;
+    }
+
+    const newParams = new URLSearchParams(searchParams);
+    newParams.delete("modal");
+
+    const remaining = modals.filter((item) => item !== modalKey);
+    if (remaining.length > 0) {
+      remaining.forEach((item) => newParams.append("modal", item));
+    }
+
+    setSearchParams(newParams);
+  };
+
+  return { isOpen, openModal, closeModal };
 };
 
 export default useModal;

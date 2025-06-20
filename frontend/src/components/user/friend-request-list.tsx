@@ -1,13 +1,25 @@
-import FriendRequestItem from "./friend-request-item";
+import type { UserInfo } from "@/types/user/type";
+import { cn } from "@/utils/style";
+import FriendRequestItem from "@/components/user/friend-request-item";
 
-const FriendRequestList = () => {
+interface FriendRequestListProps {
+  userInfoList: UserInfo[];
+  className?: string;
+  onSelect?: (_user: UserInfo) => void;
+}
+
+const FriendRequestList = ({
+  userInfoList,
+  className,
+  onSelect,
+}: FriendRequestListProps) => {
   return (
-    <div className="flex flex-col gap-2">
-      {Array.from({ length: 2 }).map((_, index) => (
+    <div className={cn("flex flex-col gap-2", className)}>
+      {userInfoList.map((item) => (
         <FriendRequestItem
-          userId={index + 1}
-          key={index}
-          nickname={`토마토러버전종우${index + 1}`}
+          key={item.userId}
+          userInfo={{ ...item, online: undefined }}
+          onClick={() => onSelect?.(item)}
         />
       ))}
     </div>

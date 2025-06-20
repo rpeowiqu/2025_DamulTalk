@@ -1,20 +1,40 @@
 import UserItem from "@/components/user/user-item";
+import type { UserInfo } from "@/types/user/type";
+import { cn } from "@/utils/style";
 
 interface FriendListProps {
+  userInfoList: UserInfo[];
   visibleStatus: boolean;
+  className?: string;
+  selectedList?: UserInfo[];
+  onSelect?: (_user: UserInfo) => void;
 }
 
-const FriendList = ({ visibleStatus }: FriendListProps) => {
+const FriendList = ({
+  userInfoList,
+  visibleStatus,
+  className,
+  selectedList,
+  onSelect,
+}: FriendListProps) => {
   return (
-    <div className="flex flex-col gap-2">
-      {Array.from({ length: 8 }).map((_, index) => (
-        <UserItem
-          key={index}
-          userId={index + 1}
-          nickname={`토마토러버전종우${index + 1}`}
-          online={visibleStatus ? true : undefined}
-        />
-      ))}
+    <div className={cn("flex flex-col gap-2", className)}>
+      {userInfoList.map((item) => {
+        const selected =
+          selectedList && selectedList.some((u) => u.userId === item.userId);
+
+        return (
+          <UserItem
+            key={item.userId}
+            userInfo={{
+              ...item,
+              online: visibleStatus ? item.online : undefined,
+            }}
+            selected={selected}
+            onClick={() => onSelect?.(item)}
+          />
+        );
+      })}
     </div>
   );
 };

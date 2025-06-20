@@ -2,7 +2,7 @@ import defaultPortraitImage from "@/assets/images/boy-portrait.png";
 import { cn } from "@/utils/style";
 
 interface UserPortraitProps {
-  profileImageUrl?: string;
+  profileImageUrl?: string | null;
   online?: boolean;
   className?: string;
 }

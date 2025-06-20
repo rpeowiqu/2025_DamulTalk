@@ -18,6 +18,8 @@
     "@types/lodash-es": "^4.17.12",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "embla-carousel": "^8.6.0",
+    "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.17.3",
     "lodash-es": "^4.17.21",
     "lucide-react": "^0.518.0",

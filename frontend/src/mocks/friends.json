@@ -1,0 +1,50 @@
+[
+  {
+    "userId": 1,
+    "nickname": "토마토러버전종우",
+    "profileImageUrl": "",
+    "online": true
+  },
+  {
+    "userId": 2,
+    "nickname": "바나나러버한재서",
+    "profileImageUrl": "",
+    "online": true
+  },
+  {
+    "userId": 3,
+    "nickname": "박새로이밥세공기",
+    "profileImageUrl": "",
+    "online": true
+  },
+  {
+    "userId": 4,
+    "nickname": "2분안에이븐하게",
+    "profileImageUrl": "",
+    "online": true
+  },
+  {
+    "userId": 5,
+    "nickname": "장그눤",
+    "profileImageUrl": "",
+    "online": false
+  },
+  {
+    "userId": 6,
+    "nickname": "나아가는모습",
+    "profileImageUrl": "",
+    "online": false
+  },
+  {
+    "userId": 7,
+    "nickname": "다믈랭포에버",
+    "profileImageUrl": "",
+    "online": false
+  },
+  {
+    "userId": 8,
+    "nickname": "세상에이런일이",
+    "profileImageUrl": "",
+    "online": false
+  }
+]

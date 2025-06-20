@@ -1,49 +1,61 @@
-import { Link } from "react-router-dom";
+import type { MouseEvent, ReactNode } from "react";
 
 import UserPortrait from "@/components/user/user-portrait";
 import { cn } from "@/utils/style";
+import type { UserInfo } from "@/types/user/type";
 
-interface UserItemProps {
-  userId: number;
-  nickname: string;
-  profileImageUrl?: string;
-  online?: boolean;
+export interface UserItemProps {
+  userInfo: UserInfo;
+  selected?: boolean;
   className?: string;
+  onClick?: (_e: MouseEvent<HTMLDivElement>) => void;
+  children?: ReactNode;
 }
 
 const UserItem = ({
-  userId,
-  nickname,
-  profileImageUrl,
-  online,
+  userInfo,
+  selected,
   className,
+  onClick,
+  children,
 }: UserItemProps) => {
   return (
-    <Link
-      to={`/profile/${userId}`}
+    <div
       className={cn(
-        "flex w-full cursor-pointer items-center gap-3 rounded-xl bg-white p-2 hover:bg-neutral-50",
+        "flex w-full cursor-pointer items-center gap-3 rounded-xl p-2 hover:bg-neutral-50",
+        selected ? "bg-damul-main-50" : "bg-white",
         className,
-      )}>
+      )}
+      onClick={onClick}>
       <UserPortrait
-        profileImageUrl={profileImageUrl}
-        online={online}
+        profileImageUrl={userInfo.profileImageUrl}
+        online={userInfo.online}
         className="shrink-0"
       />
 
-      <div className="flex flex-1 flex-col break-all">
-        <p className="line-clamp-1">{nickname}</p>
-        {online !== undefined && (
+      <div className="flex flex-1 break-all">
+        <div className="flex flex-1 flex-col">
           <p
             className={cn(
-              "line-clamp-1 text-xs",
-              online ? "text-green-400" : "text-neutral-400",
+              "line-clamp-1",
+              selected ? "text-damul-main-500" : "text-black",
             )}>
-            {online ? "온라인" : "오프라인"}
+            {userInfo.nickname}
           </p>
-        )}
+          {userInfo.online !== undefined && (
+            <p
+              className={cn(
+                "line-clamp-1 text-xs",
+                userInfo.online ? "text-green-400" : "text-neutral-400",
+              )}>
+              {userInfo.online ? "온라인" : "오프라인"}
+            </p>
+          )}
+        </div>
+
+        {children && <div className="flex items-center gap-3">{children}</div>}
       </div>
-    </Link>
+    </div>
   );
 };
 

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import {
   Accordion,
@@ -11,6 +12,9 @@ import FilterButton from "@/components/common/filter-button";
 import SearchBar from "@/components/common/search-bar";
 import FriendList from "@/components/user/friend-list";
 import FriendRequestList from "@/components/user/friend-request-list";
+import FriendRequestDummyData from "@/mocks/friend-request.json";
+import FriendDummyData from "@/mocks/friends.json";
+import type { UserInfo } from "@/types/user/type";
 
 const friendFilters = [
   {
@@ -25,6 +29,7 @@ const friendFilters = [
 
 const SideBarFriendContent = () => {
   const [selectedFilter, setSelectedFilter] = useState("nickname-ascending");
+  const navigate = useNavigate();
 
   return (
     <>
@@ -44,16 +49,27 @@ const SideBarFriendContent = () => {
         className="scroll-hidden flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto">
         <AccordionItem value="friends" className="flex flex-col gap-4">
           <AccordionItem value="friend-request" className="flex flex-col gap-4">
-            <AccordionTrigger>친구 요청 2건</AccordionTrigger>
+            <AccordionTrigger>
+              친구 요청 {FriendRequestDummyData.length}건
+            </AccordionTrigger>
             <AccordionContent>
-              <FriendRequestList />
+              <FriendRequestList
+                userInfoList={FriendRequestDummyData}
+                onSelect={(user: UserInfo) =>
+                  navigate(`/profile/${user.userId}`)
+                }
+              />
             </AccordionContent>
           </AccordionItem>
 
-          <AccordionTrigger>친구 8명</AccordionTrigger>
+          <AccordionTrigger>친구 {FriendDummyData.length}명</AccordionTrigger>
           <AccordionContent className="flex flex-col gap-4">
             <SearchBar onSearch={(keyword) => console.log(keyword)} />
-            <FriendList visibleStatus={true} />
+            <FriendList
+              userInfoList={FriendDummyData}
+              visibleStatus={true}
+              onSelect={(user: UserInfo) => navigate(`/profile/${user.userId}`)}
+            />
           </AccordionContent>
         </AccordionItem>
       </Accordion>

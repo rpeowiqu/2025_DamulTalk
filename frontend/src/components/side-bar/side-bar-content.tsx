@@ -30,12 +30,15 @@ const SideBarContent = ({ currentTab }: SideBarContentProps) => {
 
       <div className="flex items-center justify-between border-b border-neutral-300 pb-1">
         <UserItem
-          userId={1}
-          nickname="다믈랭 님"
-          online={true}
-          className="hover:bg-white"
-        />
-        <LogoutButton />
+          userInfo={{
+            userId: 1,
+            nickname: "다믈랭 님",
+            profileImageUrl: "",
+            online: true,
+          }}
+          className="hover:bg-white">
+          <LogoutButton />
+        </UserItem>
       </div>
 
       <div className="flex min-h-0 flex-1 flex-col gap-4">

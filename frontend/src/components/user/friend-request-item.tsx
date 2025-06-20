@@ -1,46 +1,15 @@
-import { useNavigate } from "react-router-dom";
-
-import { cn } from "@/utils/style";
-import UserPortrait from "@/components/user/user-portrait";
 import FriendAcceptButton from "@/components/user/friend-accept-button";
 import FriendRejectButton from "@/components/user/friend-reject-button";
+import UserItem, { type UserItemProps } from "@/components/user/user-item";
 
-interface FriendRequestItemProps {
-  userId: number;
-  nickname: string;
-  profileImageUrl?: string;
-  className?: string;
-}
-
-const FriendRequestItem = ({
-  userId,
-  nickname,
-  profileImageUrl,
-  className,
-}: FriendRequestItemProps) => {
-  const navigate = useNavigate();
-
-  const handleClick = () => {
-    navigate(`/profile/${userId}`);
-  };
-
+const FriendRequestItem = ({ userInfo, ...props }: UserItemProps) => {
   return (
-    <div
-      className={cn(
-        "flex w-full cursor-pointer items-center gap-3 rounded-xl p-2 hover:bg-neutral-50",
-        className,
-      )}
-      onClick={handleClick}>
-      <div className="flex flex-1 items-center gap-3">
-        <UserPortrait profileImageUrl={profileImageUrl} className="shrink-0" />
-        <p className="line-clamp-1 break-all">{nickname}</p>
-      </div>
-
+    <UserItem userInfo={userInfo} {...props}>
       <div className="flex items-center gap-2">
         <FriendAcceptButton />
         <FriendRejectButton />
       </div>
-    </div>
+    </UserItem>
   );
 };
 

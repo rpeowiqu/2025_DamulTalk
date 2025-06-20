@@ -1,20 +1,40 @@
+import { useState } from "react";
+
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import ChatCreateButton from "@/components/chat/chat-create-button";
+import FilterButton from "@/components/common/filter-button";
 import SearchBar from "@/components/common/search-bar";
-import ChatCreateIcon from "@/components/icon/chat-create-icon";
-import FilterIcon from "@/components/icon/filter-icon";
 import ChatRoomList from "@/components/chat/chat-room-list";
 
+const chatFilters = [
+  {
+    label: "최신 메시지 순",
+    value: "recent",
+  },
+  {
+    label: "안 읽은 메시지 순",
+    value: "unread",
+  },
+];
+
 const SideBarChatContent = () => {
+  const [selectedFilter, setSelectedFilter] = useState("recent");
+
   return (
     <>
       <div className="flex justify-end gap-4 text-neutral-500">
-        <ChatCreateIcon />
-        <FilterIcon />
+        <ChatCreateButton />
+        <FilterButton
+          title="채팅 목록 정렬 방식"
+          filters={chatFilters}
+          selected={selectedFilter}
+          onSelect={setSelectedFilter}
+        />
       </div>
 
       <Accordion

@@ -3,10 +3,12 @@ import UserSearchModal from "@/components/user/user-search-modal";
 import useModal from "@/hooks/common/use-modal";
 
 const UserSearchButton = () => {
-  const { isOpen, setIsOpen } = useModal({ modalKey: "user-search" });
+  const { isOpen, openModal, closeModal } = useModal({
+    modalKey: "user-search",
+  });
 
   const handleClick = () => {
-    setIsOpen(true);
+    openModal();
   };
 
   return (
@@ -18,7 +20,11 @@ const UserSearchButton = () => {
       <UserSearchModal
         open={isOpen}
         onOpenChange={(open: boolean) => {
-          setIsOpen(open);
+          if (open) {
+            openModal();
+          } else {
+            closeModal();
+          }
         }}
       />
     </>
