@@ -7,6 +7,7 @@ import {
 
 import type { SignupInfo } from "@/types/auth/type";
 import Button from "@/components/common/button";
+import Input from "@/components/common/input";
 import usePasswordCheck from "@/hooks/auth/usePasswordCheck";
 import { cn } from "@/utils/style";
 
@@ -59,12 +60,11 @@ const SignupPasswordForm = ({
           <br />
           입력해주세요
         </h1>
-        <input
+        <Input
           type="password"
           placeholder="비밀번호를 입력해 주세요"
           value={signupInfo.password}
           className={cn(
-            "w-full rounded-xl border border-neutral-200 px-4 py-3 placeholder:text-neutral-300 focus:ring-2 focus:outline-none",
             messageType === "valid" ||
               signupInfo.password.length === 0 ||
               signupInfo.passwordCheck.length === 0
@@ -76,13 +76,13 @@ const SignupPasswordForm = ({
           maxLength={32}
           onChange={handleChangePassword}
         />
+
         <div className="flex flex-col gap-2">
-          <input
+          <Input
             type="password"
             placeholder="비밀번호를 한번 더 입력해 주세요"
             value={signupInfo.passwordCheck}
             className={cn(
-              "w-full rounded-xl border border-neutral-200 px-4 py-3 placeholder:text-neutral-300 focus:ring-2 focus:outline-none",
               messageType === "valid" ||
                 signupInfo.password.length === 0 ||
                 signupInfo.passwordCheck.length === 0
@@ -93,6 +93,7 @@ const SignupPasswordForm = ({
             maxLength={32}
             onChange={handleChangePasswordCheck}
           />
+
           <p
             className={cn(
               "text-sm",

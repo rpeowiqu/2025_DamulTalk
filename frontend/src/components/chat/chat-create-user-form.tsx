@@ -3,6 +3,7 @@ import type { FormEvent } from "react";
 import type { UserInfo } from "@/types/user/type";
 import type { ChatCreateFormProps } from "@/components/chat/chat-create-form";
 import Carousel from "@/components/common/carousel";
+import Button from "@/components/common/button";
 import ChatCreateUserItem from "@/components/chat/chat-create-user-item";
 import SearchBar from "@/components/common/search-bar";
 import FriendList from "@/components/user/friend-list";
@@ -93,11 +94,11 @@ const ChatCreateUserForm = ({
         selectedList={chatCreateInfo.selectedUsers}
         onSelect={(user) => handleUserCreate(user)}
       />
-      <button
-        className="bg-damul-main-300 hover:bg-damul-main-400 cursor-pointer rounded-xl py-3 text-lg font-bold text-white transition-colors duration-200 disabled:bg-neutral-200"
+      <Button
+        className="w-full"
         disabled={chatCreateInfo.selectedUsers.length === 0}>
         다음
-      </button>
+      </Button>
     </form>
   );
 };

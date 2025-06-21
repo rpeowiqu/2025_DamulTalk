@@ -9,6 +9,7 @@ import {
 import { debounce } from "lodash-es";
 
 import Button from "@/components/common/button";
+import Input from "@/components/common/input";
 import type { SignupInfo } from "@/types/auth/type";
 import { cn } from "@/utils/style";
 import useNicknameCheck from "@/hooks/auth/useNicknameCheck";
@@ -63,12 +64,11 @@ const SignupNicknameForm = ({
           입력해주세요
         </h1>
         <div className="flex flex-col gap-2">
-          <input
+          <Input
             type="text"
             placeholder="닉네임을 입력해 주세요"
             value={nickname}
             className={cn(
-              "w-full rounded-xl border border-neutral-200 px-4 py-3 placeholder:text-neutral-300 focus:ring-2 focus:outline-none",
               messageType === "valid" || signupInfo.nickname.length === 0
                 ? "focus:ring-damul-main-300"
                 : "focus:ring-red-400",
@@ -78,6 +78,7 @@ const SignupNicknameForm = ({
             maxLength={12}
             onChange={handleChange}
           />
+
           <p
             className={cn(
               "text-sm",

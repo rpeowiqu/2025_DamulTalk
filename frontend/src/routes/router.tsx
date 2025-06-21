@@ -14,10 +14,10 @@ const router = createBrowserRouter([
       {
         path: "/profile/:userId",
         element: <ProfilePage />,
-      }
-    ]
+      },
+    ],
   },
- {
+  {
     element: <BlankLayout />,
     children: [
       {

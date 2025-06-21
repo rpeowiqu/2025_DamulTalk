@@ -2,6 +2,7 @@ import type { ChangeEvent, FormEvent } from "react";
 
 import type { ChatCreateFormProps } from "@/components/chat/chat-create-form";
 import Input from "@/components/common/input";
+import Button from "@/components/common/button";
 
 const ChatCreateTitleForm = ({
   chatCreateInfo,
@@ -40,18 +41,12 @@ const ChatCreateTitleForm = ({
       </div>
 
       <div className="flex gap-3">
-        <button
-          type="button"
-          className="bg-damul-main-300 hover:bg-damul-main-400 w-full cursor-pointer rounded-xl py-3 text-lg font-bold text-white transition-colors duration-200"
-          onClick={onPrev}>
+        <Button type="button" onClick={onPrev}>
           이전
-        </button>
-
-        <button
-          className="bg-damul-main-300 hover:bg-damul-main-400 w-full cursor-pointer rounded-xl py-3 text-lg font-bold text-white transition-colors duration-200 disabled:bg-neutral-200"
-          disabled={chatCreateInfo.title.length === 0}>
+        </Button>
+        <Button className="w-full" disabled={chatCreateInfo.title.length === 0}>
           만들기
-        </button>
+        </Button>
       </div>
     </form>
   );

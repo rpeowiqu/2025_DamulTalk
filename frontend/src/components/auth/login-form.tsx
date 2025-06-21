@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 
 import Button from "@/components/common/button";
+import Input from "@/components/common/input";
 
 const LoginForm = () => {
   return (
@@ -10,11 +11,10 @@ const LoginForm = () => {
           <label htmlFor="email" className="text-lg font-bold">
             이메일
           </label>
-          <input
+          <Input
             id="email"
             type="email"
             placeholder="이메일을 입력해 주세요"
-            className="ring-damul-main-300 rounded-xl border border-neutral-200 px-4 py-3 placeholder:text-neutral-300 focus:ring-2 focus:outline-none"
             autoFocus
             required
           />
@@ -24,11 +24,10 @@ const LoginForm = () => {
           <label htmlFor="password" className="text-lg font-bold">
             비밀번호
           </label>
-          <input
+          <Input
             id="password"
             type="password"
             placeholder="비밀번호를 입력해 주세요"
-            className="ring-damul-main-300 rounded-xl border border-neutral-200 px-4 py-3 placeholder:text-neutral-300 focus:ring-2 focus:outline-none"
             required
           />
 
