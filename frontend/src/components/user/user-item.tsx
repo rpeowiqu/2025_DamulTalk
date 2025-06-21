@@ -1,0 +1,62 @@
+import type { MouseEvent, ReactNode } from "react";
+
+import UserPortrait from "@/components/user/user-portrait";
+import { cn } from "@/utils/style";
+import type { UserInfo } from "@/types/user/type";
+
+export interface UserItemProps {
+  userInfo: UserInfo;
+  selected?: boolean;
+  className?: string;
+  onClick?: (_e: MouseEvent<HTMLDivElement>) => void;
+  children?: ReactNode;
+}
+
+const UserItem = ({
+  userInfo,
+  selected,
+  className,
+  onClick,
+  children,
+}: UserItemProps) => {
+  return (
+    <div
+      className={cn(
+        "flex w-full cursor-pointer items-center gap-3 rounded-xl p-2 hover:bg-neutral-50",
+        selected ? "bg-damul-main-50" : "bg-white",
+        className,
+      )}
+      onClick={onClick}>
+      <UserPortrait
+        profileImageUrl={userInfo.profileImageUrl}
+        online={userInfo.online}
+        className="shrink-0"
+      />
+
+      <div className="flex flex-1 break-all">
+        <div className="flex flex-1 flex-col">
+          <p
+            className={cn(
+              "line-clamp-1",
+              selected ? "text-damul-main-500" : "text-black",
+            )}>
+            {userInfo.nickname}
+          </p>
+          {userInfo.online !== undefined && (
+            <p
+              className={cn(
+                "line-clamp-1 text-xs",
+                userInfo.online ? "text-green-400" : "text-neutral-400",
+              )}>
+              {userInfo.online ? "온라인" : "오프라인"}
+            </p>
+          )}
+        </div>
+
+        {children && <div className="flex items-center gap-3">{children}</div>}
+      </div>
+    </div>
+  );
+};
+
+export default UserItem;
