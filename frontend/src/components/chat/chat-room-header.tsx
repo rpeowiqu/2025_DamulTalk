@@ -11,7 +11,7 @@ interface ChatRoomHeaderProps {
 
 const ChatRoomHeader = ({ roomInfo }: ChatRoomHeaderProps) => {
   return (
-    <div className="sticky top-0 flex items-center gap-6 border-b border-neutral-200 bg-white px-6 py-4">
+    <div className="sticky top-0 z-10 flex items-center gap-6 border-b border-neutral-200 bg-white px-6 py-4">
       <div className="flex flex-1 items-center gap-4">
         <ChatPortrait profileImages={roomInfo.profileImages} />
         <div className="flex flex-col break-all">
