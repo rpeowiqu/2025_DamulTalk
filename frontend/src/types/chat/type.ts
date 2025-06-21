@@ -10,3 +10,15 @@ export interface ChatCreateInfo {
   title: string;
   selectedUsers: UserInfo[];
 }
+
+export interface ChatRoomInfo {
+  roomName: string;
+  roomSize: number;
+  profileImages: string[];
+  members: ChatRoomMember[];
+}
+
+export interface ChatRoomMember {
+  userInfo: UserInfo;
+  lastReadAt: string;
+}
