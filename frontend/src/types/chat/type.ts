@@ -22,3 +22,15 @@ export interface ChatRoomMember {
   userInfo: UserInfo;
   lastReadAt: string;
 }
+
+export interface ChatMessageInfo {
+  messageId: number;
+  senderId: number;
+  profileImageUrl: string;
+  nickname: string;
+  messageType: string;
+  content: string;
+  fileUrl?: string;
+  sentTime: string;
+  unReadCount: number;
+}

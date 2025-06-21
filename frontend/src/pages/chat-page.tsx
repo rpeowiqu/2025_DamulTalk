@@ -1,3 +1,4 @@
+import ChatRoomContent from "@/components/chat/chat-room-content";
 import ChatRoomHeader from "@/components/chat/chat-room-header";
 
 const ChatPage = () => {
@@ -11,6 +12,7 @@ const ChatPage = () => {
           members: [],
         }}
       />
+      <ChatRoomContent />
     </div>
   );
 };

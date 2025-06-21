@@ -1,0 +1,92 @@
+[
+  {
+    "messageId": 1,
+    "senderId": 1,
+    "profileImageUrl": "",
+    "nickname": "토마토러버전종우",
+    "messageType": "TEXT",
+    "content": "안녕하세요, 반갑습니다!!",
+    "sentTime": "오후 02:23",
+    "unReadCount": 1
+  },
+  {
+    "messageId": 2,
+    "senderId": 1,
+    "profileImageUrl": "",
+    "nickname": "토마토러버전종우",
+    "messageType": "TEXT",
+    "content": "잘 부탁 드려요~",
+    "sentTime": "오후 02:24",
+    "unReadCount": 1
+  },
+  {
+    "messageId": 3,
+    "senderId": 2,
+    "profileImageUrl": "",
+    "nickname": "바나나러버한재서",
+    "messageType": "TEXT",
+    "content": "저도 잘 부탁 드려요!! 잘 해봅시다.",
+    "sentTime": "오후 02:28",
+    "unReadCount": 1
+  },
+  {
+    "messageId": 4,
+    "senderId": 1,
+    "profileImageUrl": "",
+    "nickname": "토마토러버전종우",
+    "messageType": "TEXT",
+    "content": "가나다라맙소사 테스트123",
+    "sentTime": "오후 02:29",
+    "unReadCount": 1
+  },
+  {
+    "messageId": 5,
+    "senderId": 1,
+    "profileImageUrl": "",
+    "nickname": "토마토러버전종우",
+    "messageType": "TEXT",
+    "content": "ㅋㅋ",
+    "sentTime": "오후 02:29",
+    "unReadCount": 1
+  },
+  {
+    "messageId": 6,
+    "senderId": 1,
+    "profileImageUrl": "",
+    "nickname": "토마토러버전종우",
+    "messageType": "TEXT",
+    "content": "졸립다",
+    "sentTime": "오후 02:30",
+    "unReadCount": 1
+  },
+  {
+    "messageId": 7,
+    "senderId": 2,
+    "profileImageUrl": "",
+    "nickname": "바나나러버한재서",
+    "messageType": "TEXT",
+    "content": "ㅇㅈㅋㅋ",
+    "sentTime": "오후 02:31",
+    "unReadCount": 1
+  },
+  {
+    "messageId": 8,
+    "senderId": 2,
+    "profileImageUrl": "",
+    "nickname": "바나나러버한재서",
+    "messageType": "TEXT",
+    "content": "이렇게 긴 텍스트는 어떻게 처리할껀데 이렇게 긴 텍스트는 어떻게 처리할껀데 이렇게 긴 텍스트는 어떻게 처리할껀데\n이렇게 긴 텍스트는 어떻게 처리할껀데 이렇게 긴 텍스트는 어떻게 처리할껀데 이렇게 긴 텍스트는 어떻게 처리할껀데\n이렇게 긴 텍스트는 어떻게 처리할껀데 이렇게 긴 텍스트는 어떻게 처리할껀데 이렇게 긴 텍스트는 어떻게 처리할껀데\n",
+    "sentTime": "오후 02:31",
+    "unReadCount": 1
+  },
+  {
+    "messageId": 9,
+    "senderId": 1,
+    "profileImageUrl": "",
+    "nickname": "토마토러버전종우",
+    "messageType": "TEXT",
+    "content": "이렇게 긴 텍스트는 어떻게 처리할껀데 이렇게 긴 텍스트는 어떻게 처리할껀데 이렇게 긴 텍스트는 어떻게 처리할껀데\n이렇게 긴 텍스트는 어떻게 처리할껀데 이렇게 긴 텍스트는 어떻게 처리할껀데 이렇게 긴 텍스트는 어떻게 처리할껀데\n이렇게 긴 텍스트는 어떻게 처리할껀데 이렇게 긴 텍스트는 어떻게 처리할껀데 이렇게 긴 텍스트는 어떻게 처리할껀데\n",
+    "sentTime": "오후 02:32",
+    "unReadCount": 1
+  }
+]
