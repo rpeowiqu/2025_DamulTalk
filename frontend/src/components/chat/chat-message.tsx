@@ -9,11 +9,11 @@ const ChatMessage = ({ messageInfo }: ChatMessageProps) => {
   return (
     <>
       {messageInfo.senderId === 1 ? (
-        <div className="flex max-w-100 items-end gap-1 self-end">
+        <div className="flex max-w-100 items-end gap-1 self-end break-all whitespace-pre-wrap">
           <p className="shrink-0 text-[0.675rem] text-neutral-500">
             {messageInfo.sentTime}
           </p>
-          <p className="bg-damul-main-50 rounded-xl p-3 whitespace-pre-wrap">
+          <p className="bg-damul-main-50 rounded-xl p-3">
             {messageInfo.content}
           </p>
         </div>
@@ -25,10 +25,8 @@ const ChatMessage = ({ messageInfo }: ChatMessageProps) => {
           />
           <div className="flex flex-col gap-2">
             <p className="font-bold">{messageInfo.nickname}</p>
-            <div className="flex max-w-100 items-end gap-1">
-              <p className="rounded-xl bg-white p-3 whitespace-pre-wrap">
-                {messageInfo.content}
-              </p>
+            <div className="flex max-w-100 items-end gap-1 break-all whitespace-pre-wrap">
+              <p className="rounded-xl bg-white p-3">{messageInfo.content}</p>
               <p className="shrink-0 text-[0.675rem] text-neutral-500">
                 {messageInfo.sentTime}
               </p>
