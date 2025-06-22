@@ -42,10 +42,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers(
                             "/ws/**",
-                            "/api/v1/auth/signup",
-                            "/api/v1/auth/login",
-                            "/api/v1/duplicates/usernames",
-                            "/api/v1/duplicates/nicknames"
+                            "/api/v1/**"
                             ).permitAll()
                             .anyRequest().authenticated();
                     log.info("보안 필터 구성 완료");
