@@ -1,5 +1,5 @@
 import {
-  useCallback,
+  useMemo,
   useState,
   type ChangeEvent,
   type Dispatch,
@@ -35,15 +35,16 @@ const SignupNicknameForm = ({
     onNext();
   };
 
-  const updateSignupNickname = useCallback(
-    debounce(
-      (nickname: string) =>
-        setSignupInfo((prev) => ({
-          ...prev,
-          nickname,
-        })),
-      400,
-    ),
+  const updateSignupNickname = useMemo(
+    () =>
+      debounce(
+        (nickname: string) =>
+          setSignupInfo((prev) => ({
+            ...prev,
+            nickname,
+          })),
+        400,
+      ),
     [],
   );
 
