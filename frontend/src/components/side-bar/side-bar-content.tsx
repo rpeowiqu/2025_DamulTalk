@@ -41,7 +41,7 @@ const SideBarContent = ({ currentTab }: SideBarContentProps) => {
             online: true,
           }}
           className="hover:bg-white"
-          onClick={() => navigate(`/profile/${data?.userId}`)}>
+          onClick={() => navigate(`/profile/${1}`)}>
           <LogoutButton />
         </UserItem>
       </div>
