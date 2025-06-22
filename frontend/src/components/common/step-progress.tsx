@@ -1,5 +1,5 @@
 import { Progress, type ProgressProps } from "@/components/ui/progress";
-import CheckCircleIcon from "@/components/icon/check-circle-icon";
+import CheckCircleFillIcon from "@/components/icon/check-circle-fill-icon";
 import { cn } from "@/utils/style";
 
 interface StepProgressProps extends ProgressProps {
@@ -20,15 +20,15 @@ const StepProgress = ({
   return (
     <div className="relative">
       <div className="flex items-center">
-        <CheckCircleIcon className={cn(stepClassName, "fill-none")} />
+        <CheckCircleFillIcon className={cn(stepClassName, "fill-none")} />
         <Progress value={value} {...props} />
-        <CheckCircleIcon className={cn(stepClassName, "fill-none")} />
+        <CheckCircleFillIcon className={cn(stepClassName, "fill-none")} />
       </div>
 
       <div className="absolute top-1/2 left-0 flex w-full -translate-y-1/2 items-center justify-between">
         {Array.from({ length: stepCount }).map((_, index) => (
           <div key={index} className="relative">
-            <CheckCircleIcon
+            <CheckCircleFillIcon
               className={cn(
                 value !== null && (100 / stepCount) * index <= value
                   ? "fill-damul-main-300"
