@@ -70,7 +70,7 @@ public class AuthServiceImpl implements AuthService {
 
         Cookie cookie = new Cookie("refreshToken", refreshToken);
         cookie.setHttpOnly(true);
-        cookie.setSecure(true);
+        cookie.setSecure(false);
         cookie.setPath("/");
         cookie.setMaxAge((int) (jwtService.getRefreshTokenExpire() / 1000));
 
@@ -89,7 +89,7 @@ public class AuthServiceImpl implements AuthService {
         // 쿠키 삭제
         Cookie cookie = new Cookie("refreshToken", null);
         cookie.setHttpOnly(true);
-        cookie.setSecure(true);
+        cookie.setSecure(false);
         cookie.setPath("/");
         cookie.setMaxAge(0);
         response.addCookie(cookie);
