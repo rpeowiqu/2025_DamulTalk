@@ -8,6 +8,7 @@ import com.demo.damulTalk.exception.ErrorCode;
 import com.demo.damulTalk.user.domain.User;
 import com.demo.damulTalk.user.dto.SignupRequest;
 import com.demo.damulTalk.user.mapper.UserMapper;
+import com.demo.damulTalk.util.CookieUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,6 +27,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserMapper userMapper;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
+    private final CookieUtil cookieUtil;
 
     public void signup(SignupRequest request) {
         log.info("[AuthService] 회원가입 시작 - username: {}", request.getUsername());
@@ -62,20 +64,13 @@ public class AuthServiceImpl implements AuthService {
                     "비밀번호가 틀립니다."
             );
         }
-        System.out.println(user.getUserId() + " " + user.getUsername() + " " + user.getNickname());
 
         jwtService.invalidateRefreshToken(user.getUsername());
 
         String accessToken = jwtService.generateAccessToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
 
-        Cookie cookie = new Cookie("refreshToken", refreshToken);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(false);
-        cookie.setPath("/");
-        cookie.setMaxAge((int) (jwtService.getRefreshTokenExpire() / 1000));
-
-        response.addCookie(cookie);
+        cookieUtil.addCookie(response, "refreshToken", refreshToken, (int) (jwtService.getRefreshTokenExpire() / 1000));
         response.setHeader("Authorization", "Bearer " + accessToken);
         return new LoginResponseDto(user.getUserId(), user.getNickname());
     }
@@ -89,12 +84,7 @@ public class AuthServiceImpl implements AuthService {
         jwtService.invalidateRefreshToken(username);
 
         // 쿠키 삭제
-        Cookie cookie = new Cookie("refreshToken", null);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(false);
-        cookie.setPath("/");
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
+        cookieUtil.deleteCookie(response, "refreshToken");
     }
 
     public void checkDuplicatesUsername(ValidValue value) {
