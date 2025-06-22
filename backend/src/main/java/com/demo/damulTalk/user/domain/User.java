@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Builder
 public class User {
 
-    private Integer memberId;
+    private Integer userId;
     private String username;
     private String password;
     private String nickname;

@@ -1,6 +1,7 @@
 package com.demo.damulTalk.auth.service;
 
 import com.demo.damulTalk.auth.dto.LoginRequestDto;
+import com.demo.damulTalk.auth.dto.LoginResponseDto;
 import com.demo.damulTalk.auth.dto.ValidValue;
 import com.demo.damulTalk.user.dto.SignupRequest;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,7 +11,7 @@ public interface AuthService {
 
     void signup(SignupRequest request);
 
-    void login(LoginRequestDto loginRequest, HttpServletResponse response);
+    LoginResponseDto login(LoginRequestDto loginRequest, HttpServletResponse response);
 
     void logout(HttpServletRequest request, HttpServletResponse response);
 

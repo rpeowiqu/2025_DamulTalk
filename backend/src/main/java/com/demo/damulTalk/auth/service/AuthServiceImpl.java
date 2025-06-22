@@ -1,6 +1,7 @@
 package com.demo.damulTalk.auth.service;
 
 import com.demo.damulTalk.auth.dto.LoginRequestDto;
+import com.demo.damulTalk.auth.dto.LoginResponseDto;
 import com.demo.damulTalk.auth.dto.ValidValue;
 import com.demo.damulTalk.exception.BusinessException;
 import com.demo.damulTalk.exception.ErrorCode;
@@ -12,7 +13,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -43,7 +43,7 @@ public class AuthServiceImpl implements AuthService {
         userMapper.insertUser(user);
     }
 
-    public void login(LoginRequestDto loginRequest, HttpServletResponse response) {
+    public LoginResponseDto login(LoginRequestDto loginRequest, HttpServletResponse response) {
         log.info("[AuthService] 로그인 시작 - username: {}", loginRequest.getUsername());
 
         User user = userMapper.findByUsername(loginRequest.getUsername());
@@ -76,6 +76,7 @@ public class AuthServiceImpl implements AuthService {
 
         response.addCookie(cookie);
         response.setHeader("Authorization", "Bearer " + accessToken);
+        return new LoginResponseDto(user.getUserId(), user.getNickname());
     }
 
     public void logout(HttpServletRequest request, HttpServletResponse response) {
