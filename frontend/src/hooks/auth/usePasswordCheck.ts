@@ -1,15 +1,16 @@
 import { debounce } from "lodash-es";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const usePasswordCheck = (password: string, passwordCheck: string) => {
   const [messageType, setMessageType] = useState<"valid" | "invalid">("valid");
   const [message, setMessage] = useState("");
 
-  const updateMessage = useCallback(
-    debounce((newMessageType: "valid" | "invalid", newMessage: string) => {
-      setMessageType(newMessageType);
-      setMessage(newMessage);
-    }, 300),
+  const updateMessage = useMemo(
+    () =>
+      debounce((newMessageType: "valid" | "invalid", newMessage: string) => {
+        setMessageType(newMessageType);
+        setMessage(newMessage);
+      }, 300),
     [],
   );
 

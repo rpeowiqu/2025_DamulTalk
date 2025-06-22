@@ -2,7 +2,7 @@ import UserItem from "@/components/user/user-item";
 import SettingButton from "@/components/user/setting-button";
 import SideBarFriendContent from "@/components/side-bar/side-bar-friend-content";
 import SideBarChatContent from "@/components/side-bar/side-bar-chat-content";
-import LogoutButton from "@/components/user/logout-button";
+import LogoutButton from "@/components/auth/logout-button";
 import type { SideBarTabType } from "@/types/side-bar/type";
 
 interface SideBarContentProps {
