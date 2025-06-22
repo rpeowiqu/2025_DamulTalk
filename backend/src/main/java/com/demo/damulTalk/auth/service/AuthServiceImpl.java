@@ -62,6 +62,7 @@ public class AuthServiceImpl implements AuthService {
                     "비밀번호가 틀립니다."
             );
         }
+        System.out.println(user.getUserId() + " " + user.getUsername() + " " + user.getNickname());
 
         jwtService.invalidateRefreshToken(user.getUsername());
 
