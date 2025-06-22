@@ -56,14 +56,6 @@ public class SecurityConfig {
                             .anyRequest().authenticated();
                     log.info("보안 필터 구성 완료");
                 })
-                .userDetailsService(userDetailsService)
-                .formLogin(formLogin -> {
-                    log.info("[SecurityConfig] 폼 로그인 설정 구성");
-                    formLogin.loginProcessingUrl("api/v1/auth/login")
-                            .successHandler(loginSuccessHandler)
-                            .failureHandler(loginFailureHandler);
-                    log.debug("[SecurityConfig] 폼 로그인 설정 완료");
-                })
                 .addFilterBefore(jwtVerificationFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(session -> {
                     log.info("[SecurityConfig] 세션 관리 정책 설정: STATELESS");
@@ -77,14 +69,6 @@ public class SecurityConfig {
                     })
                             .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
                 })
-                .logout(l -> l
-                        .logoutUrl("/api/v1/auth/logout")
-                        .addLogoutHandler(logoutHandler)
-                        .logoutSuccessHandler((request, response, authentication) -> {
-                            response.setStatus(200);
-                        })
-                        .permitAll()
-                )
                 .cors(corsCustomizer -> {
                     log.info("[SecurityConfig] CORS 설정 구성");
                     corsCustomizer.configurationSource(new CorsConfigurationSource() {
