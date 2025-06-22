@@ -9,7 +9,6 @@ import com.demo.damulTalk.user.domain.User;
 import com.demo.damulTalk.user.dto.SignupRequest;
 import com.demo.damulTalk.user.mapper.UserMapper;
 import com.demo.damulTalk.util.CookieUtil;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
