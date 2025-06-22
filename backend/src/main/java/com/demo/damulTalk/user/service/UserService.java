@@ -5,10 +5,6 @@ import com.demo.damulTalk.user.dto.SignupRequest;
 
 public interface UserService {
 
-    void signup(SignupRequest request);
 
-    void checkDuplicatesUsername(ValidValue value);
-
-    void checkDuplicatesNickname(ValidValue value);
 
 }

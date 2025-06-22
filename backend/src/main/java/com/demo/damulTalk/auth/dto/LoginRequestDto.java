@@ -1,4 +1,4 @@
-package com.demo.damulTalk.user.dto;
+package com.demo.damulTalk.auth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SignupRequest {
+public class LoginRequestDto {
 
     private String username;
     private String password;
-    private String nickname;
 
 }
