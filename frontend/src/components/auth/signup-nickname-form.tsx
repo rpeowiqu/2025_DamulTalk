@@ -12,7 +12,7 @@ import Button from "@/components/common/button";
 import Input from "@/components/common/input";
 import type { SignupInfo } from "@/types/auth/type";
 import { cn } from "@/utils/style";
-import useNicknameCheck from "@/hooks/auth/useNicknameCheck";
+import useNicknameCheck from "@/hooks/auth/use-nickname-check";
 
 interface SignupNicknameFormProps {
   signupInfo: SignupInfo;

@@ -8,7 +8,7 @@ import {
 import type { SignupInfo } from "@/types/auth/type";
 import Button from "@/components/common/button";
 import Input from "@/components/common/input";
-import usePasswordCheck from "@/hooks/auth/usePasswordCheck";
+import usePasswordCheck from "@/hooks/auth/use-password-check";
 import { cn } from "@/utils/style";
 
 interface SignupPasswordFormProps {
