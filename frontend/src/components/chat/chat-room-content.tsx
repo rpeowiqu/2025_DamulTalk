@@ -1,12 +1,23 @@
-import ChatMessage from "@/components/chat/chat-message";
+import { useState } from "react";
+
+import { useScrollMove } from "@/hooks/chat/useScrollMove";
+import type { ChatMessageInfo } from "@/types/chat/type";
+import ChatMessageList from "@/components/chat/chat-message-list";
+import ChatInput from "@/components/chat/chat-input";
 import ChatDummyData from "@/mocks/chat-messages.json";
 
 const ChatRoomContent = () => {
+  const [chatMessages, setChatMessages] =
+    useState<ChatMessageInfo[]>(ChatDummyData);
+  const { bottomRef, triggerScroll } = useScrollMove();
+
   return (
-    <div className="flex flex-col gap-6 p-6">
-      {ChatDummyData.map((item) => (
-        <ChatMessage key={item.messageId} messageInfo={item} />
-      ))}
+    <div className="p-6 pb-0">
+      <ChatMessageList chatMessages={chatMessages} bottomRef={bottomRef} />
+      <ChatInput
+        setChatMessages={setChatMessages}
+        triggerScroll={triggerScroll}
+      />
     </div>
   );
 };
