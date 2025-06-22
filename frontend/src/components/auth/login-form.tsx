@@ -6,7 +6,7 @@ import Input from "@/components/common/input";
 import useLogin from "@/hooks/auth/use-login";
 
 const LoginForm = () => {
-  const { login } = useLogin();
+  const { mutate: login } = useLogin();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

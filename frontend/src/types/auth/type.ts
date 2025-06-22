@@ -39,5 +39,4 @@ export interface ValueCheckRequest {
 // Response ==========================================================================================================================
 export interface LoginResponse {
   userId: number;
-  nickname: string;
 }
