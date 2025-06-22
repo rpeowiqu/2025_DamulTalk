@@ -1,11 +1,6 @@
 package com.demo.damulTalk.config;
 
-import com.demo.damulTalk.auth.service.JwtService;
 import com.demo.damulTalk.filter.JwtVerificationFilter;
-import com.demo.damulTalk.handler.CustomLogoutHandler;
-import com.demo.damulTalk.handler.LoginFailureHandler;
-import com.demo.damulTalk.handler.LoginSuccessHandler;
-import com.demo.damulTalk.user.service.CustomUserDetailsService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,17 +28,13 @@ import java.util.List;
 @Slf4j
 public class SecurityConfig {
 
-    private final CustomUserDetailsService userDetailsService;
     private final JwtVerificationFilter jwtVerificationFilter;
-    private final LoginSuccessHandler loginSuccessHandler;
-    private final LoginFailureHandler loginFailureHandler;
-    private final CustomLogoutHandler logoutHandler;
 
     @Value("${frontend.url}")
     private String frontendUrl;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, CustomLogoutHandler customLogoutHandler) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         log.info("[SecurityConfig] 보안 필터 체인 구성 시작");
 
         http
