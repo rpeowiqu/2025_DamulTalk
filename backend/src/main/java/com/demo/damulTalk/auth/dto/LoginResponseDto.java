@@ -13,5 +13,6 @@ public class LoginResponseDto {
 
     private int userId;
     private String nickname;
+    private String profileImageUrl;
 
 }

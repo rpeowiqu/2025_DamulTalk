@@ -72,7 +72,7 @@ public class AuthServiceImpl implements AuthService {
 
         cookieUtil.addCookie(response, "refreshToken", refreshToken, (int) (jwtService.getRefreshTokenExpire() / 1000));
         response.setHeader("Authorization", "Bearer " + accessToken);
-        return new LoginResponseDto(user.getUserId(), user.getNickname());
+        return new LoginResponseDto(user.getUserId(), user.getNickname(), user.getProfileImageUrl());
     }
 
     public void logout(HttpServletRequest request, HttpServletResponse response) {
