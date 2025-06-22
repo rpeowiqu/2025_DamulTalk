@@ -7,8 +7,9 @@ import ChatInput from "@/components/chat/chat-input";
 import ChatDummyData from "@/mocks/chat-messages.json";
 
 const ChatRoomContent = () => {
-  const [chatMessages, setChatMessages] =
-    useState<ChatMessageInfo[]>(ChatDummyData);
+  const [chatMessages, setChatMessages] = useState<ChatMessageInfo[]>(
+    ChatDummyData as ChatMessageInfo[],
+  );
   const { bottomRef, triggerScroll } = useScrollMove();
 
   return (

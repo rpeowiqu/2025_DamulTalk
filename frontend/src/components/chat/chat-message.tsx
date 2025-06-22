@@ -8,7 +8,11 @@ interface ChatMessageProps {
 const ChatMessage = ({ messageInfo }: ChatMessageProps) => {
   return (
     <>
-      {messageInfo.senderId === 1 ? (
+      {messageInfo.nickname === "SYSTEM" ? (
+        <div className="border-b border-neutral-300 py-2 text-center text-neutral-500">
+          {messageInfo.content}
+        </div>
+      ) : messageInfo.senderId === 1 ? (
         <div className="flex max-w-100 items-end gap-1 self-end break-all whitespace-pre-wrap">
           <p className="shrink-0 text-[0.675rem] text-neutral-500">
             {messageInfo.sentTime}

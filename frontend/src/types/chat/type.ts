@@ -23,12 +23,14 @@ export interface ChatRoomMember {
   lastReadAt: string;
 }
 
+export type MessageType = "TEXT" | "IMAGE" | "VIDEO";
+
 export interface ChatMessageInfo {
   messageId: number;
   senderId: number;
   profileImageUrl: string;
   nickname: string;
-  messageType: string;
+  messageType: MessageType;
   content: string;
   fileUrl?: string;
   sentTime: string;

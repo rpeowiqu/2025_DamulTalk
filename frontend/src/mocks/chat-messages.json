@@ -21,6 +21,16 @@
   },
   {
     "messageId": 3,
+    "senderId": 0,
+    "profileImageUrl": "",
+    "nickname": "SYSTEM",
+    "messageType": "TEXT",
+    "content": "2025-06-22 (일)",
+    "sentTime": "오후 02:28",
+    "unReadCount": 1
+  },
+  {
+    "messageId": 4,
     "senderId": 2,
     "profileImageUrl": "",
     "nickname": "바나나러버한재서",
@@ -30,7 +40,7 @@
     "unReadCount": 1
   },
   {
-    "messageId": 4,
+    "messageId": 5,
     "senderId": 1,
     "profileImageUrl": "",
     "nickname": "토마토러버전종우",
@@ -40,7 +50,7 @@
     "unReadCount": 1
   },
   {
-    "messageId": 5,
+    "messageId": 6,
     "senderId": 1,
     "profileImageUrl": "",
     "nickname": "토마토러버전종우",
@@ -50,7 +60,7 @@
     "unReadCount": 1
   },
   {
-    "messageId": 6,
+    "messageId": 7,
     "senderId": 1,
     "profileImageUrl": "",
     "nickname": "토마토러버전종우",
@@ -60,7 +70,7 @@
     "unReadCount": 1
   },
   {
-    "messageId": 7,
+    "messageId": 8,
     "senderId": 2,
     "profileImageUrl": "",
     "nickname": "바나나러버한재서",
@@ -70,7 +80,7 @@
     "unReadCount": 1
   },
   {
-    "messageId": 8,
+    "messageId": 9,
     "senderId": 2,
     "profileImageUrl": "",
     "nickname": "바나나러버한재서",
@@ -80,13 +90,33 @@
     "unReadCount": 1
   },
   {
-    "messageId": 9,
+    "messageId": 10,
     "senderId": 1,
     "profileImageUrl": "",
     "nickname": "토마토러버전종우",
     "messageType": "TEXT",
     "content": "이렇게 긴 텍스트는 어떻게 처리할껀데 이렇게 긴 텍스트는 어떻게 처리할껀데 이렇게 긴 텍스트는 어떻게 처리할껀데\n이렇게 긴 텍스트는 어떻게 처리할껀데 이렇게 긴 텍스트는 어떻게 처리할껀데 이렇게 긴 텍스트는 어떻게 처리할껀데\n이렇게 긴 텍스트는 어떻게 처리할껀데 이렇게 긴 텍스트는 어떻게 처리할껀데 이렇게 긴 텍스트는 어떻게 처리할껀데\n",
     "sentTime": "오후 02:32",
+    "unReadCount": 1
+  },
+  {
+    "messageId": 11,
+    "senderId": 0,
+    "profileImageUrl": "",
+    "nickname": "SYSTEM",
+    "messageType": "TEXT",
+    "content": "2분안에이븐하게 님이 채팅방을 나가셨습니다.",
+    "sentTime": "오후 02:33",
+    "unReadCount": 1
+  },
+  {
+    "messageId": 12,
+    "senderId": 1,
+    "profileImageUrl": "",
+    "nickname": "토마토러버전종우",
+    "messageType": "TEXT",
+    "content": "?",
+    "sentTime": "오후 02:35",
     "unReadCount": 1
   }
 ]
