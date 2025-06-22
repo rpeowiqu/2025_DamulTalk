@@ -3,11 +3,25 @@ spring:
         name: "backend"
 
     datasource:
-        url: "jdbc:mysql://${RDS_ENDPOINT}:3306/${DATABASE_NAME}?useSSL=false&serverTimezone=Asia/Seoul"
-        username: "${RDS_USERNAME}"
-        password: "${RDS_PASSWORD}"
+        url: "jdbc:mysql://${DB_ENDPOINT}:3306/${DB_NAME}?useSSL=false&serverTimezone=Asia/Seoul"
+        username: "${DB_USERNAME}"
+        password: "${DB_PASSWORD}"
         driver-class-name: "com.mysql.cj.jdbc.Driver"
+
+    data:
+        redis:
+            host: "${REDIS_HOST}"
+            port: "${REDIS_PORT}"
 
 mybatis:
     type-aliases-package: com.demo.damulTalk.**.domain
     mapper-locations: classpath:mapper/**/*.xml
+
+jwt:
+    secret: "${JWT_SECRET}"
+    access-token-expiration: "${ACCESS_TOKEN_EXPIRATION}"
+    refresh-token-expiration: "${REFRESH_TOKEN_EXPIRATION}"
+    temporary-token-expiration: "${TEMPORARY_TOKEN_EXPIRATION}"
+
+frontend:
+    url: "${FRONTEND_URL}"
