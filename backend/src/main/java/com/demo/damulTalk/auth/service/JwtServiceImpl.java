@@ -154,7 +154,7 @@ public class JwtServiceImpl implements JwtService {
         return Jwts
                 .builder()
                 .subject(user.getUsername())
-                .claim("userId", user.getMemberId()) // 토큰에 id 저장
+                .claim("userId", user.getUserId()) // 토큰에 id 저장
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expireTime))
                 .signWith(getSigninKey())
@@ -232,7 +232,7 @@ public class JwtServiceImpl implements JwtService {
     public User getUserInfoFromToken(String token) {
         Claims claims = extractAllClaims(token);
         return User.builder()
-                .memberId(claims.get("memberId", Integer.class))
+                .userId(claims.get("memberId", Integer.class))
                 .username(claims.get("username", String.class))
                 .build();
     }

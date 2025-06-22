@@ -1,6 +1,7 @@
 package com.demo.damulTalk.auth.controller;
 
 import com.demo.damulTalk.auth.dto.LoginRequestDto;
+import com.demo.damulTalk.auth.dto.LoginResponseDto;
 import com.demo.damulTalk.auth.dto.ValidValue;
 import com.demo.damulTalk.auth.service.AuthService;
 import com.demo.damulTalk.user.dto.SignupRequest;
@@ -33,8 +34,8 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequest, HttpServletResponse response) {
         log.info("[AuthController] 로그인 요청 - username: {}", loginRequest.getUsername());
 
-        authService.login(loginRequest, response);
-        return ResponseEntity.ok().build();
+        LoginResponseDto responseDto = authService.login(loginRequest, response);
+        return ResponseEntity.ok().body(responseDto);
     }
 
     @PostMapping("/logout")
