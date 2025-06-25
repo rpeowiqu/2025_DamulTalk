@@ -36,3 +36,14 @@ export interface ChatMessageInfo {
   sentTime: string;
   unReadCount: number;
 }
+
+export interface UploadFile {
+  file: File;
+  thumbnailImageUrl: string;
+}
+
+export interface OptChatMessageInfo {
+  id: number;
+  objectUrl?: string;
+  createdAt: string;
+}
