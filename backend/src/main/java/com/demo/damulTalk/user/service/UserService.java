@@ -1,10 +1,11 @@
 package com.demo.damulTalk.user.service;
 
-import com.demo.damulTalk.common.scroll.ScrollResponse;
 import com.demo.damulTalk.user.dto.UserStatusDto;
+
+import java.util.List;
 
 public interface UserService {
 
-    ScrollResponse<UserStatusDto, String> getFriendList(String cursor, int size);
+    List<UserStatusDto> getFriendList();
 
 }
