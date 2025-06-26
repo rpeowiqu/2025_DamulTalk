@@ -1,8 +1,8 @@
 import type { ChatRoomInfo } from "@/types/chat/type";
 import ChatPortrait from "@/components/chat/chat-portrait";
-import UserIcon from "@/components/icon/user-icon";
-import ChatRoomExitButton from "@/components/chat/chat-room-exit-button";
+import ChatRoomHeadCountButton from "@/components/chat/chat-room-head-count-button";
 import ChatRoomSearchButton from "@/components/chat/chat-room-search-button";
+import ChatRoomExitButton from "@/components/chat/chat-room-exit-button";
 
 interface ChatRoomHeaderProps {
   room: ChatRoomInfo;
@@ -15,10 +15,7 @@ const ChatRoomHeader = ({ room }: ChatRoomHeaderProps) => {
         <ChatPortrait profileImages={room.profileImages} />
         <div className="flex flex-col break-all">
           <h1 className="line-clamp-1 text-lg font-bold">{room.roomName}</h1>
-          <div className="flex items-center gap-1 text-neutral-500">
-            <UserIcon className="size-4" />
-            <p>{room.roomSize}</p>
-          </div>
+          <ChatRoomHeadCountButton room={room} />
         </div>
       </div>
 

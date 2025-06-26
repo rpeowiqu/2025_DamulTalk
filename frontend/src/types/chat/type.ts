@@ -19,7 +19,10 @@ export interface ChatRoomInfo {
 }
 
 export interface ChatRoomMember {
-  userInfo: UserInfo;
+  // userInfo: UserInfo;
+  userId: number;
+  nickname: string;
+  profileImageUrl: string | null;
   lastReadAt: string;
 }
 
