@@ -1,5 +1,7 @@
 package com.demo.damulTalk.config;
 
+import com.demo.damulTalk.user.dto.ConnectionDto;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,13 +22,17 @@ public class UserStatusSubscriber implements MessageListener {
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        String payload = new String(message.getBody(), StandardCharsets.UTF_8);
-        ConnectionDto connection = objectMapper.readValue(payload, ConnectionDto.class);
+        try {
+            String payload = new String(message.getBody(), StandardCharsets.UTF_8);
+            ConnectionDto connection = objectMapper.readValue(payload, ConnectionDto.class);
 
-        String topic = "/sub/friends" + connection.getUserId();
-        messagingTemplate.convertAndSend(topic, connection);
+            String topic = "/sub/friends" + connection.getUserId();
+            messagingTemplate.convertAndSend(topic, connection);
 
-        log.info("Redis -> WebSocket: [{}] {}", topic, connection.getOnline);
+            log.info("Redis -> WebSocket: [{}] {}", topic, connection.isOnline());
+        } catch(JsonProcessingException e) {
+            log.error("[UserStatusSubscriber] JSON 역직렬화 실패: {}", e.getMessage());
+        }
     }
 
 }
