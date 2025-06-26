@@ -1,7 +1,7 @@
 import {
+  useContext,
   useEffect,
   useRef,
-  useState,
   type Dispatch,
   type KeyboardEvent,
   type SetStateAction,
@@ -13,7 +13,10 @@ import Button from "@/components/common/button";
 import FileUploadButton from "@/components/common/file-upload-button";
 import ChatUploadFileItem from "@/components/chat/chat-upload-file-item";
 import MultiMediaIcon from "@/components/icon/multi-media-icon";
-import type { UploadFile } from "@//types/chat/type";
+import {
+  FileUploadDispatchContext,
+  FileUploadStateContext,
+} from "@/contexts/chat/file-upload-provider";
 
 interface ChatInputProps {
   setChatMessages: Dispatch<SetStateAction<ChatMessageInfo[]>>;
@@ -23,19 +26,13 @@ interface ChatInputProps {
 const ChatInput = ({ setChatMessages, triggerScroll }: ChatInputProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const nextMessageId = useRef(13); // 임시 messageId 용도
-  const [uploadFile, setUploadFile] = useState<UploadFile | null>(null);
+  const uploadFile = useContext(FileUploadStateContext);
+  const setUploadFile = useContext(FileUploadDispatchContext);
 
   useEffect(() => {
     if (uploadFile) {
       textareaRef.current?.focus();
     }
-
-    return () => {
-      // createObjectURL()은 브라우저가 해당 파일을 메모리에 저장한 채 URL로 보여주는 거라서, 파일이 필요 없어졌을 땐 해제 필요
-      if (uploadFile?.thumbnailImageUrl) {
-        URL.revokeObjectURL(uploadFile.thumbnailImageUrl);
-      }
-    };
   }, [uploadFile]);
 
   const sendMessage = () => {
@@ -57,7 +54,7 @@ const ChatInput = ({ setChatMessages, triggerScroll }: ChatInputProps) => {
           nickname: "토마토러버전종우",
           messageType,
           content,
-          fileUrl: uploadFile?.thumbnailImageUrl ?? undefined,
+          fileUrl: uploadFile?.objectUrl ?? undefined,
           sentTime,
           unReadCount: 1,
         },
@@ -68,7 +65,7 @@ const ChatInput = ({ setChatMessages, triggerScroll }: ChatInputProps) => {
       }
 
       triggerScroll();
-      setUploadFile(null);
+      setUploadFile!(null);
     }
   };
 
@@ -80,11 +77,11 @@ const ChatInput = ({ setChatMessages, triggerScroll }: ChatInputProps) => {
   };
 
   const handleFileDelete = () => {
-    if (uploadFile?.thumbnailImageUrl) {
-      URL.revokeObjectURL(uploadFile.thumbnailImageUrl);
+    if (uploadFile?.objectUrl) {
+      URL.revokeObjectURL(uploadFile.objectUrl);
     }
 
-    setUploadFile(null);
+    setUploadFile!(null);
   };
 
   return (
@@ -113,7 +110,7 @@ const ChatInput = ({ setChatMessages, triggerScroll }: ChatInputProps) => {
         <div className="flex items-end justify-between">
           <FileUploadButton
             uploadFile={uploadFile}
-            setUploadFile={setUploadFile}>
+            setUploadFile={setUploadFile!}>
             <MultiMediaIcon className="size-5" />
           </FileUploadButton>
           <Button className="py-2 text-base" onClick={sendMessage}>

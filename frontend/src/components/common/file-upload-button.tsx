@@ -42,10 +42,14 @@ const FileUploadButton = ({
         return;
       }
 
+      if (uploadFile && uploadFile.objectUrl) {
+        URL.revokeObjectURL(uploadFile.objectUrl);
+      }
+
       const objectUrl = URL.createObjectURL(file);
       setUploadFile({
-        file: file,
-        thumbnailImageUrl: objectUrl,
+        file,
+        objectUrl,
       });
     }
   };

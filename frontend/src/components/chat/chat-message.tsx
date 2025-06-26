@@ -4,17 +4,18 @@ import OutgoingChatMessage from "@/components/chat/outgoing-chat-message";
 import IncomingChatMessage from "@/components/chat/incoming-chat-message";
 
 export interface ChatMessageProps {
-  messageInfo: ChatMessageInfo;
+  message: ChatMessageInfo;
+  onClick?: (_message: ChatMessageInfo) => void;
 }
 
-const ChatMessage = ({ messageInfo }: ChatMessageProps) => {
+const ChatMessage = ({ message, onClick }: ChatMessageProps) => {
   const renderMessage = () => {
-    if (messageInfo.nickname === "SYSTEM") {
-      return <SystemChatMessage messageInfo={messageInfo} />;
-    } else if (messageInfo.senderId === 1) {
-      return <OutgoingChatMessage messageInfo={messageInfo} />;
+    if (message.nickname === "SYSTEM") {
+      return <SystemChatMessage message={message} />;
+    } else if (message.senderId === 1) {
+      return <OutgoingChatMessage message={message} onClick={onClick} />;
     } else {
-      return <IncomingChatMessage messageInfo={messageInfo} />;
+      return <IncomingChatMessage message={message} onClick={onClick} />;
     }
   };
 

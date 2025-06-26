@@ -1,27 +1,37 @@
+import { PlayCircleIcon } from "lucide-react";
+
 import type { ChatMessageProps } from "@/components/chat/chat-message";
 
-const OutgoingChatMessage = ({ messageInfo }: ChatMessageProps) => {
+const OutgoingChatMessage = ({ message, onClick }: ChatMessageProps) => {
   const renderContent = () => {
-    switch (messageInfo.messageType) {
+    switch (message.messageType) {
       case "TEXT":
-        return messageInfo.content;
+        return message.content;
       case "IMAGE":
-        return messageInfo.fileUrl ? (
+        return message.fileUrl ? (
           <img
-            src={messageInfo.fileUrl}
+            src={message.fileUrl}
             alt="첨부 이미지"
-            className="size-24 object-cover"
+            className="size-24 cursor-pointer object-cover"
+            onClick={() => onClick?.(message)}
           />
         ) : null;
       case "VIDEO":
-        return messageInfo.fileUrl ? <video src={messageInfo.fileUrl} /> : null;
+        return message.fileUrl ? (
+          <div
+            className="relative cursor-pointer"
+            onClick={() => onClick?.(message)}>
+            <video src={message.fileUrl} className="size-24 object-cover" />
+            <PlayCircleIcon className="fill-damul-main-300 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 stroke-white" />
+          </div>
+        ) : null;
     }
   };
 
   return (
     <div className="flex max-w-100 items-end gap-1 self-end break-all whitespace-pre-wrap">
       <p className="shrink-0 text-[0.675rem] text-neutral-500">
-        {messageInfo.sentTime}
+        {message.sentTime}
       </p>
 
       <div className="bg-damul-main-50 flex flex-col gap-2 rounded-xl p-3">

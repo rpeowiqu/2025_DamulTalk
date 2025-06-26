@@ -8,17 +8,19 @@ interface ChatMessageListProps {
   chatMessages: ChatMessageInfo[];
   bottomRef: Ref<HTMLDivElement>;
   className?: string;
+  onSelect?: (_message: ChatMessageInfo) => void;
 }
 
 const ChatMessageList = ({
   chatMessages,
   bottomRef,
   className,
+  onSelect,
 }: ChatMessageListProps) => {
   return (
     <div className={cn("flex flex-col gap-6", className)}>
       {chatMessages.map((item) => (
-        <ChatMessage key={item.messageId} messageInfo={item} />
+        <ChatMessage key={item.messageId} message={item} onClick={onSelect} />
       ))}
       <div ref={bottomRef} />
     </div>

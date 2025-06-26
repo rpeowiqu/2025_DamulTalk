@@ -39,7 +39,7 @@ export interface ChatMessageInfo {
 
 export interface UploadFile {
   file: File;
-  thumbnailImageUrl: string;
+  objectUrl?: string;
 }
 
 export interface OptChatMessageInfo {

@@ -15,7 +15,7 @@ const ChatUploadFileItem = ({
   return (
     <div className="relative flex h-16 w-64 items-center gap-2 rounded-xl border border-neutral-200 bg-white p-3">
       <img
-        src={uploadFile.thumbnailImageUrl}
+        src={uploadFile.objectUrl}
         alt="업로드 파일 이미지"
         className="size-12 object-cover"
       />
