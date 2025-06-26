@@ -1,6 +1,3 @@
-import { useRef } from "react";
-import { PlayCircleIcon } from "lucide-react";
-
 import Dialog, { type DialogProps } from "@/components/common/dialog";
 import type { ChatMessageInfo } from "@/types/chat/type";
 
