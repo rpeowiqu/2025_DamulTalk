@@ -1,0 +1,86 @@
+import {
+  type Dispatch,
+  type ButtonHTMLAttributes,
+  type SetStateAction,
+  type ChangeEvent,
+  type InputHTMLAttributes,
+  useRef,
+  type MouseEvent,
+  useEffect,
+} from "react";
+import { toast } from "sonner";
+
+import type { UploadFile } from "@/types/chat/type";
+import { cn } from "@/utils/style";
+
+interface FileUploadButtonProps
+  extends ButtonHTMLAttributes<HTMLButtonElement> {
+  uploadFile: UploadFile | null;
+  setUploadFile: Dispatch<SetStateAction<UploadFile | null>>;
+  inputAttributes?: InputHTMLAttributes<HTMLInputElement>;
+}
+
+const FileUploadButton = ({
+  uploadFile,
+  setUploadFile,
+  inputAttributes,
+  className,
+  children,
+}: FileUploadButtonProps) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!uploadFile && inputRef.current) {
+      inputRef.current.value = "";
+    }
+  }, [uploadFile]);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const [file] = e.target.files;
+      if (!file.type.startsWith("image/") && !file.type.startsWith("video/")) {
+        toast.error("이미지와 동영상 파일만 업로드할 수 있어요");
+        return;
+      }
+
+      if (uploadFile && uploadFile.objectUrl) {
+        URL.revokeObjectURL(uploadFile.objectUrl);
+      }
+
+      const objectUrl = URL.createObjectURL(file);
+      setUploadFile({
+        file,
+        objectUrl,
+      });
+    }
+  };
+
+  const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    inputRef.current?.click();
+  };
+
+  return (
+    <div>
+      <input
+        ref={inputRef}
+        type="file"
+        onChange={handleChange}
+        accept="image/*,video/*"
+        hidden
+        readOnly
+        {...inputAttributes}
+      />
+      <button
+        className={cn(
+          "cursor-pointer rounded-lg p-2 text-neutral-500 hover:bg-neutral-100 hover:text-neutral-600",
+          className,
+        )}
+        onClick={handleClick}>
+        {children}
+      </button>
+    </div>
+  );
+};
+
+export default FileUploadButton;

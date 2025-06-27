@@ -1,6 +1,7 @@
 import { useState, type Dispatch, type SetStateAction } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 import { ChatCreateStep, type ChatCreateInfo } from "@/types/chat/type";
 import ChatCreateUserForm from "@/components/chat/chat-create-user-form";
@@ -36,7 +37,10 @@ const ChatCreateForm = ({
             chatCreateInfo={chatCreateInfo}
             setChatCreateInfo={setChatCreateInfo}
             onPrev={() => setStep((prev) => prev - 1)}
-            onNext={() => navigate(`/chat/${1}`)}
+            onNext={() => {
+              toast.success("채팅방을 만들었어요");
+              navigate(`/chat/${1}`);
+            }}
           />
         );
     }

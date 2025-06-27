@@ -15,7 +15,8 @@ const rooms = [
     roomName: "박새로이, 조이서, 장근원",
     roomSize: 4,
     profileImages: ["", "", ""],
-    lastMessage: "시간은 누구에게나 공평하게 흐른다. 하지만 그와",
+    lastMessage:
+      "시간은 누구에게나 공평하게 흐른다. 하지만 그와 나의 시간은 그 농도가 너무나도 달랐다.",
     unreadMessageNum: 0,
     selected: false,
   },

@@ -41,7 +41,7 @@ const ChatCreateTitleForm = ({
       </div>
 
       <div className="flex gap-3">
-        <Button type="button" onClick={onPrev}>
+        <Button type="button" className="w-full" onClick={onPrev}>
           이전
         </Button>
         <Button className="w-full" disabled={chatCreateInfo.title.length === 0}>

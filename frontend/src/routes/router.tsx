@@ -2,10 +2,11 @@ import { createBrowserRouter } from "react-router-dom";
 
 import MainLayout from "@/components/layout/main-layout";
 import ProfilePage from "@/pages/profile-page";
+import SignupForm from "@/components/auth/signup-form";
+import ChatPage from "@/pages/chat-page";
 import BlankLayout from "@/components/layout/blank-layout";
 import LoginPage from "@/pages/login-page";
 import LoginForm from "@/components/auth/login-form";
-import SignupForm from "@/components/auth/signup-form";
 
 const router = createBrowserRouter([
   {
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
       {
         path: "/profile/:userId",
         element: <ProfilePage />,
+      },
+      {
+        path: "/chat/:roomId",
+        element: <ChatPage />,
       },
     ],
   },
