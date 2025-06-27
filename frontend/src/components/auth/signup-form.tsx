@@ -8,6 +8,7 @@ import SignupEmailForm from "@/components/auth/signup-email-form";
 import SignupPasswordForm from "@/components/auth/signup-password-form";
 import SignupNicknameForm from "@/components/auth/signup-nickname-form";
 import SignupCompletionForm from "@/components/auth/signup-completion-form";
+import useSignup from "@/hooks/auth/use-signup";
 
 const SignupForm = () => {
   const [signupInfo, setSignupInfo] = useState<SignupInfo>({
@@ -18,6 +19,9 @@ const SignupForm = () => {
   });
   const [step, setStep] = useState<SignupStep>(SignupStep.EMAIL);
   const navigate = useNavigate();
+  const { mutate: signup } = useSignup({
+    onSuccess: () => setStep((prev) => prev + 1),
+  });
 
   const renderForm = () => {
     switch (step) {
@@ -45,7 +49,13 @@ const SignupForm = () => {
             signupInfo={signupInfo}
             setSignupInfo={setSignupInfo}
             onPrev={() => setStep((prev) => prev - 1)}
-            onNext={() => setStep((prev) => prev + 1)}
+            onNext={() =>
+              signup({
+                username: signupInfo.email,
+                password: signupInfo.password,
+                nickname: signupInfo.nickname,
+              })
+            }
           />
         );
       case SignupStep.COMPLETION:

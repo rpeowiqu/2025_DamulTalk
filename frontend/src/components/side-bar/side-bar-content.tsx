@@ -1,8 +1,10 @@
+import { useNavigate } from "react-router-dom";
+
 import UserItem from "@/components/user/user-item";
 import SettingButton from "@/components/user/setting-button";
 import SideBarFriendContent from "@/components/side-bar/side-bar-friend-content";
 import SideBarChatContent from "@/components/side-bar/side-bar-chat-content";
-import LogoutButton from "@/components/user/logout-button";
+import LogoutButton from "@/components/auth/logout-button";
 import type { SideBarTabType } from "@/types/side-bar/type";
 
 interface SideBarContentProps {
@@ -10,6 +12,8 @@ interface SideBarContentProps {
 }
 
 const SideBarContent = ({ currentTab }: SideBarContentProps) => {
+  const navigate = useNavigate();
+
   const renderContent = () => {
     switch (currentTab) {
       case "FRIEND":
@@ -31,12 +35,13 @@ const SideBarContent = ({ currentTab }: SideBarContentProps) => {
       <div className="flex items-center justify-between border-b border-neutral-300 pb-1">
         <UserItem
           userInfo={{
-            userId: 1,
-            nickname: "다믈랭 님",
-            profileImageUrl: "",
+            userId: 0,
+            nickname: "다믈랭",
+            profileImageUrl: null,
             online: true,
           }}
-          className="hover:bg-white">
+          className="hover:bg-white"
+          onClick={() => navigate(`/profile/${1}`)}>
           <LogoutButton />
         </UserItem>
       </div>

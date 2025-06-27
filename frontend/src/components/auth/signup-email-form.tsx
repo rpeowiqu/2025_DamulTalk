@@ -1,5 +1,5 @@
 import {
-  useCallback,
+  useMemo,
   useState,
   type ChangeEvent,
   type Dispatch,
@@ -11,7 +11,7 @@ import { debounce } from "lodash-es";
 import Button from "@/components/common/button";
 import Input from "@/components/common/input";
 import type { SignupInfo } from "@/types/auth/type";
-import useEmailCheck from "@/hooks/auth/useEmailCheck";
+import useEmailCheck from "@/hooks/auth/use-email-check";
 import { cn } from "@/utils/style";
 
 interface SignupEmailFormProps {
@@ -35,15 +35,16 @@ const SignupEmailForm = ({
     onNext();
   };
 
-  const updateSignupEmail = useCallback(
-    debounce(
-      (email: string) =>
-        setSignupInfo((prev) => ({
-          ...prev,
-          email,
-        })),
-      400,
-    ),
+  const updateSignupEmail = useMemo(
+    () =>
+      debounce(
+        (email: string) =>
+          setSignupInfo((prev) => ({
+            ...prev,
+            email,
+          })),
+        400,
+      ),
     [],
   );
 

@@ -1,9 +1,13 @@
 import type { MouseEvent } from "react";
 
+import useLogout from "@/hooks/auth/use-logout";
+
 const LogoutButton = () => {
+  const { mutate: logout } = useLogout();
+
   const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    console.log("로그아웃 되었습니다.");
+    logout();
   };
 
   return (

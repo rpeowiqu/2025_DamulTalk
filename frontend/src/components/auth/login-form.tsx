@@ -1,11 +1,28 @@
 import { Link } from "react-router-dom";
+import type { FormEvent } from "react";
 
 import Button from "@/components/common/button";
 import Input from "@/components/common/input";
+import useLogin from "@/hooks/auth/use-login";
 
 const LoginForm = () => {
+  const { mutate: login } = useLogin();
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+    if (email && password) {
+      login({ username: email, password });
+    }
+  };
+
   return (
-    <form className="flex h-full flex-col justify-between bg-white">
+    <form
+      onSubmit={handleSubmit}
+      className="flex h-full flex-col justify-between bg-white">
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-2">
           <label htmlFor="email" className="text-lg font-bold">
@@ -13,10 +30,12 @@ const LoginForm = () => {
           </label>
           <Input
             id="email"
+            name="email"
             type="email"
             placeholder="이메일을 입력해 주세요"
             autoFocus
             required
+            maxLength={64}
           />
         </div>
 
@@ -26,9 +45,11 @@ const LoginForm = () => {
           </label>
           <Input
             id="password"
+            name="password"
             type="password"
             placeholder="비밀번호를 입력해 주세요"
             required
+            maxLength={32}
           />
 
           <Link to="/" className="text-damul-main-300 w-fit font-bold">
