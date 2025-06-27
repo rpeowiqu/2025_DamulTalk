@@ -1,13 +1,14 @@
 package com.demo.damulTalk.friend.service;
 
+import com.demo.damulTalk.common.scroll.ScrollResponse;
 import com.demo.damulTalk.friend.dto.FriendDto;
 
 import java.util.List;
 
 public interface FriendService {
 
-    void sendFollowRequest(int targetId);
+    void sendFollowRequest(Integer targetId);
 
-    List<FriendDto> getSearchResults(String nickname, int cursor, int size);
+    ScrollResponse<List<FriendDto>, String> getSearchResult(String nickname, String cursor, int size);
 
 }

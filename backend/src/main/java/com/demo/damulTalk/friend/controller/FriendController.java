@@ -1,6 +1,8 @@
 package com.demo.damulTalk.friend.controller;
 
 import com.demo.damulTalk.common.CommonIdDto;
+import com.demo.damulTalk.common.scroll.CursorPageMetaDto;
+import com.demo.damulTalk.common.scroll.ScrollResponse;
 import com.demo.damulTalk.friend.dto.FriendDto;
 import com.demo.damulTalk.friend.service.FriendService;
 import lombok.RequiredArgsConstructor;
@@ -29,13 +31,13 @@ public class FriendController {
     @GetMapping("/search")
     public ResponseEntity<?> searchFriends(
             @RequestParam String nickname,
-            @RequestParam int cursor,
-            @RequestParam int size
+            @RequestParam String cursor,
+            @RequestParam(defaultValue = "10") int size
     ) {
         log.info("[FriendController] 친구 검색 시작 - nickname: {}", nickname);
 
-        List<FriendDto> friends = friendService.getSearchResult(nickname, cursor, size);
-        if(friends.isEmpty()) {
+        ScrollResponse<List<FriendDto>, String> friends = friendService.getSearchResult(nickname, cursor, size);
+        if(friends.getData().isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 

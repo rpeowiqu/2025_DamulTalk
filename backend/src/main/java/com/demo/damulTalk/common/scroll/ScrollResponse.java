@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 public class ScrollResponse<T, Type> {
 
-    private List<T> data;
+    private T data;
 
     private CursorPageMetaDto<Type> meta;
 

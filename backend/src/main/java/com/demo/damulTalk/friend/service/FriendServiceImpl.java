@@ -1,5 +1,7 @@
 package com.demo.damulTalk.friend.service;
 
+import com.demo.damulTalk.common.scroll.CursorPageMetaDto;
+import com.demo.damulTalk.common.scroll.ScrollResponse;
 import com.demo.damulTalk.exception.BusinessException;
 import com.demo.damulTalk.exception.ErrorCode;
 import com.demo.damulTalk.friend.dto.FriendDto;
@@ -24,7 +26,7 @@ public class FriendServiceImpl implements FriendService {
     private final RedisTemplate<String, String> redisTemplate;
 
     @Override
-    public void sendFollowRequest(int targetId) {
+    public void sendFollowRequest(Integer targetId) {
         log.info("[FriendService] 팔로우 요청 시작 - 타겟 id: {}", targetId);
 
         int userId = userUtil.getCurrentUserId();
@@ -51,13 +53,29 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Override
-    public List<FriendDto> getSearchResults(String nickname, int cursor, int size) {
-        log.info("[FriendService] 친구 검색 시작 - nickname: {}", nickname);
+    public ScrollResponse<List<FriendDto>, String> getSearchResult(String nickname, String cursor, int size) {
+        log.info("[FriendService] 친구 검색 시작 - nickname: {}, cursor: {}, size: {}", nickname, cursor, size);
 
         int userId = userUtil.getCurrentUserId();
-        List<FriendDto> friends = userMapper.selectFriendsByNickname(userId, nickname, cursor, size);
+        List<FriendDto> results = userMapper.selectFriendsByNickname(userId, nickname, cursor, size);
 
-        return friends;
+        boolean hasNext = results.size() > size;
+        String nextCursor = null;
+
+        if (hasNext) {
+            FriendDto lastItem = results.remove(size); // size + 1 번째 항목 제거 후 커서 지정
+            nextCursor = lastItem.getNickname();       // 다음 요청 시 커서로 사용
+        }
+
+        CursorPageMetaDto<String> meta = CursorPageMetaDto.<String>builder()
+                .nextCursor(nextCursor)
+                .hasNextCursor(hasNext)
+                .build();
+
+        return ScrollResponse.<List<FriendDto>, String>builder()
+                .data(results)
+                .meta(meta)
+                .build();
     }
 
 }
