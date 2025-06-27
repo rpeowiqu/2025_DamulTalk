@@ -5,6 +5,7 @@ import com.demo.damulTalk.common.scroll.ScrollResponse;
 import com.demo.damulTalk.exception.BusinessException;
 import com.demo.damulTalk.exception.ErrorCode;
 import com.demo.damulTalk.friend.dto.FriendDto;
+import com.demo.damulTalk.friend.mapper.FriendMapper;
 import com.demo.damulTalk.user.mapper.UserMapper;
 import com.demo.damulTalk.util.UserUtil;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ import java.util.List;
 public class FriendServiceImpl implements FriendService {
 
     private final UserMapper userMapper;
+    private final FriendMapper friendMapper;
     private final UserUtil userUtil;
     private final SimpMessagingTemplate messagingTemplate;
     private final RedisTemplate<String, String> redisTemplate;
@@ -57,7 +59,7 @@ public class FriendServiceImpl implements FriendService {
         log.info("[FriendService] 친구 검색 시작 - nickname: {}, cursor: {}, size: {}", nickname, cursor, size);
 
         int userId = userUtil.getCurrentUserId();
-        List<FriendDto> results = userMapper.selectFriendsByNickname(userId, nickname, cursor, size);
+        List<FriendDto> results = friendMapper.selectFriendsByNickname(userId, nickname, cursor, size);
 
         boolean hasNext = results.size() > size;
         String nextCursor = null;
@@ -76,6 +78,21 @@ public class FriendServiceImpl implements FriendService {
                 .data(results)
                 .meta(meta)
                 .build();
+    }
+
+    @Override
+    public void deleteFriend(Integer friendId) {
+        log.info("[FriendService] 친구 삭제 시작 - friendId: {}", friendId);
+
+        int userId = userUtil.getCurrentUserId();
+
+        int delete = friendMapper.deleteFriendById(userId, friendId);
+        if(delete < 1) {
+            throw new BusinessException(
+                    ErrorCode.INVALID_USER,
+                    "해당 친구는 존재하지 않습니다."
+            );
+        }
     }
 
 }

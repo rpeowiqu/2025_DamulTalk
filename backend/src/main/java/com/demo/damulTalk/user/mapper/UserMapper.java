@@ -16,12 +16,8 @@ public interface UserMapper {
 
     int insertUser(User user);
 
-    List<UserStatusDto> selectFriends(Integer userId);
-
     int insertFollowRequest(Integer userId, Integer targetId);
 
     FriendDto selectFollowInfoById(Integer userId);
-
-    List<FriendDto> selectFriendsByNickname(Integer userId, String nickname, String cursor, Integer size);
 
 }

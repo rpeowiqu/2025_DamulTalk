@@ -13,25 +13,6 @@
         SELECT * FROM users WHERE nickname = #{nickname}
     </select>
 
-    <select id="selectFriends" resultType="com.demo.damulTalk.user.dto.UserStatusDto">
-        SELECT
-            u.user_id AS userId,
-            u.nickname,
-            u.profile_image_url AS profileImageUrl
-        FROM
-            users u
-        JOIN (
-            SELECT
-                CASE
-                    WHEN first_user_id = #{userId} THEN second_user_id
-                    ELSE first_user_id
-                END AS user_id
-            FROM friends
-            WHERE status = 'ACCEPTED'
-              AND (first_user_id = #{userId} OR second_user_id = #{userId})
-        ) f ON u.user_id = f.user_id
-    </select>
-
     <select id="selectFollowInfoById" resultType="com.demo.damulTalk.friend.dto.FriendDto">
         SELECT
             user_id as userId,
@@ -41,38 +22,9 @@
         WHERE user_id = #{userId}
     </select>
 
-    <select id="selectFriendsByNickname" resultType="com.demo.damulTalk.friend.dto.FriendDto">
-        SELECT
-            u.user_id as userId,
-            u.nickname,
-            u.profile_image_url AS profileImageUrl
-        FROM users u
-        JOIN (
-            SELECT
-                CASE
-                    WHEN first_user_id = #{userId} THEN second_user_id
-                    ELSE first_user_id
-                END AS user_id
-            FROM friends
-            WHERE status = 'ACCEPTED'
-              AND (first_user_id = #{userId} OR second_user_id = #{userId})
-        ) f ON u.user_id = f.user_id
-        WHERE u.nickname LIKE CONCAT('%', #{nickname}, '%')
-        <if test="cursor != null">
-            AND u.nickname > #{cursor}
-        </if>
-        ORDER BY u.nickname ASC
-        LIMIT #{size + 1}
-    </select>
-
     <insert id="insertUser" parameterType="com.demo.damulTalk.user.domain.User">
         INSERT INTO users (username, password, nickname, joined_at)
         VALUES (#{username}, #{password}, #{nickname}, #{joinedAt})
-    </insert>
-
-    <insert id="insertFollowRequest">
-        INSERT INTO friends (first_user_id, second_user_id)
-        VALUES(#{userId}, #{targetId})
     </insert>
 
 </mapper>

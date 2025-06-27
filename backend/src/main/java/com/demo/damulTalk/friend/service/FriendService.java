@@ -11,4 +11,6 @@ public interface FriendService {
 
     ScrollResponse<List<FriendDto>, String> getSearchResult(String nickname, String cursor, int size);
 
+    void deleteFriend(Integer friendId);
+
 }

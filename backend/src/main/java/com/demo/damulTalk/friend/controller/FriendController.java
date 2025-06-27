@@ -44,4 +44,12 @@ public class FriendController {
         return ResponseEntity.ok(friends);
     }
 
+    @DeleteMapping
+    public ResponseEntity<?> deleteFriend(@RequestBody CommonIdDto common) {
+        log.info("[FriendController] 친구 삭제 시작");
+
+        friendService.deleteFriend(common.getId());
+        return ResponseEntity.ok().build();
+    }
+
 }
