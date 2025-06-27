@@ -2,8 +2,7 @@ package com.demo.damulTalk.friend.service;
 
 import com.demo.damulTalk.exception.BusinessException;
 import com.demo.damulTalk.exception.ErrorCode;
-import com.demo.damulTalk.friend.dto.FollowResponse;
-import com.demo.damulTalk.user.domain.User;
+import com.demo.damulTalk.friend.dto.FriendDto;
 import com.demo.damulTalk.user.mapper.UserMapper;
 import com.demo.damulTalk.util.UserUtil;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +34,7 @@ public class FriendServiceImpl implements FriendService {
                     "해당 유저는 존재하지 않습니다."
             );
 
-        FollowResponse response = userMapper.selectFollowInfoById(userId);
+        FriendDto response = userMapper.selectFollowInfoById(userId);
 
         String redisKey = "user:online:" + targetId;
         boolean isOnline = redisTemplate.hasKey(redisKey);

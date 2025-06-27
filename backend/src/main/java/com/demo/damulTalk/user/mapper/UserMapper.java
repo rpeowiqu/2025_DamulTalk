@@ -1,6 +1,6 @@
 package com.demo.damulTalk.user.mapper;
 
-import com.demo.damulTalk.friend.dto.FollowResponse;
+import com.demo.damulTalk.friend.dto.FriendDto;
 import com.demo.damulTalk.user.domain.User;
 import com.demo.damulTalk.user.dto.UserStatusDto;
 import org.apache.ibatis.annotations.Mapper;
@@ -20,6 +20,6 @@ public interface UserMapper {
 
     int insertFollowRequest(int userId, int targetId);
 
-    FollowResponse selectFollowInfoById(int userId);
+    FriendDto selectFollowInfoById(int userId);
 
 }

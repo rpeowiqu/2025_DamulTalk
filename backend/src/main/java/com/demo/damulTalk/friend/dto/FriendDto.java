@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class FollowResponse {
+public class FriendDto {
 
     private int userId;
 

@@ -32,7 +32,7 @@
         ) f ON u.user_id = f.user_id
     </select>
 
-    <select id="selectFollowInfoById" resultType="com.demo.damulTalk.friend.dto.FollowResponse">
+    <select id="selectFollowInfoById" resultType="com.demo.damulTalk.friend.dto.FriendDto">
         SELECT
             user_id as userId,
             nickname,
