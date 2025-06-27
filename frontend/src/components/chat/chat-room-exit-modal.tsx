@@ -1,5 +1,6 @@
 import { AlertTriangleIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 import Dialog, { type DialogProps } from "@/components/common/dialog";
 import type { ChatRoomInfo } from "@/types/chat/type";
@@ -24,6 +25,7 @@ const ChatRoomExitModal = ({
   };
 
   const handleClickExit = () => {
+    toast.success("해당 채팅방에서 빠져 나왔어요");
     navigate(`/profile/${1}`);
   };
 

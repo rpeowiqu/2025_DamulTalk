@@ -5,6 +5,7 @@ import {
   type DragEvent,
   type SetStateAction,
 } from "react";
+import { toast } from "sonner";
 
 import type { UploadFile } from "@/types/chat/type";
 
@@ -53,7 +54,7 @@ const useFileDrag = ({ uploadFile, setUploadFile }: UseFileDragOptions) => {
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       const [file] = e.dataTransfer.files;
       if (!file.type.startsWith("image/") && !file.type.startsWith("video/")) {
-        alert("파일 형식이 올바르지 않아요!");
+        toast.error("이미지와 동영상 파일만 업로드할 수 있어요");
         return;
       }
 

@@ -8,6 +8,7 @@ import {
   type MouseEvent,
   useEffect,
 } from "react";
+import { toast } from "sonner";
 
 import type { UploadFile } from "@/types/chat/type";
 import { cn } from "@/utils/style";
@@ -38,7 +39,7 @@ const FileUploadButton = ({
     if (e.target.files && e.target.files.length > 0) {
       const [file] = e.target.files;
       if (!file.type.startsWith("image/") && !file.type.startsWith("video/")) {
-        alert("파일 형식이 올바르지 않아요!");
+        toast.error("이미지와 동영상 파일만 업로드할 수 있어요");
         return;
       }
 
