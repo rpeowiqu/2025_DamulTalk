@@ -11,6 +11,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -46,6 +48,16 @@ public class FriendServiceImpl implements FriendService {
         } else {
             log.info("[FriendService] 타겟 유저 오프라인");
         }
+    }
+
+    @Override
+    public List<FriendDto> getSearchResults(String nickname, int cursor, int size) {
+        log.info("[FriendService] 친구 검색 시작 - nickname: {}", nickname);
+
+        int userId = userUtil.getCurrentUserId();
+        List<FriendDto> friends = userMapper.selectFriendsByNickname(userId, nickname, cursor, size);
+
+        return friends;
     }
 
 }
