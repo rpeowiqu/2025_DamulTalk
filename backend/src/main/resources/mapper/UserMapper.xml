@@ -32,9 +32,23 @@
         ) f ON u.user_id = f.user_id
     </select>
 
+    <select id="selectFollowInfoById" resultType="com.demo.damulTalk.friend.dto.FollowResponse">
+        SELECT
+            user_id as userId,
+            nickname,
+            profile_image_url AS profileImageUrl
+        FROM users
+        WHERE user_id = #{userId}
+    </select>
+
     <insert id="insertUser" parameterType="com.demo.damulTalk.user.domain.User">
         INSERT INTO users (username, password, nickname, joined_at)
         VALUES (#{username}, #{password}, #{nickname}, #{joinedAt})
+    </insert>
+
+    <insert id="insertFollowRequest">
+        INSERT INTO friends (first_user_id, second_user_id)
+        VALUES(#{userId}, #{targetId})
     </insert>
 
 </mapper>

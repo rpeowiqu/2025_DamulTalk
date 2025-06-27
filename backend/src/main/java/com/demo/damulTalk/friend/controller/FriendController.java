@@ -22,7 +22,7 @@ public class FriendController {
     public ResponseEntity<?> sendFollowRequest(@RequestBody CommonIdDto common) {
         log.info("[FriendController] 팔로우 요청 시작");
 
-        friendService.sendFollowRequest(common.getUserId());
+        friendService.sendFollowRequest(common.getId());
         return ResponseEntity.ok().build();
     }
 
