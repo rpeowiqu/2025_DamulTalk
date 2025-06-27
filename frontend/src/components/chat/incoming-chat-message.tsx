@@ -37,9 +37,16 @@ const IncomingChatMessage = ({ message, onClick }: ChatMessageProps) => {
       />
       <div className="flex flex-col gap-2">
         <p className="font-bold">{message.nickname}</p>
-        <div className="flex max-w-100 items-end gap-1 break-all whitespace-pre-wrap">
-          <div className="flex flex-col gap-2 rounded-xl bg-white p-3">
+        <div className="flex items-end gap-1 break-all whitespace-pre-wrap">
+          <div className="flex max-w-96 flex-col gap-2 rounded-xl bg-white p-3">
             {renderContent()}
+          </div>
+
+          <div className="flex shrink-0 flex-col text-[0.675rem]">
+            <p className="text-damul-main-500">
+              {message.unReadCount > 99 ? "99+" : message.unReadCount}
+            </p>
+            <p className="text-neutral-500">{message.sentTime}</p>
           </div>
         </div>
       </div>

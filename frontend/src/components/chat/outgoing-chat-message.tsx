@@ -29,12 +29,16 @@ const OutgoingChatMessage = ({ message, onClick }: ChatMessageProps) => {
   };
 
   return (
-    <div className="flex max-w-100 items-end gap-1 self-end break-all whitespace-pre-wrap">
-      <p className="shrink-0 text-[0.675rem] text-neutral-500">
-        {message.sentTime}
-      </p>
+    <div className="flex items-end gap-2 self-end break-all whitespace-pre-wrap">
+      <div className="flex shrink-0 flex-col text-[0.675rem]">
+        <p className="text-damul-main-500 text-end">
+          {" "}
+          {message.unReadCount > 99 ? "99+" : message.unReadCount}
+        </p>
+        <p className="text-neutral-500">{message.sentTime}</p>
+      </div>
 
-      <div className="bg-damul-main-50 flex flex-col gap-2 rounded-xl p-3">
+      <div className="bg-damul-main-50 flex max-w-96 flex-col gap-2 rounded-xl p-3">
         {renderContent()}
       </div>
     </div>
