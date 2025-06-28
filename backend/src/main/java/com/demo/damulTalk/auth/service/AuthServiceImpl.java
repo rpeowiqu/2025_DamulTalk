@@ -5,7 +5,9 @@ import com.demo.damulTalk.auth.dto.LoginResponseDto;
 import com.demo.damulTalk.auth.dto.ValidValue;
 import com.demo.damulTalk.exception.BusinessException;
 import com.demo.damulTalk.exception.ErrorCode;
+import com.demo.damulTalk.friend.mapper.FriendMapper;
 import com.demo.damulTalk.user.domain.User;
+import com.demo.damulTalk.user.dto.ConnectionDto;
 import com.demo.damulTalk.user.dto.SignupRequest;
 import com.demo.damulTalk.user.mapper.UserMapper;
 import com.demo.damulTalk.util.CookieUtil;
@@ -13,10 +15,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,10 +29,15 @@ import java.time.LocalDateTime;
 public class AuthServiceImpl implements AuthService {
 
     private final UserMapper userMapper;
+    private final FriendMapper friendMapper;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final CookieUtil cookieUtil;
 
+    private final RedisTemplate<String, String> redisTemplate;
+    private final SimpMessagingTemplate messagingTemplate;
+
+    @Override
     public void signup(SignupRequest request) {
         log.info("[AuthService] 회원가입 시작 - username: {}", request.getUsername());
 
@@ -44,6 +54,7 @@ public class AuthServiceImpl implements AuthService {
         userMapper.insertUser(user);
     }
 
+    @Override
     public LoginResponseDto login(LoginRequestDto loginRequest, HttpServletResponse response) {
         log.info("[AuthService] 로그인 시작 - username: {}", loginRequest.getUsername());
 
@@ -74,18 +85,32 @@ public class AuthServiceImpl implements AuthService {
         return new LoginResponseDto(user.getUserId(), user.getNickname(), user.getProfileImageUrl());
     }
 
+    @Override
     public void logout(HttpServletRequest request, HttpServletResponse response) {
         String accessToken = extractAccessToken(request);
-
         String username = jwtService.extractUsername(accessToken);
+        int userId = jwtService.getUserIdFromToken(accessToken);
         log.info("[AuthService] 로그아웃 - username: {}", username);
 
         jwtService.invalidateRefreshToken(username);
-
-        // 쿠키 삭제
         cookieUtil.deleteCookie(response, "refreshToken");
+
+        String redisKey = "user:online:" + userId;
+        redisTemplate.delete(redisKey);
+
+        List<Integer> friendIds = friendMapper.selectFriendIds(userId);
+
+        ConnectionDto connectionDto = ConnectionDto.builder()
+                .userId(userId)
+                .online(false)
+                .build();
+
+        friendIds.stream()
+                .filter(friendId -> redisTemplate.hasKey("user:online:" + friendId))
+                .forEach(friendId -> messagingTemplate.convertAndSend("/sub/friends/" + friendId, connectionDto));
     }
 
+    @Override
     public void checkDuplicatesUsername(ValidValue value) {
         log.info("[AuthService] username 중복확인 시작");
 
@@ -98,6 +123,7 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
+    @Override
     public void checkDuplicatesNickname(ValidValue value) {
         log.info("[AuthService] nickname 중복확인 시작");
 
@@ -108,6 +134,14 @@ public class AuthServiceImpl implements AuthService {
                     "이미 존재하는 유저입니다."
             );
         }
+    }
+
+    @Override
+    public void changePassword(HttpServletRequest request, String password) {
+        log.info("[AuthService] 비밀번호 변경 시작");
+
+        String email = cookieUtil.getCookie(request, "temporary_token").getValue();
+        userMapper.updatePassword(email, passwordEncoder.encode(password));
     }
 
     private String extractAccessToken(HttpServletRequest request) {

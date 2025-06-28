@@ -1,7 +1,12 @@
 package com.demo.damulTalk.user.mapper;
 
+import com.demo.damulTalk.friend.dto.FriendDto;
 import com.demo.damulTalk.user.domain.User;
+import com.demo.damulTalk.user.dto.UserInfo;
+import com.demo.damulTalk.user.dto.UserStatusDto;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 @Mapper
 public interface UserMapper {
@@ -11,5 +16,13 @@ public interface UserMapper {
     User findByNickname(String nickname);
 
     int insertUser(User user);
+
+    int insertFollowRequest(Integer userId, Integer targetId);
+
+    FriendDto selectFollowInfoById(Integer userId);
+
+    UserInfo selectUserInfo(Integer userId);
+
+    int updatePassword(String username, String password);
 
 }

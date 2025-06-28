@@ -1,10 +1,14 @@
 package com.demo.damulTalk.user.service;
 
-import com.demo.damulTalk.auth.dto.ValidValue;
-import com.demo.damulTalk.user.dto.SignupRequest;
+import com.demo.damulTalk.user.dto.UserInfo;
+import com.demo.damulTalk.user.dto.UserStatusDto;
+
+import java.util.List;
 
 public interface UserService {
 
+    List<UserStatusDto> getFriendList();
 
+    UserInfo getUserInfo(Integer id);
 
 }
