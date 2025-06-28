@@ -22,16 +22,12 @@ const useInfiniteScroll = <T>({
   });
 
   useEffect(() => {
-    if (!targetRef.current) {
+    if (!targetRef.current || response.isFetchingNextPage) {
       return;
     }
 
     const handleIntersect = ([entry]: IntersectionObserverEntry[]) => {
-      if (
-        entry.isIntersecting &&
-        response.hasNextPage &&
-        !response.isFetchingNextPage
-      ) {
+      if (entry.isIntersecting && response.hasNextPage) {
         response.fetchNextPage();
       }
     };
