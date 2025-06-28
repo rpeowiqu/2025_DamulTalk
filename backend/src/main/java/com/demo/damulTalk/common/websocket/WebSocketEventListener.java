@@ -45,12 +45,9 @@ public class WebSocketEventListener {
                     .online(true)
                     .build();
 
-            for(Integer friendId : friendIds){
-                String friendRedisKey = "user:online:" + friendId;
-                if(Boolean.parseBoolean(redisTemplate.opsForValue().get(friendRedisKey))){
-                    messagingTemplate.convertAndSend("/sub/friends/" + friendId, connectionDto);
-                }
-            }
+            friendIds.stream()
+                    .filter(friendId -> redisTemplate.hasKey("user:online:" + friendId))
+                    .forEach(friendId -> messagingTemplate.convertAndSend("/sub/friends/" + friendId, connectionDto));
         }
     }
 

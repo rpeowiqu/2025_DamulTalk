@@ -5,7 +5,9 @@ import com.demo.damulTalk.auth.dto.LoginResponseDto;
 import com.demo.damulTalk.auth.dto.ValidValue;
 import com.demo.damulTalk.exception.BusinessException;
 import com.demo.damulTalk.exception.ErrorCode;
+import com.demo.damulTalk.friend.mapper.FriendMapper;
 import com.demo.damulTalk.user.domain.User;
+import com.demo.damulTalk.user.dto.ConnectionDto;
 import com.demo.damulTalk.user.dto.SignupRequest;
 import com.demo.damulTalk.user.mapper.UserMapper;
 import com.demo.damulTalk.util.CookieUtil;
@@ -13,10 +15,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,9 +29,13 @@ import java.time.LocalDateTime;
 public class AuthServiceImpl implements AuthService {
 
     private final UserMapper userMapper;
+    private final FriendMapper friendMapper;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final CookieUtil cookieUtil;
+
+    private final RedisTemplate<String, String> redisTemplate;
+    private final SimpMessagingTemplate messagingTemplate;
 
     public void signup(SignupRequest request) {
         log.info("[AuthService] 회원가입 시작 - username: {}", request.getUsername());
@@ -76,14 +85,26 @@ public class AuthServiceImpl implements AuthService {
 
     public void logout(HttpServletRequest request, HttpServletResponse response) {
         String accessToken = extractAccessToken(request);
-
         String username = jwtService.extractUsername(accessToken);
+        int userId = jwtService.getUserIdFromToken(accessToken);
         log.info("[AuthService] 로그아웃 - username: {}", username);
 
         jwtService.invalidateRefreshToken(username);
-
-        // 쿠키 삭제
         cookieUtil.deleteCookie(response, "refreshToken");
+
+        String redisKey = "user:online:" + userId;
+        redisTemplate.delete(redisKey);
+
+        List<Integer> friendIds = friendMapper.selectFriendIds(userId);
+
+        ConnectionDto connectionDto = ConnectionDto.builder()
+                .userId(userId)
+                .online(false)
+                .build();
+
+        friendIds.stream()
+                .filter(friendId -> redisTemplate.hasKey("user:online:" + friendId))
+                .forEach(friendId -> messagingTemplate.convertAndSend("/sub/friends/" + friendId, connectionDto));
     }
 
     public void checkDuplicatesUsername(ValidValue value) {
