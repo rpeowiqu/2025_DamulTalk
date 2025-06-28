@@ -19,4 +19,6 @@ public interface AuthService {
 
     void checkDuplicatesNickname(ValidValue value);
 
+    void changePassword(HttpServletRequest request, String password);
+
 }

@@ -2,6 +2,7 @@ package com.demo.damulTalk.auth.controller;
 
 import com.demo.damulTalk.auth.dto.*;
 import com.demo.damulTalk.auth.service.AuthService;
+import com.demo.damulTalk.auth.service.EmailService;
 import com.demo.damulTalk.user.dto.SignupRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
+    private final EmailService emailService;
 
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody SignupRequest request) {
@@ -58,26 +60,26 @@ public class AuthController {
     }
 
     @PostMapping("/password/reset-request")
-    public ResponseEntity<?> resetPassword(@RequestBody EmailDto emailDto) {
+    public ResponseEntity<?> resetPassword(@RequestBody EmailDto emailDto, HttpServletResponse response) {
         log.info("[AuthController] 비밀번호 변경 요청 시작");
 
-        emailService.sendPasswordResetCode(emailDto.getEmail());
+        emailService.sendPasswordResetCode(response, emailDto.getEmail());
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/email-validation")
-    public ResponseEntity<?> validateEmail(@RequestBody EmailCodeDto code) {
+    public ResponseEntity<?> validateEmail(@RequestBody EmailCodeDto code, HttpServletRequest request) {
         log.info("[AuthController] 이메일 인증코드 검증 시작");
 
-        emailService.verificationResetCode(code.getCode());
+        emailService.verificationResetCode(request, code.getCode());
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/password")
-    public ResponseEntity<?> changePassword(@RequestBody PasswordDto passwordDto) {
+    public ResponseEntity<?> changePassword(@RequestBody PasswordDto passwordDto, HttpServletRequest request) {
         log.info("[AuthController] 비밀번호 변경 시작");
 
-        authService.changePassword(passwordDto.getPassword());
+        authService.changePassword(request, passwordDto.getPassword());
         return ResponseEntity.ok().build();
     }
 
