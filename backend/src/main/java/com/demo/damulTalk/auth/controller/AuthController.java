@@ -1,8 +1,6 @@
 package com.demo.damulTalk.auth.controller;
 
-import com.demo.damulTalk.auth.dto.LoginRequestDto;
-import com.demo.damulTalk.auth.dto.LoginResponseDto;
-import com.demo.damulTalk.auth.dto.ValidValue;
+import com.demo.damulTalk.auth.dto.*;
 import com.demo.damulTalk.auth.service.AuthService;
 import com.demo.damulTalk.user.dto.SignupRequest;
 import jakarta.servlet.http.HttpServletRequest;
@@ -45,7 +43,6 @@ public class AuthController {
         return ResponseEntity.ok("로그아웃 성공");
     }
 
-
     @PostMapping("/duplicates/usernames")
     public ResponseEntity<?> checkDuplicatesUsername(@RequestBody ValidValue value) {
         log.info("[AuthController] 이메일 중복확인 시작");
@@ -58,6 +55,30 @@ public class AuthController {
         log.info("[AuthController] 닉네임 중복확인 시작");
         authService.checkDuplicatesNickname(value);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/password/reset-request")
+    public ResponseEntity<?> resetPassword(@RequestBody EmailDto emailDto) {
+        log.info("[AuthController] 비밀번호 변경 요청 시작");
+
+        emailService.sendPasswordResetCode(emailDto.getEmail());
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/email-validation")
+    public ResponseEntity<?> validateEmail(@RequestBody EmailCodeDto code) {
+        log.info("[AuthController] 이메일 인증코드 검증 시작");
+
+        emailService.verificationResetCode(code.getCode());
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/password")
+    public ResponseEntity<?> changePassword(@RequestBody PasswordDto passwordDto) {
+        log.info("[AuthController] 비밀번호 변경 시작");
+
+        authService.changePassword(passwordDto.getPassword());
+        return ResponseEntity.ok().build();
     }
 
 }
