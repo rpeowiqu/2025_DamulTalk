@@ -22,6 +22,22 @@
         WHERE user_id = #{userId}
     </select>
 
+    <select id="selectUserInfo" resultType="com.demo.damulTalk.user.dto.UserInfo">
+        SELECT
+            u.user_id AS userId,
+            u.nickname,
+            u.status_message AS statusMessage,
+            (
+                SELECT COUNT(*)
+                FROM friends
+                WHERE status = 'ACCEPTED'
+                  AND (first_user_id = #{userId} OR second_user_id = #{userId})
+            ) AS friendNum
+            u.joined_at AS joinedAt
+        FROM users u
+        WHERE u.user_id = #{userId}
+    </select>
+
     <insert id="insertUser" parameterType="com.demo.damulTalk.user.domain.User">
         INSERT INTO users (username, password, nickname, joined_at)
         VALUES (#{username}, #{password}, #{nickname}, #{joinedAt})
