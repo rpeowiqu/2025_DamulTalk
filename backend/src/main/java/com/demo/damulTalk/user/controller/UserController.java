@@ -21,15 +21,21 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public ResponseEntity<?> getFriends(
-            @RequestParam(required = false) String cursor,
-            @RequestParam(defaultValue = "20") int size
-    ) {
+    public ResponseEntity<?> getFriends() {
+        log.info("[UserController] 친구 목록 불러오기 시작")
         List<UserStatusDto> response = userService.getFriendList();
         if(response.isEmpty())
             return ResponseEntity.noContent().build();
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/info")
+    public ResponseEntity<?> getUserInfo(@RequestParam int id) {
+        log.info("[UserController] 유저 정보 조회 시작 - userId: {}", id);
+
+        UserInfo info = userService.getUserInfo();
+        return ResponseEntity.ok(info);
     }
 
 }
