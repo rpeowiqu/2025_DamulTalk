@@ -1,6 +1,7 @@
 package com.demo.damulTalk.user.service;
 
 import com.demo.damulTalk.friend.mapper.FriendMapper;
+import com.demo.damulTalk.user.dto.UserInfo;
 import com.demo.damulTalk.user.dto.UserStatusDto;
 import com.demo.damulTalk.user.mapper.UserMapper;
 import com.demo.damulTalk.util.UserUtil;
@@ -21,6 +22,7 @@ public class UserServiceImpl implements UserService {
     private final RedisTemplate<String, String> redisTemplate;
     private final FriendMapper friendMapper;
 
+    @Override
     public List<UserStatusDto> getFriendList() {
         log.info("[UserService] 친구목록 조회 시작");
 
@@ -37,6 +39,18 @@ public class UserServiceImpl implements UserService {
         });
 
         return list;
+    }
+
+    @Override
+    public UserInfo getUserInfo(Integer id) {
+        log.info("[UserService] 유저 정보 조회 시작");
+
+        if(id == null)
+            id = userUtil.getCurrentUserId();
+
+        UserInfo info = userMapper.selectUserInfo(id);
+
+        return info;
     }
 
 }

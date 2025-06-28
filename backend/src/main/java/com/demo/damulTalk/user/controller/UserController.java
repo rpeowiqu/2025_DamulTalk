@@ -23,7 +23,7 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<?> getFriends() {
-        log.info("[UserController] 친구 목록 불러오기 시작")
+        log.info("[UserController] 친구 목록 불러오기 시작");
         List<UserStatusDto> response = userService.getFriendList();
         if(response.isEmpty())
             return ResponseEntity.noContent().build();
@@ -32,10 +32,10 @@ public class UserController {
     }
 
     @GetMapping("/info")
-    public ResponseEntity<?> getUserInfo(@RequestParam int id) {
+    public ResponseEntity<?> getUserInfo(@RequestParam Integer id) {
         log.info("[UserController] 유저 정보 조회 시작 - userId: {}", id);
 
-        UserInfo info = userService.getUserInfo();
+        UserInfo info = userService.getUserInfo(id);
         return ResponseEntity.ok(info);
     }
 
