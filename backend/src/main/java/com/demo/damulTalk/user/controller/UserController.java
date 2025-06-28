@@ -1,5 +1,6 @@
 package com.demo.damulTalk.user.controller;
 
+import com.demo.damulTalk.user.dto.UserInfo;
 import com.demo.damulTalk.user.dto.UserStatusDto;
 import com.demo.damulTalk.user.service.UserService;
 import lombok.RequiredArgsConstructor;
