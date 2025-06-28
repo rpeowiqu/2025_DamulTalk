@@ -23,4 +23,6 @@ public interface UserMapper {
 
     UserInfo selectUserInfo(Integer userId);
 
+    int updatePassword(String username, String password);
+
 }

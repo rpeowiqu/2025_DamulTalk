@@ -141,8 +141,7 @@ public class AuthServiceImpl implements AuthService {
         log.info("[AuthService] 비밀번호 변경 시작");
 
         String email = cookieUtil.getCookie(request, "temporary_token").getValue();
-        int userId = userMapper.findByUsername(email).getUserId();
-        userMapper.updatePassword(userId, passwordEncoder.encode(password));
+        userMapper.updatePassword(email, passwordEncoder.encode(password));
     }
 
     private String extractAccessToken(HttpServletRequest request) {
