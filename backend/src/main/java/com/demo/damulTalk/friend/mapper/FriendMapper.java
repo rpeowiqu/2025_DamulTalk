@@ -15,4 +15,6 @@ public interface FriendMapper {
 
     int deleteFriendById(Integer userId, Integer friendId);
 
+    List<Integer> selectFriendIds(Integer userId);
+
 }
