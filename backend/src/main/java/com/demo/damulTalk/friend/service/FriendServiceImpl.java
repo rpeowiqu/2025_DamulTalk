@@ -95,4 +95,19 @@ public class FriendServiceImpl implements FriendService {
         }
     }
 
+    @Override
+    public void deleteFriendRequest(Integer friendId) {
+        log.info("[FriendService] 친구 요청 거절 시작 - friendId: {}", friendId);
+
+        int userId = userUtil.getCurrentUserId();
+
+        int delete = friendMapper.deleteFriendRequestById(userId, friendId);
+        if(delete < 1) {
+            throw new BusinessException(
+                    ErrorCode.INVALID_USER,
+                    "해당 요청은 존재하지 않습니다."
+            );
+        }
+    }
+
 }

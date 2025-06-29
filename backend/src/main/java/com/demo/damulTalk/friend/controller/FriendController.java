@@ -52,4 +52,12 @@ public class FriendController {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/refusal")
+    public ResponseEntity<?> deleteFriendRequest(@RequestBody CommonIdDto common) {
+        log.info("[FriendController] 친구 요청 거절 시작");
+
+        friendService.deleteFriendRequest(common.getId());
+        return ResponseEntity.ok().build();
+    }
+
 }
