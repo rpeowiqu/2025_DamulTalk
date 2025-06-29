@@ -13,8 +13,8 @@ import SearchBar from "@/components/common/search-bar";
 import FriendList from "@/components/user/friend-list";
 import FriendRequestList from "@/components/user/friend-request-list";
 import FriendRequestDummyData from "@/mocks/friend-request.json";
-import FriendDummyData from "@/mocks/friends.json";
 import type { UserInfo } from "@/types/user/type";
+import useFriendList from "@/hooks/community/use-friend-list";
 
 const friendFilters = [
   {
@@ -28,6 +28,7 @@ const friendFilters = [
 ];
 
 const SideBarFriendContent = () => {
+  const { data, isLoading } = useFriendList();
   const [selectedFilter, setSelectedFilter] = useState("nickname-ascending");
   const navigate = useNavigate();
 
@@ -62,11 +63,12 @@ const SideBarFriendContent = () => {
             </AccordionContent>
           </AccordionItem>
 
-          <AccordionTrigger>친구 {FriendDummyData.length}명</AccordionTrigger>
+          <AccordionTrigger>친구 {data?.length ?? 0}명</AccordionTrigger>
           <AccordionContent className="flex flex-col gap-4">
             <SearchBar onSearch={(keyword) => console.log(keyword)} />
             <FriendList
-              userInfoList={FriendDummyData}
+              isLoading={isLoading}
+              userInfoList={data ?? []}
               visibleStatus={true}
               onSelect={(user: UserInfo) => navigate(`/profile/${user.userId}`)}
             />

@@ -1,8 +1,10 @@
-import UserItem from "@/components/user/user-item";
 import type { UserInfo } from "@/types/user/type";
 import { cn } from "@/utils/style";
+import UserItem from "@/components/user/user-item";
+import UserItemSkeleton from "@/components/user/user-item-skeleton";
 
 interface FriendListProps {
+  isLoading: boolean;
   userInfoList: UserInfo[];
   visibleStatus: boolean;
   className?: string;
@@ -11,6 +13,7 @@ interface FriendListProps {
 }
 
 const FriendList = ({
+  isLoading,
   userInfoList,
   visibleStatus,
   className,
@@ -19,22 +22,27 @@ const FriendList = ({
 }: FriendListProps) => {
   return (
     <div className={cn("flex flex-col gap-2", className)}>
-      {userInfoList.map((item) => {
-        const selected =
-          selectedList && selectedList.some((u) => u.userId === item.userId);
+      {isLoading
+        ? Array.from({ length: 6 }).map((_, index) => (
+            <UserItemSkeleton key={index} />
+          ))
+        : userInfoList.map((item) => {
+            const selected =
+              selectedList &&
+              selectedList.some((u) => u.userId === item.userId);
 
-        return (
-          <UserItem
-            key={item.userId}
-            userInfo={{
-              ...item,
-              online: visibleStatus ? item.online : undefined,
-            }}
-            selected={selected}
-            onClick={() => onSelect?.(item)}
-          />
-        );
-      })}
+            return (
+              <UserItem
+                key={item.userId}
+                userInfo={{
+                  ...item,
+                  online: visibleStatus ? item.online : undefined,
+                }}
+                selected={selected}
+                onClick={() => onSelect?.(item)}
+              />
+            );
+          })}
     </div>
   );
 };
