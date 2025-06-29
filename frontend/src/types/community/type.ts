@@ -15,12 +15,7 @@ export interface FriendDeleteRequest {
 }
 
 // Response ==========================================================================================================================
-export interface FriendListResponse {
-  userId: number;
-  nickname: string;
-  profileImageUrl: string;
-  online: boolean;
-}
+export type FriendListResponse = UserInfo[];
 
 export interface FriendSearchResponse {
   data: UserInfo[];
