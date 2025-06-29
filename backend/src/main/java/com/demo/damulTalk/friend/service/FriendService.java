@@ -15,6 +15,6 @@ public interface FriendService {
 
     void deleteFriendRequest(Integer friendId);
 
-    List<FriendDto> getFriends();
+    List<FriendDto> getFriendRequests();
 
 }
