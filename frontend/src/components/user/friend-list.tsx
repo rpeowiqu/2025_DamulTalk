@@ -24,7 +24,7 @@ const FriendList = ({
     <div className={cn("flex flex-col gap-2", className)}>
       {isLoading
         ? Array.from({ length: 6 }).map((_, index) => (
-            <UserItemSkeleton key={index} />
+            <UserItemSkeleton key={index} visibleStatus={true} />
           ))
         : userInfoList.map((item) => {
             const selected =

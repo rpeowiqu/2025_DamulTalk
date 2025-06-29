@@ -1,10 +1,11 @@
 import apiClient from "@/utils/http-common";
-import type {
-  FollowRequest,
-  FriendDeleteRequest,
-  FriendListResponse,
-  FriendSearchRequest,
-  FriendSearchResponse,
+import {
+  type FriendRequestListResponse,
+  type FollowRequest,
+  type FriendDeleteRequest,
+  type FriendListResponse,
+  type FriendSearchRequest,
+  type FriendSearchResponse,
 } from "@/types/community/type";
 import { getQueryString } from "@/utils/url";
 
@@ -33,4 +34,11 @@ export const deleteFriend = async (request: FriendDeleteRequest) => {
     json: request,
   });
   return response;
+};
+
+export const getFriendRequests = async () => {
+  const data = await apiClient
+    .get("/friends/requests")
+    .json<FriendRequestListResponse>();
+  return data;
 };
