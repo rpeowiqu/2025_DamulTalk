@@ -110,4 +110,14 @@ public class FriendServiceImpl implements FriendService {
         }
     }
 
+    @Override
+    public List<FriendDto> getFriends() {
+        log.info("[FriendService] 친구 요청 목록 조회 시작");
+
+        int userId = userUtil.getCurrentUserId();
+
+        List<FriendDto> requests = friendMapper.selectFriendRequestsById(userId);
+        return requests;
+    }
+
 }

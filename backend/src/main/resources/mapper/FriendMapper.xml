@@ -63,6 +63,24 @@
             ) f ON u.user_id = f.user_id
     </select>
 
+    <select id="selectFriendRequestsById" resultType="com.demo.damulTalk.friend.dto.FriendDto">
+        SELECT
+            u.user_id as userId,
+            u.nickname,
+            u.profile_image_url AS profileImageUrl
+        FROM users u
+            JOIN (
+                SELECT
+                    CASE
+                        WHEN first_user_id = #{userId} THEN second_user_id
+                        ELSE first_user_id
+                        END AS user_id
+                FROM friends
+                WHERE status = 'ACCEPTED'
+                  AND (first_user_id = #{userId} OR second_user_id = #{userId})
+            ) f ON u.user_id = f.user_id
+    </select>
+
     <insert id="insertFollowRequest">
         INSERT INTO friends (first_user_id, second_user_id)
         VALUES(#{userId}, #{targetId})

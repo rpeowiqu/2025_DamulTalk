@@ -38,7 +38,7 @@ public class FriendController {
 
         ScrollResponse<List<FriendDto>, String> friends = friendService.getSearchResult(nickname, cursor, size);
         if(friends.getData().isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.noContent().build();
         }
 
         return ResponseEntity.ok(friends);
@@ -58,6 +58,18 @@ public class FriendController {
 
         friendService.deleteFriendRequest(common.getId());
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/requests")
+    public ResponseEntity<?> getFriendRequests() {
+        log.info("[FriendController] 친구 요청 목록 조회 시작");
+
+        List<FriendDto> response = friendService.getFriendRequests();
+        if(response.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(response);
     }
 
 }
