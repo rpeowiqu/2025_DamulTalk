@@ -15,7 +15,7 @@ export const getFriends = async () => {
 };
 
 export const postFollow = async (request: FollowRequest) => {
-  const response = await apiClient.post("/friends/requests", {
+  const response = await apiClient.post("friends/requests", {
     json: request,
   });
   return response;
@@ -24,13 +24,13 @@ export const postFollow = async (request: FollowRequest) => {
 export const getFriendSearch = async (request: FriendSearchRequest) => {
   const query = getQueryString(request);
   const data = await apiClient
-    .get(`/friends/search?${query}`)
+    .get(`friends/search?${query}`)
     .json<FriendSearchResponse>();
   return data;
 };
 
 export const deleteFriend = async (request: FriendDeleteRequest) => {
-  const response = await apiClient.delete("/friends", {
+  const response = await apiClient.delete("friends", {
     json: request,
   });
   return response;
@@ -38,7 +38,7 @@ export const deleteFriend = async (request: FriendDeleteRequest) => {
 
 export const getFriendRequests = async () => {
   const data = await apiClient
-    .get("/friends/requests")
+    .get("friends/requests")
     .json<FriendRequestListResponse>();
   return data;
 };
