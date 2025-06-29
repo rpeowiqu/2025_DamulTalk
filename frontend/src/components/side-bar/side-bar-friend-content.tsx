@@ -7,13 +7,13 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import type { UserInfo } from "@/types/user/type";
 import UserSearchButton from "@/components/user/user-search-button";
 import FilterButton from "@/components/common/filter-button";
 import SearchBar from "@/components/common/search-bar";
 import FriendList from "@/components/user/friend-list";
 import FriendRequestList from "@/components/user/friend-request-list";
-import FriendRequestDummyData from "@/mocks/friend-request.json";
-import type { UserInfo } from "@/types/user/type";
+import useFriendRequestList from "@/hooks/community/use-friend-request-list";
 import useFriendList from "@/hooks/community/use-friend-list";
 
 const friendFilters = [
@@ -28,7 +28,9 @@ const friendFilters = [
 ];
 
 const SideBarFriendContent = () => {
-  const { data, isLoading } = useFriendList();
+  const { data: friendRequests, isLoading: isLoadingFriendRequests } =
+    useFriendRequestList();
+  const { data: friends, isLoading: isLoadingFriends } = useFriendList();
   const [selectedFilter, setSelectedFilter] = useState("nickname-ascending");
   const navigate = useNavigate();
 
@@ -51,11 +53,12 @@ const SideBarFriendContent = () => {
         <AccordionItem value="friends" className="flex flex-col gap-4">
           <AccordionItem value="friend-request" className="flex flex-col gap-4">
             <AccordionTrigger>
-              친구 요청 {FriendRequestDummyData.length}건
+              친구 요청 {friendRequests?.length ?? 0}건
             </AccordionTrigger>
             <AccordionContent>
               <FriendRequestList
-                userInfoList={FriendRequestDummyData}
+                isLoading={isLoadingFriendRequests}
+                userInfoList={friendRequests ?? []}
                 onSelect={(user: UserInfo) =>
                   navigate(`/profile/${user.userId}`)
                 }
@@ -63,12 +66,12 @@ const SideBarFriendContent = () => {
             </AccordionContent>
           </AccordionItem>
 
-          <AccordionTrigger>친구 {data?.length ?? 0}명</AccordionTrigger>
+          <AccordionTrigger>친구 {friends?.length ?? 0}명</AccordionTrigger>
           <AccordionContent className="flex flex-col gap-4">
             <SearchBar onSearch={(keyword) => console.log(keyword)} />
             <FriendList
-              isLoading={isLoading}
-              userInfoList={data ?? []}
+              isLoading={isLoadingFriends}
+              userInfoList={friends ?? []}
               visibleStatus={true}
               onSelect={(user: UserInfo) => navigate(`/profile/${user.userId}`)}
             />

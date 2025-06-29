@@ -24,3 +24,5 @@ export interface FriendSearchResponse {
     hasNext: boolean;
   };
 }
+
+export type FriendRequestListResponse = UserInfo[];

@@ -5,10 +5,8 @@ import UserItem, { type UserItemProps } from "@/components/user/user-item";
 const FriendRequestItem = ({ userInfo, ...props }: UserItemProps) => {
   return (
     <UserItem userInfo={userInfo} {...props}>
-      <div className="flex items-center gap-2">
-        <FriendAcceptButton />
-        <FriendRejectButton />
-      </div>
+      <FriendAcceptButton />
+      <FriendRejectButton />
     </UserItem>
   );
 };

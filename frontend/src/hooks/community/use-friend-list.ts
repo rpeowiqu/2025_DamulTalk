@@ -1,10 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { getFriends } from "@/services/community/api";
-import type { FriendListResponse } from "@/types/community/type";
 
 const useFriendList = () => {
-  return useQuery<FriendListResponse>({
+  return useQuery({
     queryKey: ["friend-list"],
     queryFn: getFriends,
     staleTime: 30 * 1_000 * 60,
