@@ -5,6 +5,7 @@ import com.demo.damulTalk.common.scroll.CursorPageMetaDto;
 import com.demo.damulTalk.common.scroll.ScrollResponse;
 import com.demo.damulTalk.friend.dto.FriendDto;
 import com.demo.damulTalk.friend.service.FriendService;
+import com.demo.damulTalk.user.dto.UserStatusDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,16 @@ import java.util.List;
 public class FriendController {
 
     private final FriendService friendService;
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<?> getFriends(@PathVariable Integer userId) {
+        log.info("[UserController] 친구 목록 불러오기 시작");
+        List<UserStatusDto> response = friendService.getFriendList(userId);
+        if(response.isEmpty())
+            return ResponseEntity.noContent().build();
+
+        return ResponseEntity.ok(response);
+    }
 
     @PostMapping("/requests")
     public ResponseEntity<?> sendFollowRequest(@RequestBody CommonIdDto common) {
@@ -38,7 +49,7 @@ public class FriendController {
 
         ScrollResponse<List<FriendDto>, String> friends = friendService.getSearchResult(nickname, cursor, size);
         if(friends.getData().isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.noContent().build();
         }
 
         return ResponseEntity.ok(friends);
@@ -50,6 +61,26 @@ public class FriendController {
 
         friendService.deleteFriend(common.getId());
         return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/refusal")
+    public ResponseEntity<?> deleteFriendRequest(@RequestBody CommonIdDto common) {
+        log.info("[FriendController] 친구 요청 거절 시작");
+
+        friendService.deleteFriendRequest(common.getId());
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/requests")
+    public ResponseEntity<?> getFriendRequests() {
+        log.info("[FriendController] 친구 요청 목록 조회 시작");
+
+        List<FriendDto> response = friendService.getFriendRequests();
+        if(response.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(response);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.demo.damulTalk.user.mapper;
 
+import com.demo.damulTalk.auth.dto.LoginResponseDto;
 import com.demo.damulTalk.friend.dto.FriendDto;
 import com.demo.damulTalk.user.domain.User;
 import com.demo.damulTalk.user.dto.UserInfo;
@@ -21,8 +22,10 @@ public interface UserMapper {
 
     FriendDto selectFollowInfoById(Integer userId);
 
-    UserInfo selectUserInfo(Integer userId);
+    UserInfo selectUserInfo(Integer userId, Integer targetId);
 
     int updatePassword(String username, String password);
+
+    LoginResponseDto selectMyInfo(Integer userId);
 
 }

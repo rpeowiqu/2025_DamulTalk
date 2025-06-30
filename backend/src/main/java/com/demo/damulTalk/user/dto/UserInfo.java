@@ -8,10 +8,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class UserInfo {
-
-    private int userId;
 
     private String nickname;
 
@@ -20,5 +17,7 @@ public class UserInfo {
     private int friendNum;
 
     private LocalDateTime joinedAt;
+
+    private Boolean isFriend;
 
 }

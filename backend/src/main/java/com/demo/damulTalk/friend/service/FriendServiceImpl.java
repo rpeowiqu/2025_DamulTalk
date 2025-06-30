@@ -6,6 +6,7 @@ import com.demo.damulTalk.exception.BusinessException;
 import com.demo.damulTalk.exception.ErrorCode;
 import com.demo.damulTalk.friend.dto.FriendDto;
 import com.demo.damulTalk.friend.mapper.FriendMapper;
+import com.demo.damulTalk.user.dto.UserStatusDto;
 import com.demo.damulTalk.user.mapper.UserMapper;
 import com.demo.damulTalk.util.UserUtil;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,23 @@ public class FriendServiceImpl implements FriendService {
     private final UserUtil userUtil;
     private final SimpMessagingTemplate messagingTemplate;
     private final RedisTemplate<String, String> redisTemplate;
+
+    @Override
+    public List<UserStatusDto> getFriendList(Integer userId) {
+        log.info("[UserService] 친구목록 조회 시작");
+
+        // 친구 목록 불러오기 (nickname 가나다순 정렬 등은 쿼리에서 처리)
+        List<UserStatusDto> list = friendMapper.selectFriends(userId);
+
+        // Redis에서 온라인 상태 확인
+        list.forEach(u -> {
+            String redisKey = "user:online:" + u.getUserId();
+            boolean online = Boolean.TRUE.equals(redisTemplate.hasKey(redisKey));
+            u.setOnline(online);
+        });
+
+        return list;
+    }
 
     @Override
     public void sendFollowRequest(Integer targetId) {
@@ -93,6 +111,31 @@ public class FriendServiceImpl implements FriendService {
                     "해당 친구는 존재하지 않습니다."
             );
         }
+    }
+
+    @Override
+    public void deleteFriendRequest(Integer friendId) {
+        log.info("[FriendService] 친구 요청 거절 시작 - friendId: {}", friendId);
+
+        int userId = userUtil.getCurrentUserId();
+
+        int delete = friendMapper.deleteFriendRequestById(userId, friendId);
+        if(delete < 1) {
+            throw new BusinessException(
+                    ErrorCode.INVALID_USER,
+                    "해당 요청은 존재하지 않습니다."
+            );
+        }
+    }
+
+    @Override
+    public List<FriendDto> getFriendRequests() {
+        log.info("[FriendService] 친구 요청 목록 조회 시작");
+
+        int userId = userUtil.getCurrentUserId();
+
+        List<FriendDto> requests = friendMapper.selectFriendRequestsById(userId);
+        return requests;
     }
 
 }

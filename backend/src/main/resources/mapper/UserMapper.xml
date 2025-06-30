@@ -24,18 +24,39 @@
 
     <select id="selectUserInfo" resultType="com.demo.damulTalk.user.dto.UserInfo">
         SELECT
-            u.user_id AS userId,
             u.nickname,
-            u.status_message AS statusMessage,
+            u.status_message          AS statusMessage,
             (
                 SELECT COUNT(*)
                 FROM friends
                 WHERE status = 'ACCEPTED'
-                  AND (first_user_id = #{userId} OR second_user_id = #{userId})
-            ) AS friendNum
-            u.joined_at AS joinedAt
+                  AND (first_user_id = #{targetId} OR second_user_id = #{targetId})
+            )                         AS friendNum,
+            u.joined_at               AS joinedAt,
+            CASE
+                WHEN EXISTS (
+                    SELECT 1
+                    FROM friends
+                    WHERE status = 'ACCEPTED'
+                      AND (
+                        (first_user_id = #{userId} AND second_user_id = #{targetId})
+                            OR (first_user_id = #{targetId} AND second_user_id = #{userId})
+                        )
+                )
+                    THEN TRUE
+                ELSE FALSE
+                END                      AS isFriend
         FROM users u
-        WHERE u.user_id = #{userId}
+        WHERE u.user_id = #{targetId}
+    </select>
+
+    <select id="selectMyInfo" resultType="com.demo.damulTalk.auth.dto.LoginResponseDto">
+        SELECT
+            user_id as userId,
+            nickname,
+            profile_image_url as profileImageUrl
+        FROM users
+        WHERE user_id = #{userId}
     </select>
 
     <insert id="insertUser" parameterType="com.demo.damulTalk.user.domain.User">
