@@ -6,23 +6,30 @@ import com.demo.damulTalk.auth.dto.ValidValue;
 import com.demo.damulTalk.exception.BusinessException;
 import com.demo.damulTalk.exception.ErrorCode;
 import com.demo.damulTalk.friend.mapper.FriendMapper;
+import com.demo.damulTalk.user.domain.CustomUserDetails;
 import com.demo.damulTalk.user.domain.User;
 import com.demo.damulTalk.user.dto.ConnectionDto;
 import com.demo.damulTalk.user.dto.SignupRequest;
 import com.demo.damulTalk.user.mapper.UserMapper;
+import com.demo.damulTalk.user.service.CustomUserDetailsService;
 import com.demo.damulTalk.util.CookieUtil;
 import com.demo.damulTalk.util.UserUtil;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +41,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final CookieUtil cookieUtil;
+    private final CustomUserDetailsService userDetailsService;
 
     private final RedisTemplate<String, String> redisTemplate;
     private final SimpMessagingTemplate messagingTemplate;
@@ -82,7 +90,7 @@ public class AuthServiceImpl implements AuthService {
         String refreshToken = jwtService.generateRefreshToken(user);
 
         cookieUtil.addCookie(response, "refresh_token", refreshToken, (int) (jwtService.getRefreshTokenExpire() / 1000));
-        response.setHeader("Authorization", "Bearer " + accessToken);
+        response.setHeader("Authorization", accessToken);
         return new LoginResponseDto(user.getUserId(), user.getNickname(), user.getProfileImageUrl());
     }
 
@@ -145,6 +153,53 @@ public class AuthServiceImpl implements AuthService {
         userMapper.updatePassword(email, passwordEncoder.encode(password));
     }
 
+    @Override
+    public LoginResponseDto getUserInfo() {
+        log.info("[AuthService] 로그인 한 유저 정보 조회 시작");
+        int userId = userUtil.getCurrentUserId();
+
+        LoginResponseDto response = userMapper.selectMyInfo(userId);
+        return response;
+    }
+
+    @Override
+    public void refreshTokenRotate(HttpServletRequest request, HttpServletResponse response) {
+        log.info("[AuthService] RTR 시작");
+
+        Cookie refreshTokenCookie = cookieUtil.getCookie(request, "refresh_token");
+        if(refreshTokenCookie != null) {
+            String refreshToken = refreshTokenCookie.getValue();
+            CustomUserDetails userDetails = (CustomUserDetails) userDetailsService.loadUserByUsername(
+                    jwtService.extractUsername(refreshToken));
+
+            jwtService.isValidRefreshToken(refreshToken, userDetails.getUser());
+
+            Map<String, String> tokens = jwtService.rotateTokens(refreshToken, userDetails.getUser());
+            if (tokens != null) {
+                cookieUtil.addCookie(response, "refresh_token", tokens.get("refresh_token"), (int) (jwtService.getRefreshTokenExpire() / 1000));
+                response.setHeader("Authorization", tokens.get("access_token"));
+                processAccessToken(tokens.get("access_token"), response);
+                return;
+            }
+        }
+
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+    }
+
+    private void processAccessToken(String accessToken, HttpServletResponse response) {
+        String username = jwtService.getUsernameFromToken(accessToken);
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            if (jwtService.isValid(accessToken, userDetails)) {
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        }
+    }
+
     private String extractAccessToken(HttpServletRequest request) {
         String accessToken = request.getHeader("Authorization");
         if (accessToken != null && accessToken.startsWith("Bearer ")) {
@@ -196,15 +251,6 @@ public class AuthServiceImpl implements AuthService {
 
         response.setHeader("Authorization", "Bearer " + accessToken);
         cookieUtil.addCookie(response, "refresh_token", refreshToken, (int)(jwtService.getRefreshTokenExpire() / 1000));
-    }
-
-    @Override
-    public LoginResponseDto getUserInfo() {
-        log.info("[AuthService] 로그인 한 유저 정보 조회 시작");
-        int userId = userUtil.getCurrentUserId();
-
-        LoginResponseDto response = userMapper.selectMyInfo(userId);
-        return response;
     }
 
 }

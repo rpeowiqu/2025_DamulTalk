@@ -205,8 +205,8 @@ public class JwtServiceImpl implements JwtService {
         String newRefreshToken = generateRefreshToken(user);
 
         Map<String, String> tokens = new HashMap<>();
-        tokens.put("accessToken", newAccessToken);
-        tokens.put("refreshToken", newRefreshToken);
+        tokens.put("access_token", newAccessToken);
+        tokens.put("refresh_token", newRefreshToken);
 
         return tokens;
     }
