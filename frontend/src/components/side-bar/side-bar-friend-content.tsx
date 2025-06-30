@@ -7,7 +7,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import type { UserInfo } from "@/types/user/type";
+import type { User } from "@/types/user/type";
 import UserSearchButton from "@/components/user/user-search-button";
 import FilterButton from "@/components/common/filter-button";
 import SearchBar from "@/components/common/search-bar";
@@ -58,10 +58,8 @@ const SideBarFriendContent = () => {
             <AccordionContent>
               <FriendRequestList
                 isLoading={isLoadingFriendRequests}
-                userInfoList={friendRequests ?? []}
-                onSelect={(user: UserInfo) =>
-                  navigate(`/profile/${user.userId}`)
-                }
+                users={friendRequests ?? []}
+                onSelect={(user: User) => navigate(`/profile/${user.userId}`)}
               />
             </AccordionContent>
           </AccordionItem>
@@ -71,9 +69,9 @@ const SideBarFriendContent = () => {
             <SearchBar onSearch={(keyword) => console.log(keyword)} />
             <FriendList
               isLoading={isLoadingFriends}
-              userInfoList={friends ?? []}
+              users={friends ?? []}
               visibleStatus={true}
-              onSelect={(user: UserInfo) => navigate(`/profile/${user.userId}`)}
+              onSelect={(user: User) => navigate(`/profile/${user.userId}`)}
             />
           </AccordionContent>
         </AccordionItem>

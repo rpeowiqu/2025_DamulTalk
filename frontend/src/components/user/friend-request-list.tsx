@@ -1,18 +1,18 @@
-import type { UserInfo } from "@/types/user/type";
+import type { User } from "@/types/user/type";
 import { cn } from "@/utils/style";
 import FriendRequestItem from "@/components/user/friend-request-item";
 import FriendRequestItemSkeleton from "@/components/user/friend-request-item-skeleton";
 
 interface FriendRequestListProps {
   isLoading: boolean;
-  userInfoList: UserInfo[];
+  users: User[];
   className?: string;
-  onSelect?: (_user: UserInfo) => void;
+  onSelect?: (_user: User) => void;
 }
 
 const FriendRequestList = ({
   isLoading,
-  userInfoList,
+  users,
   className,
   onSelect,
 }: FriendRequestListProps) => {
@@ -22,10 +22,10 @@ const FriendRequestList = ({
         ? Array.from({ length: 3 }).map((_, index) => (
             <FriendRequestItemSkeleton key={index} />
           ))
-        : userInfoList.map((item) => (
+        : users.map((item) => (
             <FriendRequestItem
               key={item.userId}
-              userInfo={{ ...item, online: undefined }}
+              user={{ ...item, online: undefined }}
               onClick={() => onSelect?.(item)}
             />
           ))}

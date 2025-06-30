@@ -34,7 +34,7 @@ const SideBarContent = ({ currentTab }: SideBarContentProps) => {
 
       <div className="flex items-center justify-between border-b border-neutral-300 pb-1">
         <UserItem
-          userInfo={{
+          user={{
             userId: 0,
             nickname: "다믈랭",
             profileImageUrl: null,

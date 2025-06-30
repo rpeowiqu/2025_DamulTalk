@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router-dom";
 
-import type { UserInfo } from "@/types/user/type";
+import type { User } from "@/types/user/type";
 import Dialog, { type DialogProps } from "@/components/common/dialog";
 import SearchBar from "@/components/common/search-bar";
 import FriendList from "@/components/user/friend-list";
 
 interface ChatRoomMemberModalProps extends DialogProps {
-  members: UserInfo[];
+  members: User[];
 }
 
 const ChatRoomMemberModal = ({
@@ -17,7 +17,7 @@ const ChatRoomMemberModal = ({
 }: ChatRoomMemberModalProps) => {
   const navigate = useNavigate();
 
-  const handleUserSelect = (user: UserInfo) => {
+  const handleUserSelect = (user: User) => {
     navigate(`/profile/${user.userId}`);
   };
 
@@ -31,7 +31,7 @@ const ChatRoomMemberModal = ({
       <div className="flex flex-col gap-4">
         <SearchBar onSearch={(keyword) => console.log(keyword)} />
         <FriendList
-          userInfoList={members}
+          users={members}
           visibleStatus={false}
           className="scroll-hidden min-h-0 flex-1 overflow-y-auto"
           onSelect={(user) => handleUserSelect(user)}

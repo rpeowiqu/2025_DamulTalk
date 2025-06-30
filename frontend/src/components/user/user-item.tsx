@@ -2,10 +2,10 @@ import type { MouseEvent, ReactNode } from "react";
 
 import UserPortrait from "@/components/user/user-portrait";
 import { cn } from "@/utils/style";
-import type { UserInfo } from "@/types/user/type";
+import type { User } from "@/types/user/type";
 
 export interface UserItemProps {
-  userInfo: UserInfo;
+  user: User;
   selected?: boolean;
   className?: string;
   onClick?: (_e: MouseEvent<HTMLDivElement>) => void;
@@ -13,7 +13,7 @@ export interface UserItemProps {
 }
 
 const UserItem = ({
-  userInfo,
+  user,
   selected,
   className,
   onClick,
@@ -28,8 +28,8 @@ const UserItem = ({
       )}
       onClick={onClick}>
       <UserPortrait
-        profileImageUrl={userInfo.profileImageUrl}
-        online={userInfo.online}
+        profileImageUrl={user.profileImageUrl}
+        online={user.online}
         className="shrink-0"
       />
 
@@ -40,15 +40,15 @@ const UserItem = ({
               "line-clamp-1",
               selected ? "text-damul-main-500" : "text-black",
             )}>
-            {userInfo.nickname}
+            {user.nickname}
           </p>
-          {userInfo.online !== undefined && (
+          {user.online !== undefined && (
             <p
               className={cn(
                 "line-clamp-1 text-xs",
-                userInfo.online ? "text-green-400" : "text-neutral-400",
+                user.online ? "text-green-400" : "text-neutral-400",
               )}>
-              {userInfo.online ? "온라인" : "오프라인"}
+              {user.online ? "온라인" : "오프라인"}
             </p>
           )}
         </div>

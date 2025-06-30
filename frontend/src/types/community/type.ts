@@ -1,4 +1,4 @@
-import type { UserInfo } from "@/types/user/type";
+import type { User } from "@/types/user/type";
 
 // Request ==========================================================================================================================
 export interface FollowRequest {
@@ -15,14 +15,14 @@ export interface FriendDeleteRequest {
 }
 
 // Response ==========================================================================================================================
-export type FriendListResponse = UserInfo[];
+export type FriendListResponse = User[];
 
 export interface FriendSearchResponse {
-  data: UserInfo[];
+  data: User[];
   meta: {
     nextCursor: string;
     hasNext: boolean;
   };
 }
 
-export type FriendRequestListResponse = UserInfo[];
+export type FriendRequestListResponse = User[];
