@@ -1,4 +1,4 @@
-import type { UserInfo } from "@/types/user/type";
+import type { User } from "@/types/user/type";
 
 export enum ChatCreateStep {
   SELECT_USER,
@@ -8,7 +8,7 @@ export enum ChatCreateStep {
 
 export interface ChatCreateInfo {
   title: string;
-  selectedUsers: UserInfo[];
+  selectedUsers: User[];
 }
 
 export interface ChatRoomInfo {
@@ -19,7 +19,6 @@ export interface ChatRoomInfo {
 }
 
 export interface ChatRoomMember {
-  // userInfo: UserInfo;
   userId: number;
   nickname: string;
   profileImageUrl: string | null;

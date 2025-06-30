@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import SearchBar from "@/components/common/search-bar";
 import FriendList from "@/components/user/friend-list";
 import UserDummyData from "@/mocks/friends.json";
-import type { UserInfo } from "@/types/user/type";
+import type { User } from "@/types/user/type";
 
 const ProfileContent = () => {
   const navigate = useNavigate();
@@ -35,10 +35,10 @@ const ProfileContent = () => {
         <h1 className="text-xl font-bold">친구</h1>
         <SearchBar onSearch={(keyword) => console.log(keyword)} />
         <FriendList
-          userInfoList={UserDummyData}
+          users={UserDummyData}
           visibleStatus={false}
           className="scroll-hidden min-h-0 flex-1 overflow-y-auto"
-          onSelect={(user: UserInfo) => navigate(`/profile/${user.userId}`)}
+          onSelect={(user: User) => navigate(`/profile/${user.userId}`)}
         />
       </div>
     </div>

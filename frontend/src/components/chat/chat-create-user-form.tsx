@@ -1,6 +1,6 @@
 import type { FormEvent } from "react";
 
-import type { UserInfo } from "@/types/user/type";
+import type { User } from "@/types/user/type";
 import type { ChatCreateFormProps } from "@/components/chat/chat-create-form";
 import Carousel from "@/components/common/carousel";
 import Button from "@/components/common/button";
@@ -14,7 +14,7 @@ const ChatCreateUserForm = ({
   setChatCreateInfo,
   onNext,
 }: ChatCreateFormProps) => {
-  const getDefaultTitle = (users: UserInfo[]): string => {
+  const getDefaultTitle = (users: User[]): string => {
     const maxDisplay = 4;
     const nicknames = users.map((item) => item.nickname);
     nicknames.sort();
@@ -40,7 +40,7 @@ const ChatCreateUserForm = ({
     onNext?.();
   };
 
-  const handleUserCreate = (user: UserInfo) => {
+  const handleUserCreate = (user: User) => {
     setChatCreateInfo((prev) => {
       const isExist = prev.selectedUsers.some(
         (item) => item.userId === user.userId,
@@ -57,7 +57,7 @@ const ChatCreateUserForm = ({
     });
   };
 
-  const handleUserDelete = (user: UserInfo) => {
+  const handleUserDelete = (user: User) => {
     setChatCreateInfo((prev) => ({
       ...prev,
       selectedUsers: prev.selectedUsers.filter(
@@ -78,7 +78,7 @@ const ChatCreateUserForm = ({
               {chatCreateInfo.selectedUsers.map((item) => (
                 <ChatCreateUserItem
                   key={item.userId}
-                  userInfo={item}
+                  user={item}
                   onDelete={() => handleUserDelete(item)}
                 />
               ))}
@@ -88,10 +88,10 @@ const ChatCreateUserForm = ({
       )}
       <SearchBar onSearch={(keyword) => console.log(keyword)} />
       <FriendList
-        userInfoList={UserDummyData}
+        users={UserDummyData}
         visibleStatus={false}
         className="scroll-hidden min-h-0 flex-1 overflow-y-auto"
-        selectedList={chatCreateInfo.selectedUsers}
+        selectedUsers={chatCreateInfo.selectedUsers}
         onSelect={(user) => handleUserCreate(user)}
       />
       <Button

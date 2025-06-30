@@ -1,23 +1,23 @@
-import type { UserInfo } from "@/types/user/type";
+import type { User } from "@/types/user/type";
 import { cn } from "@/utils/style";
 import UserItem from "@/components/user/user-item";
 import UserItemSkeleton from "@/components/user/user-item-skeleton";
 
 interface FriendListProps {
   isLoading: boolean;
-  userInfoList: UserInfo[];
+  users: User[];
   visibleStatus: boolean;
   className?: string;
-  selectedList?: UserInfo[];
-  onSelect?: (_user: UserInfo) => void;
+  selectedUsers?: User[];
+  onSelect?: (_user: User) => void;
 }
 
 const FriendList = ({
   isLoading,
-  userInfoList,
+  users,
   visibleStatus,
   className,
-  selectedList,
+  selectedUsers,
   onSelect,
 }: FriendListProps) => {
   return (
@@ -26,15 +26,15 @@ const FriendList = ({
         ? Array.from({ length: 6 }).map((_, index) => (
             <UserItemSkeleton key={index} visibleStatus={true} />
           ))
-        : userInfoList.map((item) => {
+        : users.map((item) => {
             const selected =
-              selectedList &&
-              selectedList.some((u) => u.userId === item.userId);
+              selectedUsers &&
+              selectedUsers.some((u) => u.userId === item.userId);
 
             return (
               <UserItem
                 key={item.userId}
-                userInfo={{
+                user={{
                   ...item,
                   online: visibleStatus ? item.online : undefined,
                 }}
