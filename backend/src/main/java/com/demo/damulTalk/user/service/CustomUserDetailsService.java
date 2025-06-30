@@ -1,5 +1,6 @@
 package com.demo.damulTalk.user.service;
 
+import com.demo.damulTalk.user.domain.CustomUserDetails;
 import com.demo.damulTalk.user.domain.User;
 import com.demo.damulTalk.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -23,11 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException(username);
         }
 
-        return org.springframework.security.core.userdetails.User.builder()
-                .username(user.getUsername())
-                .password(user.getPassword())
-                .authorities(Collections.emptyList())
-                .build();
+        return new CustomUserDetails(user);
     }
 
 }

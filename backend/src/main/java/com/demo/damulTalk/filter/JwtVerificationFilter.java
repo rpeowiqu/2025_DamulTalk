@@ -1,6 +1,7 @@
 package com.demo.damulTalk.filter;
 
 import com.demo.damulTalk.auth.service.JwtService;
+import com.demo.damulTalk.user.domain.CustomUserDetails;
 import com.demo.damulTalk.user.domain.User;
 import com.demo.damulTalk.user.service.CustomUserDetailsService;
 import com.demo.damulTalk.util.CookieUtil;
@@ -38,6 +39,7 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
     private final CookieUtil cookieUtil;
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
     private final List<String> excludedUrls = Arrays.asList(
+            "/api/v1/**",
             "/api/v1/auth/signup",
             "/api/v1/auth/login",
             "/api/v1/duplicates/usernames",
@@ -98,10 +100,10 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
 
     private void handleExpiredToken(HttpServletResponse response, String refreshToken) {
         if(refreshToken != null) {
-            User user = (User) userDetailsService.loadUserByUsername(
+            CustomUserDetails userDetails = (CustomUserDetails) userDetailsService.loadUserByUsername(
                     jwtService.extractUsername(refreshToken));
 
-            Map<String, String> tokens = jwtService.rotateTokens(refreshToken, user);
+            Map<String, String> tokens = jwtService.rotateTokens(refreshToken, userDetails.getUser());
             if(tokens != null) {
                 cookieUtil.addCookie(response, REFRESH_TOKEN, tokens.get("refreshToken"), (int) (jwtService.getRefreshTokenExpire() / 1000));
 
