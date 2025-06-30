@@ -63,6 +63,8 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
                 return;
             } catch(ExpiredJwtException e) {
                 log.info("[JwtVerificationFilter] Access Token 만료, Refresh Token으로 갱신 시도");
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
             }
         }
 
