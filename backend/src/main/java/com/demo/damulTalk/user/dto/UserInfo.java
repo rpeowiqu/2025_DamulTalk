@@ -12,9 +12,11 @@ public class UserInfo {
 
     private String nickname;
 
+    private String profileImageUrl;
+
     private String statusMessage;
 
-    private int friendNum;
+    private int friendCount;
 
     private LocalDateTime joinedAt;
 

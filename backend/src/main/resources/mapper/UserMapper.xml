@@ -25,13 +25,14 @@
     <select id="selectUserInfo" resultType="com.demo.damulTalk.user.dto.UserInfo">
         SELECT
             u.nickname,
+            u.profile_image_url AS profileImageUrl,
             u.status_message AS statusMessage,
             (
                 SELECT COUNT(*)
                 FROM friends
                 WHERE status = 'ACCEPTED'
                   AND (first_user_id = #{targetId} OR second_user_id = #{targetId})
-            ) AS friendNum,
+            ) AS friendCount,
             u.joined_at AS joinedAt,
             CASE
                 WHEN u.user_id = #{userId} THEN 'ME'
