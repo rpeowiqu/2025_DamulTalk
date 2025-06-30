@@ -50,6 +50,14 @@
         WHERE u.user_id = #{targetId}
     </select>
 
+    <select id="selectMyInfo" resultType="com.demo.damulTalk.auth.dto.LoginResponseDto">
+        SELECT
+            user_id as userId,
+            nickname,
+            profile_image_url as profileImageUrl
+        FROM users
+        WHERE user_id = #{userId}
+    </select>
 
     <insert id="insertUser" parameterType="com.demo.damulTalk.user.domain.User">
         INSERT INTO users (username, password, nickname, joined_at)

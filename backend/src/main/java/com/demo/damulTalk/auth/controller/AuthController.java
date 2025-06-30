@@ -86,4 +86,12 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("info")
+    public ResponseEntity<?> getUserInfo() {
+        log.info("[AuthController] 로그인 한 유저 정보 조회 시작");
+
+        LoginResponseDto response = authService.getUserInfo();
+        return ResponseEntity.ok().body(response);
+    }
+
 }

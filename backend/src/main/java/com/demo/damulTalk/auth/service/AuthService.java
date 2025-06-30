@@ -24,4 +24,6 @@ public interface AuthService {
 
     void issueTestTokens(@RequestParam String username, HttpServletResponse response);
 
+    LoginResponseDto getUserInfo();
+
 }

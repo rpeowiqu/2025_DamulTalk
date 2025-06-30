@@ -31,7 +31,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/info")
+    @GetMapping("/profiles")
     public ResponseEntity<?> getUserInfo(@RequestParam Integer id) {
         log.info("[UserController] 유저 정보 조회 시작 - userId: {}", id);
 
