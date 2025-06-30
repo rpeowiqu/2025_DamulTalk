@@ -51,6 +51,8 @@ public class UserServiceImpl implements UserService {
         int userId = userUtil.getCurrentUserId();
 
         UserInfo info = userMapper.selectUserInfo(userId, id);
+        if(id == userId)
+            info.setIsFriend(null);
 
         return info;
     }
