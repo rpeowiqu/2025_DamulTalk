@@ -82,7 +82,7 @@ public class AuthServiceImpl implements AuthService {
         String accessToken = jwtService.generateAccessToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
 
-        cookieUtil.addCookie(response, "refreshToken", refreshToken, (int) (jwtService.getRefreshTokenExpire() / 1000));
+        cookieUtil.addCookie(response, "refresh_token", refreshToken, (int) (jwtService.getRefreshTokenExpire() / 1000));
         response.setHeader("Authorization", "Bearer " + accessToken);
         return new LoginResponseDto(user.getUserId(), user.getNickname(), user.getProfileImageUrl());
     }
@@ -95,7 +95,7 @@ public class AuthServiceImpl implements AuthService {
         log.info("[AuthService] 로그아웃 - username: {}", username);
 
         jwtService.invalidateRefreshToken(username);
-        cookieUtil.deleteCookie(response, "refreshToken");
+        cookieUtil.deleteCookie(response, "refresh_token");
 
         String redisKey = "user:online:" + userId;
         redisTemplate.delete(redisKey);

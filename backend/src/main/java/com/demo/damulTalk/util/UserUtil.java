@@ -20,6 +20,7 @@ public class UserUtil {
             );
 
         Object principal = authentication.getPrincipal();
+        System.out.println("principal : " + principal);
 
         if(principal instanceof CustomUserDetails userDetails) {
             return userDetails.getUserId();
