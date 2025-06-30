@@ -13,7 +13,7 @@ const useLogin = () => {
     onSuccess: async (response) => {
       const accessToken = response.headers.get("Authorization");
       if (accessToken) {
-        localStorage.setItem("access-token", accessToken.split(" ")[1]);
+        localStorage.setItem("access-token", accessToken);
 
         const data: LoginResponse = await response.json();
         navigate(`/profiles/${data.userId}`, { replace: true });
