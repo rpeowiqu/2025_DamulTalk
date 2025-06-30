@@ -1,7 +1,7 @@
-import type { User } from "@/types/user/type";
+import type { Profile, User } from "@/types/user/type";
 
 // Request ==========================================================================================================================
-export interface FollowRequest {
+export interface FriendRequestRequest {
   id: number;
 }
 
@@ -15,7 +15,7 @@ export interface FriendDeleteRequest {
 }
 
 // Response ==========================================================================================================================
-export type FriendListResponse = User[];
+export type FriendsResponse = User[];
 
 export interface FriendSearchResponse {
   data: User[];
@@ -25,4 +25,6 @@ export interface FriendSearchResponse {
   };
 }
 
-export type FriendRequestListResponse = User[];
+export type FriendRequestsResponse = User[];
+
+export type ProfileResponse = Profile;

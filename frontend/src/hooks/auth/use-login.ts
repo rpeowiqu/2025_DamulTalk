@@ -16,7 +16,7 @@ const useLogin = () => {
         localStorage.setItem("access-token", accessToken.split(" ")[1]);
 
         const data: LoginResponse = await response.json();
-        navigate(`/profile/${data.userId}`, { replace: true });
+        navigate(`/profiles/${data.userId}`, { replace: true });
       }
     },
     onError: (error) => {

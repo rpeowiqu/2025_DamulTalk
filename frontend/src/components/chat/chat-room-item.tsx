@@ -27,7 +27,7 @@ const ChatRoomItem = ({
 }: ChatRoomItemProps) => {
   return (
     <Link
-      to={`/chat/${roomId}`}
+      to={`/chats/${roomId}`}
       className={cn(
         "flex w-full cursor-pointer items-center gap-3 rounded-xl bg-white p-2 hover:bg-neutral-50",
         className,

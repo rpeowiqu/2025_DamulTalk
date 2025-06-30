@@ -13,11 +13,11 @@ const router = createBrowserRouter([
     element: <MainLayout />,
     children: [
       {
-        path: "/profile/:userId",
+        path: "/profiles/:userId",
         element: <ProfilePage />,
       },
       {
-        path: "/chat/:roomId",
+        path: "/chats/:roomId",
         element: <ChatPage />,
       },
     ],

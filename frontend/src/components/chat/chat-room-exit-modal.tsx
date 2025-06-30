@@ -26,7 +26,7 @@ const ChatRoomExitModal = ({
 
   const handleClickExit = () => {
     toast.success("해당 채팅방에서 빠져 나왔어요");
-    navigate(`/profile/${1}`);
+    navigate(`/profiles/${1}`);
   };
 
   return (

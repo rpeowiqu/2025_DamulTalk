@@ -39,7 +39,7 @@ const ChatCreateForm = ({
             onPrev={() => setStep((prev) => prev - 1)}
             onNext={() => {
               toast.success("채팅방을 만들었어요");
-              navigate(`/chat/${1}`);
+              navigate(`/chats/${1}`);
             }}
           />
         );

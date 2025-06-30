@@ -18,7 +18,7 @@ const ChatRoomMemberModal = ({
   const navigate = useNavigate();
 
   const handleUserSelect = (user: User) => {
-    navigate(`/profile/${user.userId}`);
+    navigate(`/profiles/${user.userId}`);
   };
 
   return (
