@@ -18,6 +18,6 @@ public class UserInfo {
 
     private LocalDateTime joinedAt;
 
-    private Boolean isFriend;
+    private FriendshipStatus isFriend;
 
 }
