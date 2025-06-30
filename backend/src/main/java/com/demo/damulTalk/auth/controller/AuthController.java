@@ -94,4 +94,12 @@ public class AuthController {
         return ResponseEntity.ok().body(response);
     }
 
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refreshTokenRotate(HttpServletRequest request, HttpServletResponse response) {
+        log.info("[AuthController] RTR 시작");
+
+        authService.refreshTokenRotate(request, response);
+        return ResponseEntity.ok().build();
+    }
+
 }

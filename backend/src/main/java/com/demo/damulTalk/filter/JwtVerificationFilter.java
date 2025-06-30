@@ -56,28 +56,14 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
             accessToken = authorizationHeader.substring(7);
         }
 
-        Cookie refreshCookie = cookieUtil.getCookie(request, REFRESH_TOKEN);
-        String refreshToken = (refreshCookie != null) ? refreshCookie.getValue() : null;
-
-        try {
-            if (accessToken != null && refreshToken != null) {
-                try {
-                    processAccessToken(accessToken, response);
-                    filterChain.doFilter(request, response);
-                    return;
-                } catch(ExpiredJwtException e) {
-                    log.info("[JwtVerificationFilter] Access Token 만료, Refresh Token으로 갱신 시도");
-                    handleExpiredToken(response, refreshToken);
-                    return;
-                }
-            } else if(refreshToken != null) {
-                handleExpiredToken(response, refreshToken);
+        if (accessToken != null) {
+            try {
+                processAccessToken(accessToken, response);
+                filterChain.doFilter(request, response);
                 return;
+            } catch(ExpiredJwtException e) {
+                log.info("[JwtVerificationFilter] Access Token 만료, Refresh Token으로 갱신 시도");
             }
-        } catch(JwtException e) {
-            log.error("[JwtVerificationFilter] Jwt 처리 중 오류 발생 - {}", e.getMessage());
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
         }
 
         log.info("[JwtVerificationFilter] JWT 검증 완료");
@@ -105,11 +91,11 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
 
             Map<String, String> tokens = jwtService.rotateTokens(refreshToken, userDetails.getUser());
             if(tokens != null) {
-                cookieUtil.addCookie(response, REFRESH_TOKEN, tokens.get("refreshToken"), (int) (jwtService.getRefreshTokenExpire() / 1000));
+                cookieUtil.addCookie(response, REFRESH_TOKEN, tokens.get("refresh_token"), (int) (jwtService.getRefreshTokenExpire() / 1000));
 
-                response.setHeader("Authorization",  "Bearer " + tokens.get("accessToken"));
+                response.setHeader("Authorization",  tokens.get("accessToken"));
 
-                processAccessToken(tokens.get("accessToken"), response);
+                processAccessToken(tokens.get("access_token"), response);
                 return;
             }
         }

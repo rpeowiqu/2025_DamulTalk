@@ -26,4 +26,6 @@ public interface AuthService {
 
     LoginResponseDto getUserInfo();
 
+    void refreshTokenRotate(HttpServletRequest request, HttpServletResponse response);
+
 }
