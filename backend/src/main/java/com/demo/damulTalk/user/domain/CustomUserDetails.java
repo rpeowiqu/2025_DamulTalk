@@ -8,30 +8,27 @@ import java.util.Collections;
 
 public class CustomUserDetails implements UserDetails {
 
-    private final int userId;
-    private final String username;
-    private final String password;
-    private final Collection<? extends GrantedAuthority> authorities;
+    private final User user;
 
     public CustomUserDetails(User user) {
-        this.userId = user.getUserId();
-        this.username = user.getUsername();
-        this.password = user.getPassword(); // 필요 없다면 null
-        this.authorities = Collections.emptyList(); // 또는 roles → authorities 변환
+        this.user = user;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     public int getUserId() {
-        return userId;
+        return user.getUserId();
     }
 
     @Override
     public String getUsername() {
-        return username;
+        return user.getUsername();
     }
 
-    @Override
     public String getPassword() {
-        return password;
+        return user.getPassword();
     }
 
     @Override
