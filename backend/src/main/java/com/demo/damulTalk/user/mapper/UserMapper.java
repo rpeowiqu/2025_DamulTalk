@@ -21,7 +21,7 @@ public interface UserMapper {
 
     FriendDto selectFollowInfoById(Integer userId);
 
-    UserInfo selectUserInfo(Integer userId);
+    UserInfo selectUserInfo(Integer userId, Integer targetId);
 
     int updatePassword(String username, String password);
 

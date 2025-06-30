@@ -9,10 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -80,6 +77,12 @@ public class AuthController {
         log.info("[AuthController] 비밀번호 변경 시작");
 
         authService.changePassword(request, passwordDto.getPassword());
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/test-login")
+    public ResponseEntity<Void> testLogin(@RequestParam String username, HttpServletResponse response) {
+        authService.issueTestTokens(username, response);
         return ResponseEntity.ok().build();
     }
 

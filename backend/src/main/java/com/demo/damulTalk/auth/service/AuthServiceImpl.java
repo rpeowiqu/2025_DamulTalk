@@ -184,4 +184,17 @@ public class AuthServiceImpl implements AuthService {
         log.info("[AuthService] 회원가입 validation 성공");
     }
 
+    @Override
+    public void issueTestTokens(String username, HttpServletResponse response) {
+        User user = userMapper.findByUsername(username);
+        if (user == null)
+            throw new BusinessException(ErrorCode.INVALID_USER, "테스트 유저가 존재하지 않습니다.");
+
+        String accessToken = jwtService.generateAccessToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
+
+        response.setHeader("Authorization", "Bearer " + accessToken);
+        cookieUtil.addCookie(response, "refresh_token", refreshToken, (int)(jwtService.getRefreshTokenExpire() / 1000));
+    }
+
 }

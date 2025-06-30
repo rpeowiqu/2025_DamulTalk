@@ -11,8 +11,6 @@ import java.time.LocalDateTime;
 @Builder
 public class UserInfo {
 
-    private int userId;
-
     private String nickname;
 
     private String statusMessage;
@@ -20,5 +18,7 @@ public class UserInfo {
     private int friendNum;
 
     private LocalDateTime joinedAt;
+
+    private Boolean isFriend;
 
 }

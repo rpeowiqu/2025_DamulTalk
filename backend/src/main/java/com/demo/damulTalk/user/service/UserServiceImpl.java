@@ -48,7 +48,9 @@ public class UserServiceImpl implements UserService {
         if(id == null)
             id = userUtil.getCurrentUserId();
 
-        UserInfo info = userMapper.selectUserInfo(id);
+        int userId = userUtil.getCurrentUserId();
+
+        UserInfo info = userMapper.selectUserInfo(userId, id);
 
         return info;
     }

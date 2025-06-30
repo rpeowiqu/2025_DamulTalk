@@ -6,6 +6,7 @@ import com.demo.damulTalk.auth.dto.ValidValue;
 import com.demo.damulTalk.user.dto.SignupRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.web.bind.annotation.RequestParam;
 
 public interface AuthService {
 
@@ -20,5 +21,7 @@ public interface AuthService {
     void checkDuplicatesNickname(ValidValue value);
 
     void changePassword(HttpServletRequest request, String password);
+
+    void issueTestTokens(@RequestParam String username, HttpServletResponse response);
 
 }
