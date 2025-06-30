@@ -43,3 +43,8 @@ export const getCurrentUser = async () => {
   const data = await apiClient.get("auth/info").json<User>();
   return data;
 };
+
+export const postTokenUpdate = async () => {
+  const response = await apiClient.post("auth/refresh");
+  return response;
+};
