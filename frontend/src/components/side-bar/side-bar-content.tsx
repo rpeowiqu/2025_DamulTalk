@@ -6,18 +6,21 @@ import SideBarFriendContent from "@/components/side-bar/side-bar-friend-content"
 import SideBarChatContent from "@/components/side-bar/side-bar-chat-content";
 import LogoutButton from "@/components/auth/logout-button";
 import type { SideBarTabType } from "@/types/side-bar/type";
+import useCurrentUser from "@/hooks/auth/use-current-user";
+import UserItemSkeleton from "@/components/user/user-item-skeleton";
 
 interface SideBarContentProps {
   currentTab: SideBarTabType;
 }
 
 const SideBarContent = ({ currentTab }: SideBarContentProps) => {
+  const { data, isLoading } = useCurrentUser();
   const navigate = useNavigate();
 
   const renderContent = () => {
     switch (currentTab) {
       case "FRIEND":
-        return <SideBarFriendContent />;
+        return <SideBarFriendContent user={data} />;
       case "CHAT":
         return <SideBarChatContent />;
     }
@@ -33,17 +36,16 @@ const SideBarContent = ({ currentTab }: SideBarContentProps) => {
       </div>
 
       <div className="flex items-center justify-between border-b border-neutral-300 pb-1">
-        <UserItem
-          user={{
-            userId: 0,
-            nickname: "다믈랭",
-            profileImageUrl: null,
-            online: true,
-          }}
-          className="hover:bg-white"
-          onClick={() => navigate(`/profile/${1}`)}>
-          <LogoutButton />
-        </UserItem>
+        {isLoading ? (
+          <UserItemSkeleton visibleStatus={true} />
+        ) : data ? (
+          <UserItem
+            user={{ ...data, online: true }}
+            className="hover:bg-white"
+            onClick={() => navigate(`/profiles/${data.userId}`)}>
+            <LogoutButton />
+          </UserItem>
+        ) : null}
       </div>
 
       <div className="flex min-h-0 flex-1 flex-col gap-4">

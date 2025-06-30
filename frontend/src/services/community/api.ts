@@ -1,20 +1,19 @@
 import apiClient from "@/utils/http-common";
 import {
-  type FriendRequestListResponse,
-  type FollowRequest,
+  type FriendRequestRequest,
   type FriendDeleteRequest,
-  type FriendListResponse,
   type FriendSearchRequest,
   type FriendSearchResponse,
+  type ProfileResponse,
 } from "@/types/community/type";
 import { getQueryString } from "@/utils/url";
 
-export const getFriends = async () => {
-  const data = await apiClient.get("/friends").json<FriendListResponse>();
-  return data;
+export const getFriends = async (userId: number) => {
+  const response = await apiClient.get(`friends/${userId}`);
+  return response;
 };
 
-export const postFollow = async (request: FollowRequest) => {
+export const postFriendRequest = async (request: FriendRequestRequest) => {
   const response = await apiClient.post("friends/requests", {
     json: request,
   });
@@ -37,8 +36,13 @@ export const deleteFriend = async (request: FriendDeleteRequest) => {
 };
 
 export const getFriendRequests = async () => {
+  const response = await apiClient.get("friends/requests");
+  return response;
+};
+
+export const getProfile = async (userId: number) => {
   const data = await apiClient
-    .get("friends/requests")
-    .json<FriendRequestListResponse>();
+    .get(`users/profiles/${userId}`)
+    .json<ProfileResponse>();
   return data;
 };

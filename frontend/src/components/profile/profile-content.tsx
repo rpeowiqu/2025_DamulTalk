@@ -1,11 +1,19 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import SearchBar from "@/components/common/search-bar";
 import FriendList from "@/components/user/friend-list";
-import UserDummyData from "@/mocks/friends.json";
-import type { User } from "@/types/user/type";
+import type { Profile, User } from "@/types/user/type";
+import useFriends from "@/hooks/community/use-friends";
 
-const ProfileContent = () => {
+interface ProfileContentProps {
+  profile: Profile;
+}
+
+const ProfileContent = ({ profile }: ProfileContentProps) => {
+  const { userId } = useParams();
+  const { data, isLoading: isLoadingFriends } = useFriends(
+    userId ? Number(userId) : 0,
+  );
   const navigate = useNavigate();
 
   return (
@@ -15,15 +23,15 @@ const ProfileContent = () => {
         <ul className="flex list-disc flex-col gap-4 pl-8">
           <li>
             <p className="font-bold">가입일</p>
-            <p className="text-neutral-500">2025년 06월 11일</p>
+            <p className="text-neutral-500">
+              {new Date(profile.joinedAt).toLocaleDateString()}
+            </p>
           </li>
 
           <li>
             <p className="font-bold">상태 메시지</p>
             <p className="whitespace-pre-wrap text-neutral-500">
-              {
-                "안녕하세요, 반갑습니다.\n팀 50일에서 다믈랭에 이어 메신저 서비스 다믈톡을 개발 중에 있습니다.\n많은 관심 부탁드립니다."
-              }
+              {profile.statusMessage}
             </p>
           </li>
         </ul>
@@ -35,10 +43,11 @@ const ProfileContent = () => {
         <h1 className="text-xl font-bold">친구</h1>
         <SearchBar onSearch={(keyword) => console.log(keyword)} />
         <FriendList
-          users={UserDummyData}
+          isLoading={isLoadingFriends}
+          users={data ?? []}
           visibleStatus={false}
           className="scroll-hidden min-h-0 flex-1 overflow-y-auto"
-          onSelect={(user: User) => navigate(`/profile/${user.userId}`)}
+          onSelect={(user: User) => navigate(`/profiles/${user.userId}`)}
         />
       </div>
     </div>

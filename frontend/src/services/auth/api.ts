@@ -1,9 +1,10 @@
+import apiClient from "@/utils/http-common";
 import type {
   LoginRequest,
   SignupRequest,
   ValueCheckRequest,
 } from "@/types/auth/type";
-import apiClient from "@/utils/http-common";
+import type { User } from "@/types/user/type";
 
 export const postSignup = async (request: SignupRequest) => {
   const response = await apiClient.post("auth/signup", {
@@ -36,4 +37,9 @@ export const postNicknameCheck = async (request: ValueCheckRequest) => {
     json: request,
   });
   return response;
+};
+
+export const getCurrentUser = async () => {
+  const data = await apiClient.get("auth/info").json<User>();
+  return data;
 };
