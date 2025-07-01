@@ -63,6 +63,11 @@
         VALUES (#{username}, #{password}, #{nickname}, #{joinedAt})
     </insert>
 
+    <insert id="insertFollowRequest">
+        INSERT INTO friends (first_user_id, second_user_id)
+        VALUES (#{userId}, #{targetId});
+    </insert>
+
     <update id="updatePassword">
         UPDATE users
         SET password = #{password}
