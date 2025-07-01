@@ -42,7 +42,7 @@ public class FriendController {
     @GetMapping("/search")
     public ResponseEntity<?> searchFriends(
             @RequestParam String nickname,
-            @RequestParam String cursor,
+            @RequestParam(required = false) String cursor,
             @RequestParam(defaultValue = "10") int size
     ) {
         log.info("[FriendController] 친구 검색 시작 - nickname: {}", nickname);
