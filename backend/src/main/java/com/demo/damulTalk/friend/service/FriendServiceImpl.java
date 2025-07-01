@@ -77,7 +77,7 @@ public class FriendServiceImpl implements FriendService {
         log.info("[FriendService] 친구 검색 시작 - nickname: {}, cursor: {}, size: {}", nickname, cursor, size);
 
         int userId = userUtil.getCurrentUserId();
-        List<FriendDto> results = friendMapper.selectFriendsByNickname(userId, nickname, cursor, size);
+        List<FriendDto> results = friendMapper.selectFriendsByNickname(userId, nickname, cursor, size + 1);
 
         boolean hasNext = results.size() > size;
         String nextCursor = null;

@@ -45,7 +45,7 @@
             AND u.nickname > #{cursor}
         </if>
         ORDER BY u.nickname ASC
-        LIMIT #{size + 1}
+        LIMIT #{size}
     </select>
 
     <select id="selectFriendIds" resultType="int">
