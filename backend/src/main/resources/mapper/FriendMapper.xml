@@ -81,6 +81,13 @@
             ) f ON u.user_id = f.user_id
     </select>
 
+    <select id="selectFriendRelationShipCount">
+        SELECT COUNT(*)
+        FROM friends
+        WHERE (first_user_id = #{userId} AND second_user_id = #{targetId})
+          OR (first_user_id = #{targetId} AND second_user_id = #{userId})
+    </select>
+
     <insert id="insertFollowRequest">
         INSERT INTO friends (first_user_id, second_user_id)
         VALUES(#{userId}, #{targetId})

@@ -17,7 +17,9 @@ public enum ErrorCode {
     OUTLENGTH_NICKNAME(HttpStatus.BAD_REQUEST, "길이 제한에 맞지 않는 닉네임입니다."),
 
     EMAIL_SEND_FAIL(HttpStatus.BAD_REQUEST, "이메일 인증코드 발송에 실패하였습니다."),
-    INVALID_CODE(HttpStatus.BAD_REQUEST, "올바른 코드가 아닙니다."),;
+    INVALID_CODE(HttpStatus.BAD_REQUEST, "올바른 코드가 아닙니다."),
+
+    EXISTING_FRIEND(HttpStatus.BAD_REQUEST, "이미 존재하는 관계입니다."),;
 
     private final HttpStatus status;
     private final String message;

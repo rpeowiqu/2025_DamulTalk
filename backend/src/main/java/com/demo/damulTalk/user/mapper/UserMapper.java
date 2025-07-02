@@ -28,4 +28,6 @@ public interface UserMapper {
 
     LoginResponseDto selectMyInfo(Integer userId);
 
+    int selectFriendRelationShipCount(int userId, Integer targetId);
+
 }
