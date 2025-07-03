@@ -1,7 +1,5 @@
 package com.demo.damulTalk.friend.service;
 
-import com.demo.damulTalk.common.scroll.CursorPageMetaDto;
-import com.demo.damulTalk.common.scroll.ScrollResponse;
 import com.demo.damulTalk.exception.BusinessException;
 import com.demo.damulTalk.exception.ErrorCode;
 import com.demo.damulTalk.friend.dto.FriendDto;
@@ -118,6 +116,24 @@ public class FriendServiceImpl implements FriendService {
 
         List<FriendDto> requests = friendMapper.selectFriendRequestsById(userId);
         return requests;
+    }
+
+    @Override
+    public FriendDto addFriend(Integer targetId) {
+        log.info("[FriendService] 친구 추가 시작 - targetId: {}", targetId);
+
+        int userId = userUtil.getCurrentUserId();
+
+        int insert = friendMapper.updateFriend(targetId, userId);
+        if(insert < 1) {
+            throw new BusinessException(
+                    ErrorCode.INVALID_REQUEST,
+                    "해당 요청이 존재하지 않습니다."
+            );
+        }
+
+        FriendDto friend = friendMapper.selectFriendInfoById(targetId);
+        return friend;
     }
 
 }

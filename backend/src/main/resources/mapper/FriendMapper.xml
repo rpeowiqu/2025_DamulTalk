@@ -64,10 +64,25 @@
           OR (first_user_id = #{targetId} AND second_user_id = #{userId})
     </select>
 
+    <select id="selectFriendInfoById" resultType="com.demo.damulTalk.friend.dto.FriendDto">
+        SELECT
+            user_id AS userId,
+            nickname,
+            profile_image_url AS profileImageUrl
+        FROM users
+        WHERE user_id = #{userId}
+    </select>
+
     <insert id="insertFollowRequest">
         INSERT INTO friends (first_user_id, second_user_id)
         VALUES(#{userId}, #{targetId})
     </insert>
+
+    <update id="updateFriend">
+        UPDATE friends SET status = 'PENDING'
+        WHERE (first_user_id = #{targetId} AND second_user_id = #{userId})
+          OR (first_user_id = #{userId} AND second_user_id = #{targetId})
+    </update>
 
     <delete id="deleteFriendById">
         DELETE FROM friends

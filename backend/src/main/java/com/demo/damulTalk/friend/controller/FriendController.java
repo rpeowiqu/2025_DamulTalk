@@ -67,4 +67,12 @@ public class FriendController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/requests/{targetId}")
+    public ResponseEntity<?> acceptFriendRequest(@PathVariable Integer targetId) {
+        log.info("[FriendController] 친구 요청 수락 시작 - targetId: {}", targetId);
+
+        FriendDto response = friendService.addFriend(targetId);
+        return ResponseEntity.ok(response);
+    }
+
 }

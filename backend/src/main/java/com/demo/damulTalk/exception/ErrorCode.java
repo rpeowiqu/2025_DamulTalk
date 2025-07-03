@@ -19,7 +19,8 @@ public enum ErrorCode {
     EMAIL_SEND_FAIL(HttpStatus.BAD_REQUEST, "이메일 인증코드 발송에 실패하였습니다."),
     INVALID_CODE(HttpStatus.BAD_REQUEST, "올바른 코드가 아닙니다."),
 
-    EXISTING_FRIEND(HttpStatus.BAD_REQUEST, "이미 존재하는 관계입니다."),;
+    EXISTING_FRIEND(HttpStatus.BAD_REQUEST, "이미 존재하는 관계입니다."),
+    INVALID_REQUEST(HttpStatus.BAD_REQUEST, "유효하지 않은 요청입니다."),;
 
     private final HttpStatus status;
     private final String message;
