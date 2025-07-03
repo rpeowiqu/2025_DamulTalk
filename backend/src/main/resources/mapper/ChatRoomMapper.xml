@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.damulTalk.chat.mapper.ChatRoomMapper">
+
+    <select id="selectChatRoomsByUserId" parameterType="int" resultType="com.demo.damulTalk.chat.domain.ChatRoom">
+        SELECT cr.*
+        FROM chat_rooms cr
+                 JOIN chat_participants cp ON cr.room_id = cp.room_id
+        WHERE cp.user_id = #{userId}
+    </select>
+
+    <select id="selectParticipants" resultType="com.demo.damulTalk.user.domain.User">
+        SELECT u.*
+        FROM users u
+                 JOIN chat_participants cp ON u.user_id = cp.user_id
+        WHERE cp.room_id = #{roomId}
+          AND u.user_id != #{excludeUserId}
+    </select>
+
+    <select id="selectLastReadTime" resultType="java.time.LocalDateTime">
+        SELECT last_read_time
+        FROM chat_read
+        WHERE room_id = #{roomId}
+          AND user_id = #{userId}
+    </select>
+
+</mapper>

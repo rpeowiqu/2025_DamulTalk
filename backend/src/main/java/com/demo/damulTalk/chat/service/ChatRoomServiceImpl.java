@@ -3,6 +3,8 @@ package com.demo.damulTalk.chat.service;
 import com.demo.damulTalk.chat.domain.ChatMessage;
 import com.demo.damulTalk.chat.domain.ChatRoom;
 import com.demo.damulTalk.chat.dto.ChatRoomInfo;
+import com.demo.damulTalk.chat.mapper.ChatRoomMapper;
+import com.demo.damulTalk.chat.repository.ChatMessageRepository;
 import com.demo.damulTalk.user.domain.User;
 import com.demo.damulTalk.util.UserUtil;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +19,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ChatRoomServiceImpl {
+public class ChatRoomServiceImpl implements ChatRoomService {
 
     private final ChatRoomMapper chatRoomMapper;
     private final ChatMessageRepository chatMessageRepository;
