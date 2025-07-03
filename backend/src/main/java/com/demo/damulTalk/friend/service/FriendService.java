@@ -12,8 +12,6 @@ public interface FriendService {
 
     void sendFollowRequest(Integer targetId);
 
-    ScrollResponse<List<FriendDto>, String> getSearchResult(String nickname, String cursor, int size);
-
     void deleteFriend(Integer friendId);
 
     void deleteFriendRequest(Integer friendId);

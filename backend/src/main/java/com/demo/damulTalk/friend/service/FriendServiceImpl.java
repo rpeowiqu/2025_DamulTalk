@@ -81,32 +81,6 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Override
-    public ScrollResponse<List<FriendDto>, String> getSearchResult(String nickname, String cursor, int size) {
-        log.info("[FriendService] 친구 검색 시작 - nickname: {}, cursor: {}, size: {}", nickname, cursor, size);
-
-        int userId = userUtil.getCurrentUserId();
-        List<FriendDto> results = friendMapper.selectFriendsByNickname(userId, nickname, cursor, size + 1);
-
-        boolean hasNext = results.size() > size;
-        String nextCursor = null;
-
-        if (hasNext) {
-            FriendDto lastItem = results.remove(size); // size + 1 번째 항목 제거 후 커서 지정
-            nextCursor = lastItem.getNickname();       // 다음 요청 시 커서로 사용
-        }
-
-        CursorPageMetaDto<String> meta = CursorPageMetaDto.<String>builder()
-                .nextCursor(nextCursor)
-                .hasNextCursor(hasNext)
-                .build();
-
-        return ScrollResponse.<List<FriendDto>, String>builder()
-                .data(results)
-                .meta(meta)
-                .build();
-    }
-
-    @Override
     public void deleteFriend(Integer friendId) {
         log.info("[FriendService] 친구 삭제 시작 - friendId: {}", friendId);
 

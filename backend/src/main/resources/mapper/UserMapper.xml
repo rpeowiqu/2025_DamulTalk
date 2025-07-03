@@ -58,6 +58,20 @@
         WHERE user_id = #{userId}
     </select>
 
+    <select id="selectUsersByNickname" resultType="com.demo.damulTalk.friend.dto.FriendDto">
+        SELECT
+            user_id as userId,
+            nickname,
+            profile_image_url AS profileImageUrl
+        FROM users
+        WHERE nickname LIKE CONCAT('%', #{nickname}, '%')
+        <if test="cursor != null">
+            AND nickname > #{cursor}
+        </if>
+        ORDER BY nickname ASC
+        LIMIT #{size}
+    </select>
+
     <insert id="insertUser" parameterType="com.demo.damulTalk.user.domain.User">
         INSERT INTO users (username, password, nickname, joined_at)
         VALUES (#{username}, #{password}, #{nickname}, #{joinedAt})

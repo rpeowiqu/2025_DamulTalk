@@ -4,7 +4,6 @@ import com.demo.damulTalk.auth.dto.LoginResponseDto;
 import com.demo.damulTalk.friend.dto.FriendDto;
 import com.demo.damulTalk.user.domain.User;
 import com.demo.damulTalk.user.dto.UserInfo;
-import com.demo.damulTalk.user.dto.UserStatusDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -29,5 +28,7 @@ public interface UserMapper {
     LoginResponseDto selectMyInfo(Integer userId);
 
     int selectFriendRelationShipCount(int userId, Integer targetId);
+
+    List<FriendDto> selectUsersByNickname(Integer userId, String nickname, String cursor, Integer size);
 
 }

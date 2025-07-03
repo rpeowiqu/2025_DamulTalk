@@ -11,8 +11,6 @@ public interface FriendMapper {
 
     List<UserStatusDto> selectFriends(Integer userId);
 
-    List<FriendDto> selectFriendsByNickname(Integer userId, String nickname, String cursor, Integer size);
-
     int deleteFriendById(Integer userId, Integer friendId);
 
     List<Integer> selectFriendIds(Integer userId);

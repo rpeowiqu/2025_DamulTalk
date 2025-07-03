@@ -39,22 +39,6 @@ public class FriendController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<?> searchFriends(
-            @RequestParam String nickname,
-            @RequestParam(required = false) String cursor,
-            @RequestParam(defaultValue = "10") int size
-    ) {
-        log.info("[FriendController] 친구 검색 시작 - nickname: {}", nickname);
-
-        ScrollResponse<List<FriendDto>, String> friends = friendService.getSearchResult(nickname, cursor, size);
-        if(friends.getData().isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-
-        return ResponseEntity.ok(friends);
-    }
-
     @DeleteMapping
     public ResponseEntity<?> deleteFriend(@RequestBody CommonIdDto common) {
         log.info("[FriendController] 친구 삭제 시작");
