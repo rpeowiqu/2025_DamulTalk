@@ -5,8 +5,8 @@ import UserItem, { type UserItemProps } from "@/components/community/user-item";
 const FriendRequestItem = ({ user, ...props }: UserItemProps) => {
   return (
     <UserItem user={user} {...props}>
-      <FriendAcceptButton />
-      <FriendRejectButton />
+      <FriendAcceptButton userId={user.userId} />
+      <FriendRejectButton userId={user.userId} />
     </UserItem>
   );
 };

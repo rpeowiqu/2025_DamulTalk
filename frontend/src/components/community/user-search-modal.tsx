@@ -3,7 +3,7 @@ import { type Dispatch, type SetStateAction } from "react";
 import Dialog, { type DialogProps } from "@/components/common/dialog";
 import AutocompleteSearchBar from "@/components/common/auto-complete-search-bar";
 import { getUserSearch } from "@/services/community/api";
-import type { User } from "@/types/user/type";
+import type { User } from "@/types/community/type";
 import type { FriendSearchResponse } from "@/types/community/type";
 import UserSearchItem from "@/components/community/user-search-item";
 

@@ -1,4 +1,4 @@
-import type { Profile } from "@/types/user/type";
+import type { Profile } from "@/types/community/type";
 import defaultProfileBackground from "@/assets/images/profile-background.png";
 import UserPortrait from "@/components/community/user-portrait";
 import FriendRequestButton from "@/components/community/friend-request-button";

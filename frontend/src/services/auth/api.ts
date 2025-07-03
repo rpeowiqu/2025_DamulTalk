@@ -4,7 +4,7 @@ import type {
   SignupRequest,
   ValueCheckRequest,
 } from "@/types/auth/type";
-import type { User } from "@/types/user/type";
+import type { User } from "@/types/community/type";
 
 export const postSignup = async (request: SignupRequest) => {
   const response = await apiClient.post("auth/signup", {

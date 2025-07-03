@@ -14,7 +14,7 @@ import FriendList from "@/components/community/friend-list";
 import FriendRequestList from "@/components/community/friend-request-list";
 import useFriendRequests from "@/hooks/community/use-friend-requests";
 import useFriends from "@/hooks/community/use-friends";
-import type { User } from "@/types/user/type";
+import type { User } from "@/types/community/type";
 
 const friendFilters = [
   {

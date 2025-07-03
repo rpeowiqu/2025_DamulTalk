@@ -2,7 +2,7 @@ import type { MouseEvent, ReactNode } from "react";
 
 import UserPortrait from "@/components/community/user-portrait";
 import { cn } from "@/utils/style";
-import type { User } from "@/types/user/type";
+import type { User } from "@/types/community/type";
 
 export interface UserItemProps {
   user: User;

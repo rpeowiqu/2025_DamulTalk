@@ -1,6 +1,6 @@
 import type { FormEvent } from "react";
 
-import type { User } from "@/types/user/type";
+import type { User } from "@/types/community/type";
 import type { ChatCreateFormProps } from "@/components/chat/chat-create-form";
 import Carousel from "@/components/common/carousel";
 import Button from "@/components/common/button";
@@ -88,6 +88,7 @@ const ChatCreateUserForm = ({
       )}
       <SearchBar onSearch={(keyword) => console.log(keyword)} />
       <FriendList
+        isLoading={false}
         users={UserDummyData}
         visibleStatus={false}
         className="scroll-hidden min-h-0 flex-1 overflow-y-auto"
