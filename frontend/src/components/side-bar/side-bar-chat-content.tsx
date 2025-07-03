@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import {
   Accordion,
@@ -10,6 +11,7 @@ import ChatCreateButton from "@/components/chat/chat-create-button";
 import FilterButton from "@/components/common/filter-button";
 import SearchBar from "@/components/common/search-bar";
 import ChatRoomList from "@/components/chat/chat-room-list";
+import useChatRoomPreviews from "@/hooks/chat/use-chat-room-previews";
 
 const chatFilters = [
   {
@@ -23,7 +25,10 @@ const chatFilters = [
 ];
 
 const SideBarChatContent = () => {
+  const { data, isLoading } = useChatRoomPreviews();
   const [selectedFilter, setSelectedFilter] = useState("recent");
+  const [selectedChatRoomId, setSelectedChatRoomId] = useState(0);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -42,10 +47,18 @@ const SideBarChatContent = () => {
         defaultValue={["chats"]}
         className="scroll-hidden flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto">
         <AccordionItem value="chats" className="flex flex-col gap-4">
-          <AccordionTrigger>채팅 4건</AccordionTrigger>
+          <AccordionTrigger>채팅 {data?.length ?? 0}건</AccordionTrigger>
           <AccordionContent className="flex flex-col gap-4">
             <SearchBar onSearch={(keyword) => console.log(keyword)} />
-            <ChatRoomList />
+            <ChatRoomList
+              isLoading={isLoading}
+              chatRoomPreviews={data ?? []}
+              selecetedChatRoomId={selectedChatRoomId}
+              onSelect={(item) => {
+                setSelectedChatRoomId(item.roomId);
+                navigate(`/chats/${item.roomId}`);
+              }}
+            />
           </AccordionContent>
         </AccordionItem>
       </Accordion>
