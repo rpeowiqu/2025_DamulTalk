@@ -41,7 +41,6 @@ const apiClient = ky.create({
     ],
     afterResponse: [
       async (request, options, response) => {
-        console.log(response.status);
         if (response.status === 401) {
           try {
             const accessToken = await reissueAccessToken();
