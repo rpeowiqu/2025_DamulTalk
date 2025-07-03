@@ -27,4 +27,35 @@
           AND user_id = #{userId}
     </select>
 
+    <select id="selectRoomIdByExactUserIds" resultType="int">
+        SELECT crm.room_id
+        FROM chat_room_members crm
+        WHERE crm.user_id IN
+        <foreach item="userId" collection="userIds" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+        GROUP BY crm.room_id
+        HAVING COUNT(*) = #{size}
+          AND COUNT(*) = (
+              SELECT COUNT(*)
+              FROM chat_room_members
+              WHERE room_id = crm.room_id
+          )
+        LIMIT 1
+    </select>
+
+    <insert id="insertChatRoom" parameterType="com.demo.damulTalk.chat.domain.ChatRoom"
+            useGeneratedKeys="true" keyProperty="roomId">
+        INSERT INTO chat_rooms (room_type, room_name, room_size)
+        VALUES (#{roomType}, #{roomName}, #{roomSize})
+    </insert>
+
+    <insert id="insertParticipants">
+        INSERT INTO chat_room_members (room_id, user_id)
+        VALUES
+            <foreach collection="userIds" item="userId" separator=",">
+                (#{roomId}, #{userId})
+            </foreach>
+    </insert>
+
 </mapper>

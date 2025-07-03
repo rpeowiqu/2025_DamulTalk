@@ -1,9 +1,7 @@
 package com.demo.damulTalk.chat.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.demo.damulTalk.chat.dto.RoomType;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -11,6 +9,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ChatRoom {
 
     private Integer roomId;
@@ -22,9 +21,5 @@ public class ChatRoom {
     private Integer roomSize;
 
     private LocalDateTime createdAt;
-
-    enum RoomType {
-        PRIVATE, GROUP;
-    }
 
 }

@@ -2,7 +2,9 @@ package com.demo.damulTalk.chat.service;
 
 import com.demo.damulTalk.chat.domain.ChatMessage;
 import com.demo.damulTalk.chat.domain.ChatRoom;
+import com.demo.damulTalk.chat.dto.ChatRoomCreate;
 import com.demo.damulTalk.chat.dto.ChatRoomInfo;
+import com.demo.damulTalk.chat.dto.RoomType;
 import com.demo.damulTalk.chat.mapper.ChatRoomMapper;
 import com.demo.damulTalk.chat.repository.ChatMessageRepository;
 import com.demo.damulTalk.user.domain.User;
@@ -12,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -60,6 +63,39 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
             return info;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public Integer createChatRoom(ChatRoomCreate chatRoomCreate) {
+        log.info("[ChatRoomService] 채팅방 생성 시작");
+
+        int userId = userUtil.getCurrentUserId();
+        List<Integer> userIds = new ArrayList<>(chatRoomCreate.getUserIds());
+
+        if(!userIds.contains(userId)){
+            userIds.add(userId);
+        }
+
+        Integer existingRoomId = chatRoomMapper.selectRoomIdByExactUserIds(userIds, userIds.size());
+        if(existingRoomId != null){
+            log.info("[ChatRoomService] 기존 채팅방 존재");
+            return existingRoomId;
+        }
+
+        ChatRoom newRoom = ChatRoom.builder()
+                .roomName(chatRoomCreate.getRoomName())
+                .roomType(userIds.size() == 2 ? RoomType.PRIVATE : RoomType.GROUP)
+                .roomSize(userIds.size())
+                .build();
+
+        chatRoomMapper.insertChatRoom(newRoom);
+
+        int newRoomId = newRoom.getRoomId();
+
+        chatRoomMapper.insertParticipants(newRoomId, userIds);
+
+        log.info("[ChatRoomService] 채팅방 생성 완료: {}", newRoomId);
+        return newRoomId;
     }
 
 }
