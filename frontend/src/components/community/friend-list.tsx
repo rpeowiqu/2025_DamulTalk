@@ -1,7 +1,7 @@
 import type { User } from "@/types/user/type";
 import { cn } from "@/utils/style";
-import UserItem from "@/components/user/user-item";
-import UserItemSkeleton from "@/components/user/user-item-skeleton";
+import UserItem from "@/components/community/user-item";
+import UserItemSkeleton from "@/components/community/user-item-skeleton";
 
 interface FriendListProps {
   isLoading: boolean;

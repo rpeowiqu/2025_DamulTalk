@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import UserSearchIcon from "@/components/icon/user-search-icon";
-import UserSearchModal from "@/components/user/user-search-modal";
+import UserSearchModal from "@/components/community/user-search-modal";
 import useModal from "@/hooks/common/use-modal";
 
 const UserSearchButton = () => {

@@ -7,11 +7,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import UserSearchButton from "@/components/user/user-search-button";
+import UserSearchButton from "@/components/community/user-search-button";
 import FilterButton from "@/components/common/filter-button";
 import SearchBar from "@/components/common/search-bar";
-import FriendList from "@/components/user/friend-list";
-import FriendRequestList from "@/components/user/friend-request-list";
+import FriendList from "@/components/community/friend-list";
+import FriendRequestList from "@/components/community/friend-request-list";
 import useFriendRequests from "@/hooks/community/use-friend-requests";
 import useFriends from "@/hooks/community/use-friends";
 import type { User } from "@/types/user/type";

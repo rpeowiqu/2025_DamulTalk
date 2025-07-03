@@ -1,5 +1,22 @@
-import type { Profile, User } from "@/types/user/type";
 import type { InfiniteScrollType } from "@/types/common/type";
+
+export interface User {
+  userId: number;
+  nickname: string;
+  profileImageUrl: string | null;
+  online?: boolean;
+}
+
+export type FriendRequestType = "ACCEPTED" | "PENDING" | "ME" | "NONE";
+
+export interface Profile {
+  nickname: string;
+  profileImageUrl: string;
+  statusMessage: string;
+  friendCount: number;
+  joinedAt: string;
+  isFriend: FriendRequestType;
+}
 
 // Request ==========================================================================================================================
 export interface FriendRequestRequest {
