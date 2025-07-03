@@ -27,8 +27,6 @@ public interface UserMapper {
 
     LoginResponseDto selectMyInfo(Integer userId);
 
-    int selectFriendRelationShipCount(int userId, Integer targetId);
-
     List<FriendDto> selectUsersByNickname(Integer userId, String nickname, String cursor, Integer size);
 
 }

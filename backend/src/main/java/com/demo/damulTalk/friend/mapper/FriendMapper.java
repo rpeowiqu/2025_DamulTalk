@@ -19,4 +19,6 @@ public interface FriendMapper {
 
     List<FriendDto> selectFriendRequestsById(Integer userId);
 
+    int selectFriendRelationShipCount(int userId, Integer targetId);
+
 }

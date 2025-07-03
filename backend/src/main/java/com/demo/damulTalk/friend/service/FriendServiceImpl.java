@@ -51,7 +51,7 @@ public class FriendServiceImpl implements FriendService {
 
         int userId = userUtil.getCurrentUserId();
 
-        int cnt = userMapper.selectFriendRelationShipCount(userId, targetId);
+        int cnt = friendMapper.selectFriendRelationShipCount(userId, targetId);
         if(cnt > 0) {
             throw new BusinessException(
                     ErrorCode.EXISTING_FRIEND,
