@@ -1,11 +1,18 @@
 import type { MouseEvent } from "react";
 
 import CancelCircleIcon from "@/components/icon/cancel-circle-icon";
+import useRejectFriendRequest from "@/hooks/community/use-reject-friend-request";
 
-const FriendRejectButton = () => {
+interface FriendRejectButtonProps {
+  userId: number;
+}
+
+const FriendRejectButton = ({ userId }: FriendRejectButtonProps) => {
+  const { mutate: rejectRequest } = useRejectFriendRequest(userId);
+
   const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    console.log("친구 요청 거절함");
+    rejectRequest({ id: userId });
   };
 
   return (

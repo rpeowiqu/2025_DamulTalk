@@ -1,11 +1,18 @@
 import type { MouseEvent } from "react";
 
 import CheckCircleIcon from "@/components/icon/check-circle-icon";
+import useAcceptFriendRequest from "@/hooks/community/use-accept-friend-request";
 
-const FriendAcceptButton = () => {
+interface FriendAcceptButtonProps {
+  userId: number;
+}
+
+const FriendAcceptButton = ({ userId }: FriendAcceptButtonProps) => {
+  const { mutate: acceptRequest } = useAcceptFriendRequest(userId);
+
   const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    console.log("친구 요청 수락함");
+    acceptRequest(userId);
   };
 
   return (
