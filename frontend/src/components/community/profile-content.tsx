@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 
 import SearchBar from "@/components/common/search-bar";
-import FriendList from "@/components/user/friend-list";
+import FriendList from "@/components/community/friend-list";
 import type { Profile, User } from "@/types/user/type";
 import useFriends from "@/hooks/community/use-friends";
 

@@ -1,6 +1,6 @@
 import type { MouseEvent } from "react";
 
-import UserPortrait from "@/components/user/user-portrait";
+import UserPortrait from "@/components/community/user-portrait";
 import ChatCreateUserDeleteButton from "@/components/chat/chat-create-user-delete-button";
 import { cn } from "@/utils/style";
 import type { User } from "@/types/user/type";

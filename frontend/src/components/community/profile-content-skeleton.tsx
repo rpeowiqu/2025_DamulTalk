@@ -1,4 +1,4 @@
-import UserItemSkeleton from "@/components/user/user-item-skeleton";
+import UserItemSkeleton from "@/components/community/user-item-skeleton";
 
 const ProfileContentSkeleton = () => {
   return (

@@ -6,7 +6,7 @@ import Carousel from "@/components/common/carousel";
 import Button from "@/components/common/button";
 import ChatCreateUserItem from "@/components/chat/chat-create-user-item";
 import SearchBar from "@/components/common/search-bar";
-import FriendList from "@/components/user/friend-list";
+import FriendList from "@/components/community/friend-list";
 import UserDummyData from "@/mocks/friends.json";
 
 const ChatCreateUserForm = ({

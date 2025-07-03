@@ -1,10 +1,10 @@
 import { useParams } from "react-router-dom";
 
-import ProfileContent from "@/components/profile/profile-content";
-import ProfileHeader from "@/components/profile/profile-header";
+import ProfileContent from "@/components/community/profile-content";
+import ProfileHeader from "@/components/community/profile-header";
 import useProfile from "@/hooks/community/use-profile";
-import ProfileHeaderSkeleton from "@/components/profile/profile-header-skeleton";
-import ProfileContentSkeleton from "@/components/profile/profile-content-skeleton";
+import ProfileHeaderSkeleton from "@/components/community/profile-header-skeleton";
+import ProfileContentSkeleton from "@/components/community/profile-content-skeleton";
 
 const ProfilePage = () => {
   const { userId } = useParams();

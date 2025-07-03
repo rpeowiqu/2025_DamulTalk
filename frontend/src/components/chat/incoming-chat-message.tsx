@@ -1,7 +1,7 @@
 import { PlayCircleIcon } from "lucide-react";
 
 import type { ChatMessageProps } from "@/components/chat/chat-message";
-import UserPortrait from "@/components/user/user-portrait";
+import UserPortrait from "@/components/community/user-portrait";
 
 const IncomingChatMessage = ({ message, onClick }: ChatMessageProps) => {
   const renderContent = () => {

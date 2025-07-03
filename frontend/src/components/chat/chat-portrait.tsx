@@ -1,4 +1,4 @@
-import UserPortrait from "@/components/user/user-portrait";
+import UserPortrait from "@/components/community/user-portrait";
 
 interface ChatPortraitProps {
   profileImages: string[];

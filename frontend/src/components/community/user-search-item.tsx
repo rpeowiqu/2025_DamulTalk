@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 
 import type { User } from "@/types/user/type";
-import UserPortrait from "@/components/user/user-portrait";
+import UserPortrait from "@/components/community/user-portrait";
 
 interface UserSearchItemProps {
   user: User;
