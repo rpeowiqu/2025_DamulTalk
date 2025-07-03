@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 
 import { cn } from "@/utils/style";
-import useRequestFriend from "@/hooks/community/use-request-friend";
+import useToggleFriendRequest from "@/hooks/community/use-toggle-friend-request";
 import type { FriendRequestType } from "@/types/user/type";
 
 const buttonVariants = cva(
@@ -40,7 +40,10 @@ const FriendRequestButton = ({
   ...props
 }: FriendRequestButtonProps) => {
   const { userId } = useParams();
-  const { optimisticState, mutate } = useRequestFriend(Number(userId), variant);
+  const { optimisticState, toggleFriendRequest } = useToggleFriendRequest(
+    Number(userId),
+    variant,
+  );
 
   const renderContent = () => {
     switch (optimisticState) {
@@ -74,7 +77,7 @@ const FriendRequestButton = ({
     <button
       className={cn(buttonVariants({ variant: optimisticState }), className)}
       {...props}
-      onClick={() => mutate({ id: Number(userId) })}>
+      onClick={toggleFriendRequest}>
       {renderContent()}
     </button>
   );
