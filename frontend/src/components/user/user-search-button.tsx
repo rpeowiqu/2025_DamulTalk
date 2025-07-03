@@ -15,6 +15,14 @@ const UserSearchButton = () => {
     openModal();
   };
 
+  const handleOpenChange = (open: boolean) => {
+    if (open) {
+      openModal();
+    } else {
+      closeModal();
+    }
+  };
+
   return (
     <>
       <button type="button" className="cursor-pointer" onClick={handleClick}>
@@ -23,13 +31,7 @@ const UserSearchButton = () => {
 
       <UserSearchModal
         open={isOpen}
-        onOpenChange={(open: boolean) => {
-          if (open) {
-            openModal();
-          } else {
-            closeModal();
-          }
-        }}
+        onOpenChange={handleOpenChange}
         keyword={keyword}
         setKeyword={setKeyword}
       />

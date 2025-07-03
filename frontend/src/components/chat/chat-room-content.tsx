@@ -27,6 +27,14 @@ const ChatRoomContent = () => {
     }
   };
 
+  const handleOpenChange = (open: boolean) => {
+    if (open) {
+      openModal();
+    } else {
+      closeModal();
+    }
+  };
+
   return (
     <div className="p-6 pb-0">
       <ChatMessageList
@@ -40,13 +48,7 @@ const ChatRoomContent = () => {
       />
       <ChatMessageFileModal
         open={isOpen}
-        onOpenChange={(open: boolean) => {
-          if (open) {
-            openModal();
-          } else {
-            closeModal();
-          }
-        }}
+        onOpenChange={handleOpenChange}
         messageInfo={selectedMessage}
       />
     </div>

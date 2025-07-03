@@ -19,6 +19,14 @@ const ChatRoomExitButton = ({ room, ...props }: ChatRoomExitButtonProps) => {
     openModal();
   };
 
+  const handleOpenChange = (open: boolean) => {
+    if (open) {
+      openModal();
+    } else {
+      closeModal();
+    }
+  };
+
   return (
     <>
       <button className="cursor-pointer" {...props} onClick={handleClick}>
@@ -29,13 +37,7 @@ const ChatRoomExitButton = ({ room, ...props }: ChatRoomExitButtonProps) => {
         room={room}
         closeModal={closeModal}
         open={isOpen}
-        onOpenChange={(open: boolean) => {
-          if (open) {
-            openModal();
-          } else {
-            closeModal();
-          }
-        }}
+        onOpenChange={handleOpenChange}
       />
     </>
   );
