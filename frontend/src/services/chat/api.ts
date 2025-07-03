@@ -11,7 +11,7 @@ import apiClient from "@/utils/http-common";
 import { getQueryString } from "@/utils/url";
 
 // 채팅 목록 조회
-export const getChatRooms = async () => {
+export const getChatRoomPreviews = async () => {
   const data = await apiClient.get("chats").json<ChatRoomPreviewsResponse>();
   return data;
 };
