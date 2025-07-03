@@ -52,7 +52,7 @@
                         ELSE first_user_id
                         END AS user_id
                 FROM friends
-                WHERE status = 'ACCEPTED'
+                WHERE status = 'PENDING'
                   AND (first_user_id = #{userId} OR second_user_id = #{userId})
             ) f ON u.user_id = f.user_id
     </select>
