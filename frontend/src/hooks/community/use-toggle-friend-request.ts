@@ -5,8 +5,10 @@ import {
   deleteFriendRequest,
   postFriendRequest,
 } from "@/services/community/api";
-import type { FriendRequestRequest } from "@/types/community/type";
-import type { FriendRequestType } from "@/types/user/type";
+import type {
+  FriendRequestRequest,
+  FriendRequestType,
+} from "@/types/community/type";
 
 const useToggleFriendRequest = (
   userId: number,

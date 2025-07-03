@@ -1,4 +1,4 @@
-import type { User } from "@/types/user/type";
+import type { User } from "@/types/community/type";
 
 export enum ChatCreateStep {
   SELECT_USER,

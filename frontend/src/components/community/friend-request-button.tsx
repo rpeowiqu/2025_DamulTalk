@@ -9,7 +9,7 @@ import {
 
 import { cn } from "@/utils/style";
 import useToggleFriendRequest from "@/hooks/community/use-toggle-friend-request";
-import type { FriendRequestType } from "@/types/user/type";
+import type { FriendRequestType } from "@/types/community/type";
 
 const buttonVariants = cva(
   "flex gap-3 items-center justify-center cursor-pointer rounded-lg px-5 py-2 text-lg font-bold text-white transition-color duration-300 disabled:bg-neutral-200",

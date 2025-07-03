@@ -1,4 +1,4 @@
-import type { User } from "@/types/user/type";
+import type { User } from "@/types/community/type";
 import { cn } from "@/utils/style";
 import UserItem from "@/components/community/user-item";
 import UserItemSkeleton from "@/components/community/user-item-skeleton";
