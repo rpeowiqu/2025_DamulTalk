@@ -1,15 +1,17 @@
 import type { Profile, User } from "@/types/user/type";
+import type { InfiniteScrollType } from "@/types/common/type";
 
 // Request ==========================================================================================================================
 export interface FriendRequestRequest {
   id: number;
 }
 
-export interface FriendSearchRequest {
+export interface UserSearchRequest {
   nickname: string;
   cursor?: string;
   size?: number;
 }
+
 export interface FriendDeleteRequest {
   id: number;
 }
@@ -17,13 +19,7 @@ export interface FriendDeleteRequest {
 // Response ==========================================================================================================================
 export type FriendsResponse = User[];
 
-export interface FriendSearchResponse {
-  data: User[];
-  meta: {
-    nextCursor: string;
-    hasNext: boolean;
-  };
-}
+export type FriendSearchResponse = InfiniteScrollType<User>;
 
 export type FriendRequestsResponse = User[];
 

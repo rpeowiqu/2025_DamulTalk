@@ -1,10 +1,14 @@
+import { useState } from "react";
+
 import UserSearchIcon from "@/components/icon/user-search-icon";
 import UserSearchModal from "@/components/user/user-search-modal";
 import useModal from "@/hooks/common/use-modal";
 
 const UserSearchButton = () => {
+  const [keyword, setKeyword] = useState("");
   const { isOpen, openModal, closeModal } = useModal({
     modalKey: "user-search",
+    onOpen: () => setKeyword(""),
   });
 
   const handleClick = () => {
@@ -26,6 +30,8 @@ const UserSearchButton = () => {
             closeModal();
           }
         }}
+        keyword={keyword}
+        setKeyword={setKeyword}
       />
     </>
   );

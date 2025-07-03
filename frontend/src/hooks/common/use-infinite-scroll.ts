@@ -5,8 +5,14 @@ import {
 } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 
+import type { InfiniteScrollType } from "@/types/common/type";
+
 interface UseInfiniteScrollOptions<T>
-  extends UseInfiniteQueryOptions<T, Error, InfiniteData<T>> {
+  extends UseInfiniteQueryOptions<
+    InfiniteScrollType<T>,
+    Error,
+    InfiniteData<InfiniteScrollType<T>>
+  > {
   rootMargin?: string;
   threshold?: number;
 }
@@ -19,6 +25,8 @@ const useInfiniteScroll = <T>({
   const targetRef = useRef<HTMLDivElement>(null);
   const response = useInfiniteQuery({
     ...props,
+    refetchOnWindowFocus: false,
+    retry: 0,
   });
 
   useEffect(() => {

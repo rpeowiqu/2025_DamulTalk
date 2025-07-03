@@ -1,21 +1,41 @@
-import { useRef, type InputHTMLAttributes, type KeyboardEvent } from "react";
+import {
+  useRef,
+  type ChangeEvent,
+  type InputHTMLAttributes,
+  type KeyboardEvent,
+} from "react";
 
 import SearchIcon from "@/components/icon/search-icon";
 import { cn } from "@/utils/style";
 
 interface SearchBarProps extends InputHTMLAttributes<HTMLInputElement> {
   onSearch: (_keyword: string) => void;
+  onChangeKeyword?: (_keyword: string) => void;
 }
 
-const SearchBar = ({ onSearch, className, ...props }: SearchBarProps) => {
+const SearchBar = ({
+  onSearch,
+  onChangeKeyword,
+  className,
+  ...props
+}: SearchBarProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      const keyword = inputRef.current?.value.trim() || "";
-      onSearch(keyword);
+
+      if (inputRef.current) {
+        const keyword = inputRef.current.value.trim();
+        onSearch(keyword);
+        inputRef.current.value = "";
+      }
     }
+  };
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const keyword = e.target.value;
+    onChangeKeyword?.(keyword);
   };
 
   return (
@@ -28,6 +48,7 @@ const SearchBar = ({ onSearch, className, ...props }: SearchBarProps) => {
       <input
         ref={inputRef}
         onKeyDown={handleKeyDown}
+        onChange={handleChange}
         className={cn("w-full focus:outline-none", className)}
         {...props}
       />
