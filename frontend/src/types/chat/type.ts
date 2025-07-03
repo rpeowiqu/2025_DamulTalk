@@ -1,4 +1,5 @@
 import type { User } from "@/types/community/type";
+import type { InfiniteScrollType } from "@/types/common/type";
 
 export enum ChatCreateStep {
   SELECT_USER,
@@ -11,11 +12,25 @@ export interface ChatCreateInfo {
   selectedUsers: User[];
 }
 
-export interface ChatRoomInfo {
+export interface ChatRoomPreview {
+  roomId: number;
   roomName: string;
   roomSize: number;
   profileImages: string[];
-  members: ChatRoomMember[];
+  lastMessage: string;
+  lastMessageTime: string;
+  unReadMessageCount: number;
+}
+
+export interface ChatRoom {
+  roomName: string;
+  roomSize: number;
+  roomMembers: {
+    userId: number;
+    nickname: string;
+    profileImageUrl: string;
+    lastReadAt: string;
+  }[];
 }
 
 export interface ChatRoomMember {
@@ -27,7 +42,7 @@ export interface ChatRoomMember {
 
 export type MessageType = "TEXT" | "IMAGE" | "VIDEO";
 
-export interface ChatMessageInfo {
+export interface Message {
   messageId: number;
   senderId: number;
   profileImageUrl: string;
@@ -44,8 +59,46 @@ export interface UploadFile {
   objectUrl?: string;
 }
 
-export interface OptChatMessageInfo {
+export interface optimisticMessage {
   id: number;
   objectUrl?: string;
   createdAt: string;
+}
+
+// Request ==========================================================================================================================
+export interface CreateChatRoomRequest {
+  roomName?: string;
+  userIds: number[];
+}
+
+export interface ReadMessageRequest {
+  roomId: number;
+  lastReadAt: string;
+}
+
+export interface MessagesRequest {
+  roomId: number;
+  cursor?: string;
+  size?: number;
+}
+
+export interface SearchMessageRequest {
+  roomId: number;
+  keyword: string;
+  size?: number; // 50 ~ 100
+}
+
+// Response ==========================================================================================================================
+export type ChatRoomPreviewsResponse = ChatRoomPreview[];
+
+export type ChatRoomResponse = ChatRoom;
+
+export type MessagesResponse = InfiniteScrollType<Message>;
+
+export interface SearchMessageResponse {
+  results: {
+    messageId: number;
+    sendTime: string;
+    content: string;
+  }[];
 }
