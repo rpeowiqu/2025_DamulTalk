@@ -19,6 +19,14 @@ const ChatCreateButton = () => {
     openModal();
   };
 
+  const handleOpenChange = (open: boolean) => {
+    if (open) {
+      openModal();
+    } else {
+      closeModal();
+    }
+  };
+
   return (
     <>
       <button type="button" className="cursor-pointer" onClick={handleClick}>
@@ -27,13 +35,7 @@ const ChatCreateButton = () => {
 
       <ChatCreateModal
         open={isOpen}
-        onOpenChange={(open: boolean) => {
-          if (open) {
-            openModal();
-          } else {
-            closeModal();
-          }
-        }}
+        onOpenChange={handleOpenChange}
         chatCreateInfo={chatCreateInfo}
         setChatCreateInfo={setChatCreateInfo}
       />

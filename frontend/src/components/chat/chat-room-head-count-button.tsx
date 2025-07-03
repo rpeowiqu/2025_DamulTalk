@@ -22,6 +22,14 @@ const ChatRoomHeadCountButton = ({
     openModal();
   };
 
+  const handleOpenChange = (open: boolean) => {
+    if (open) {
+      openModal();
+    } else {
+      closeModal();
+    }
+  };
+
   return (
     <>
       <button
@@ -34,13 +42,7 @@ const ChatRoomHeadCountButton = ({
 
       <ChatRoomMemberModal
         open={isOpen}
-        onOpenChange={(open: boolean) => {
-          if (open) {
-            openModal();
-          } else {
-            closeModal();
-          }
-        }}
+        onOpenChange={handleOpenChange}
         members={room.members}
       />
     </>
