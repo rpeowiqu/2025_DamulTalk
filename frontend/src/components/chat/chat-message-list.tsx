@@ -1,14 +1,14 @@
 import type { Ref } from "react";
 
 import ChatMessage from "@/components/chat/chat-message";
-import type { ChatMessageInfo } from "@/types/chat/type";
+import type { Message } from "@/types/chat/type";
 import { cn } from "@/utils/style";
 
 interface ChatMessageListProps {
-  chatMessages: ChatMessageInfo[];
+  chatMessages: Message[];
   bottomRef: Ref<HTMLDivElement>;
   className?: string;
-  onSelect?: (_message: ChatMessageInfo) => void;
+  onSelect?: (_message: Message) => void;
 }
 
 const ChatMessageList = ({

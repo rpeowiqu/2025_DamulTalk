@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { useScrollMove } from "@/hooks/chat/use-scroll-move";
-import { type ChatMessageInfo } from "@/types/chat/type";
+import { type Message } from "@/types/chat/type";
 import ChatMessageList from "@/components/chat/chat-message-list";
 import ChatInput from "@/components/chat/chat-input";
 import ChatDummyData from "@/mocks/chat-messages.json";
@@ -9,17 +9,16 @@ import useModal from "@/hooks/common/use-modal";
 import ChatMessageFileModal from "@/components/chat/chat-message-file-modal";
 
 const ChatRoomContent = () => {
-  const [chatMessages, setChatMessages] = useState<ChatMessageInfo[]>(
-    ChatDummyData as ChatMessageInfo[],
+  const [chatMessages, setChatMessages] = useState<Message[]>(
+    ChatDummyData as Message[],
   );
-  const [selectedMessage, setSelectedMessage] =
-    useState<ChatMessageInfo | null>(null);
+  const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
   const { bottomRef, triggerScroll } = useScrollMove();
   const { isOpen, openModal, closeModal } = useModal({
     modalKey: "chat-message-detail",
   });
 
-  const handleSelect = (message: ChatMessageInfo) => {
+  const handleSelect = (message: Message) => {
     setSelectedMessage(message);
 
     if (message) {
@@ -49,7 +48,7 @@ const ChatRoomContent = () => {
       <ChatMessageFileModal
         open={isOpen}
         onOpenChange={handleOpenChange}
-        messageInfo={selectedMessage}
+        message={selectedMessage}
       />
     </div>
   );

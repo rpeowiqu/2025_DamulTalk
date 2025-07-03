@@ -1,11 +1,11 @@
-import type { ChatRoomInfo } from "@/types/chat/type";
+import type { ChatRoom } from "@/types/chat/type";
 import ChatPortrait from "@/components/chat/chat-portrait";
 import ChatRoomHeadCountButton from "@/components/chat/chat-room-head-count-button";
 import ChatRoomSearchButton from "@/components/chat/chat-room-search-button";
 import ChatRoomExitButton from "@/components/chat/chat-room-exit-button";
 
 interface ChatRoomHeaderProps {
-  room: ChatRoomInfo;
+  room: ChatRoom;
 }
 
 const ChatRoomHeader = ({ room }: ChatRoomHeaderProps) => {

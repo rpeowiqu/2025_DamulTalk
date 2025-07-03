@@ -1,11 +1,11 @@
-import type { ChatMessageInfo } from "@/types/chat/type";
+import type { Message } from "@/types/chat/type";
 import SystemChatMessage from "@/components/chat/system-chat-message";
 import OutgoingChatMessage from "@/components/chat/outgoing-chat-message";
 import IncomingChatMessage from "@/components/chat/incoming-chat-message";
 
 export interface ChatMessageProps {
-  message: ChatMessageInfo;
-  onClick?: (_message: ChatMessageInfo) => void;
+  message: Message;
+  onClick?: (_message: Message) => void;
 }
 
 const ChatMessage = ({ message, onClick }: ChatMessageProps) => {

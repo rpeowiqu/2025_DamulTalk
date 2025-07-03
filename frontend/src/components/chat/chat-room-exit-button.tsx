@@ -3,11 +3,11 @@ import type { ButtonHTMLAttributes } from "react";
 
 import useModal from "@/hooks/common/use-modal";
 import ChatRoomExitModal from "@/components/chat/chat-room-exit-modal";
-import type { ChatRoomInfo } from "@/types/chat/type";
+import type { ChatRoom } from "@/types/chat/type";
 
 interface ChatRoomExitButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement> {
-  room: ChatRoomInfo;
+  room: ChatRoom;
 }
 
 const ChatRoomExitButton = ({ room, ...props }: ChatRoomExitButtonProps) => {
