@@ -1,26 +1,26 @@
 import Dialog, { type DialogProps } from "@/components/common/dialog";
-import type { ChatMessageInfo } from "@/types/chat/type";
+import type { Message } from "@/types/chat/type";
 
 interface ChatMessageFileModalProps extends DialogProps {
-  messageInfo: ChatMessageInfo | null;
+  message: Message | null;
 }
 
 const ChatMessageFileModal = ({
   open,
   onOpenChange,
-  messageInfo,
+  message,
   ...props
 }: ChatMessageFileModalProps) => {
   const renderContent = () => {
-    if (!messageInfo) {
+    if (!message) {
       return null;
     }
 
-    switch (messageInfo.messageType) {
+    switch (message.messageType) {
       case "IMAGE":
         return (
           <img
-            src={messageInfo.fileUrl}
+            src={message.fileUrl}
             alt="첨부 이미지"
             className="w-full object-cover"
           />
@@ -28,7 +28,7 @@ const ChatMessageFileModal = ({
       case "VIDEO":
         return (
           <video
-            src={messageInfo.fileUrl}
+            src={message.fileUrl}
             className="w-full object-cover"
             controls
           />

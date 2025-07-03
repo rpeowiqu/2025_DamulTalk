@@ -3,11 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 import Dialog, { type DialogProps } from "@/components/common/dialog";
-import type { ChatRoomInfo } from "@/types/chat/type";
+import type { ChatRoom } from "@/types/chat/type";
 import Button from "@/components/common/button";
 
 interface ChatRoomExitModalProps extends DialogProps {
-  room: ChatRoomInfo;
+  room: ChatRoom;
   closeModal: () => void;
 }
 

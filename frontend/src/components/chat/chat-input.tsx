@@ -8,7 +8,7 @@ import {
 } from "react";
 
 import { getFormattedTime } from "@/utils/time";
-import type { ChatMessageInfo, MessageType } from "@/types/chat/type";
+import type { Message, MessageType } from "@/types/chat/type";
 import Button from "@/components/common/button";
 import FileUploadButton from "@/components/common/file-upload-button";
 import ChatUploadFileItem from "@/components/chat/chat-upload-file-item";
@@ -19,7 +19,7 @@ import {
 } from "@/contexts/chat/file-upload-provider";
 
 interface ChatInputProps {
-  setChatMessages: Dispatch<SetStateAction<ChatMessageInfo[]>>;
+  setChatMessages: Dispatch<SetStateAction<Message[]>>;
   triggerScroll: () => void;
 }
 
