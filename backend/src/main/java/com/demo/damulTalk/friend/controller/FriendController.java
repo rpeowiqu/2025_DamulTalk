@@ -39,19 +39,19 @@ public class FriendController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping
-    public ResponseEntity<?> deleteFriend(@RequestBody CommonIdDto common) {
+    @DeleteMapping("/{targetId}")
+    public ResponseEntity<?> deleteFriend(@PathVariable Integer targetId) {
         log.info("[FriendController] 친구 삭제 시작");
 
-        friendService.deleteFriend(common.getId());
+        friendService.deleteFriend(targetId);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/refusal")
-    public ResponseEntity<?> deleteFriendRequest(@RequestBody CommonIdDto common) {
+    @DeleteMapping("/requests/{targetId}")
+    public ResponseEntity<?> deleteFriendRequest(@PathVariable Integer targetId) {
         log.info("[FriendController] 친구 요청 거절 시작");
 
-        friendService.deleteFriendRequest(common.getId());
+        friendService.deleteFriendRequest(targetId);
         return ResponseEntity.ok().build();
     }
 
@@ -64,6 +64,14 @@ public class FriendController {
             return ResponseEntity.noContent().build();
         }
 
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/requests/{targetId}")
+    public ResponseEntity<?> acceptFriendRequest(@PathVariable Integer targetId) {
+        log.info("[FriendController] 친구 요청 수락 시작 - targetId: {}", targetId);
+
+        FriendDto response = friendService.addFriend(targetId);
         return ResponseEntity.ok(response);
     }
 

@@ -18,4 +18,6 @@ public interface FriendService {
 
     List<FriendDto> getFriendRequests();
 
+    FriendDto addFriend(Integer targetId);
+
 }

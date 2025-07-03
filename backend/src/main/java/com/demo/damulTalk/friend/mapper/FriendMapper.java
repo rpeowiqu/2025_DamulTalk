@@ -21,4 +21,8 @@ public interface FriendMapper {
 
     int selectFriendRelationShipCount(int userId, Integer targetId);
 
+    int updateFriend(Integer targetId, Integer userId);
+
+    FriendDto selectFriendInfoById(Integer userId);
+
 }
