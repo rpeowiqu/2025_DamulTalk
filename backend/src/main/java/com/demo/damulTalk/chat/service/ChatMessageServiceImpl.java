@@ -2,9 +2,11 @@ package com.demo.damulTalk.chat.service;
 
 import com.demo.damulTalk.chat.domain.ChatMessage;
 import com.demo.damulTalk.chat.dto.ChatMessageResponse;
+import com.demo.damulTalk.chat.mapper.ChatRoomMapper;
 import com.demo.damulTalk.chat.repository.ChatMessageRepository;
 import com.demo.damulTalk.common.scroll.CursorPageMetaDto;
 import com.demo.damulTalk.common.scroll.ScrollResponse;
+import com.demo.damulTalk.util.UserUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +25,8 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 
     private final ChatMessageRepository chatMessageRepository;
     private final RestClient.Builder builder;
+    private final ChatRoomMapper chatRoomMapper;
+    private final UserUtil userUtil;
 
     @Override
     public ScrollResponse<List<ChatMessageResponse>, String> getChatMessages(Integer roomId, LocalDateTime cursor, Integer size) {
@@ -63,6 +67,13 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                 .data(response)
                 .meta(cursorPageMetaDto)
                 .build();
+    }
+
+    public void updateReadStatus(Integer roomId, LocalDateTime lastReadAt) {
+        log.info("[ChatMessageService] 채팅방 읽음 처리 시작 - roomId: {}, lastReadAt: {}", roomId, lastReadAt);
+
+        int userId = userUtil.getCurrentUserId();
+        chatRoomMapper.updateReadStatus(userId, roomId, lastReadAt);
     }
 
 }

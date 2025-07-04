@@ -102,6 +102,11 @@
         WHERE room_id = #{roomId}
     </update>
 
+    <update id="updateReadStatus">
+        UPDATE chat_room_members SET last_read_at = #{lastReadAt}
+        WHERE user_id = #{userId} AND room_id = #{roomId}
+    </update>
+
     <delete id="deleteParticipant">
         DELETE FROM chat_room_members
         WHERE room_id = #{roomId} AND user_id = #{userId}

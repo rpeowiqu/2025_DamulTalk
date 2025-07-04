@@ -10,4 +10,6 @@ public interface ChatMessageService {
 
     ScrollResponse<List<ChatMessageResponse>, String> getChatMessages(Integer roomId, LocalDateTime cursor, Integer size);
 
+    void updateReadStatus(Integer roomId, LocalDateTime lastReadAt);
+
 }

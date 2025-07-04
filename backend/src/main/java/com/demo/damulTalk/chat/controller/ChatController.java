@@ -1,9 +1,6 @@
 package com.demo.damulTalk.chat.controller;
 
-import com.demo.damulTalk.chat.dto.ChatMessageResponse;
-import com.demo.damulTalk.chat.dto.ChatRoomCreate;
-import com.demo.damulTalk.chat.dto.ChatRoomInfo;
-import com.demo.damulTalk.chat.dto.SimpleRoomInfo;
+import com.demo.damulTalk.chat.dto.*;
 import com.demo.damulTalk.chat.service.ChatMessageService;
 import com.demo.damulTalk.chat.service.ChatRoomService;
 import com.demo.damulTalk.common.scroll.ScrollResponse;
@@ -72,6 +69,14 @@ public class ChatController {
         log.info("[ChatController] 채팅방 나가기 시작 - roomId: {}", roomId);
 
         chatRoomService.deleteChatRoom(roomId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{roomId}/read")
+    public ResponseEntity<?> updateReadStatus(@PathVariable("roomId") Integer roomId, @RequestBody MessageReadRequest read) {
+        log.info("[ChatController] 읽음 처리 시작 - roomId: {}", roomId);
+
+        chatMessageService.updateReadStatus(roomId, read.getLastReadAt());
         return ResponseEntity.ok().build();
     }
 
