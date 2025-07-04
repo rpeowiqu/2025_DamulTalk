@@ -24,7 +24,7 @@ const ProfileContentSkeleton = () => {
         <div className="h-6 w-12 animate-pulse rounded-xl bg-neutral-200" />
         <div className="h-12 w-full animate-pulse rounded-xl bg-neutral-200" />
         <div className="flex flex-col gap-2">
-          {Array.from({ length: 6 }).map((_, index) => (
+          {Array.from({ length: 3 }).map((_, index) => (
             <UserItemSkeleton key={index} />
           ))}
         </div>
