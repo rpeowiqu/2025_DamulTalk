@@ -83,12 +83,23 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         }
 
         String roomName = chatRoomCreate.getRoomName();
-        if(roomName == null || roomName.isBlank()){
+        if(roomName == null || roomName.isBlank()) {
             List<User> users = chatRoomMapper.selectParticipantsByIds(userIds);
-            roomName = users.stream()
-                    .map(User::getNickname)
-                    .sorted().collect(Collectors.joining(", "));
+
+            if(userIds.size() == 2) {
+                roomName = users.stream()
+                        .filter(user -> user.getUserId() != userId)
+                        .map(User::getNickname)
+                        .findFirst()
+                        .orElse("1:1 채팅"); // 예외 처리용
+            } else {
+                roomName = users.stream()
+                        .map(User::getNickname)
+                        .sorted()
+                        .collect(Collectors.joining(", "));
+            }
         }
+
 
         ChatRoom newRoom = ChatRoom.builder()
                 .roomName(roomName)

@@ -68,10 +68,11 @@ public class SecurityConfig {
                             log.info("[SecurityConfig] CORS 설정 생성 - 요청 URI: {}", request.getRequestURI());
 
                             CorsConfiguration configuration = new CorsConfiguration();
-                            configuration.setAllowedOriginPatterns(List.of(frontendUrl));
-                            configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH"));
+                            configuration.setAllowedOrigins(List.of(frontendUrl));
+//                            configuration.setAllowedOriginPatterns(List.of(frontendUrl));
+                            configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
                             configuration.setAllowCredentials(true);
-                            configuration.addAllowedHeader("*");
+//                            configuration.addAllowedHeader("*");
                             configuration.setExposedHeaders(Arrays.asList(
                                     "Authorization",
                                     "Set-Cookie",

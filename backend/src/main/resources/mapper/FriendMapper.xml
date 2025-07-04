@@ -79,7 +79,7 @@
     </insert>
 
     <update id="updateFriend">
-        UPDATE friends SET status = 'PENDING'
+        UPDATE friends SET status = 'ACCEPTED'
         WHERE (first_user_id = #{targetId} AND second_user_id = #{userId})
           OR (first_user_id = #{userId} AND second_user_id = #{targetId})
     </update>
