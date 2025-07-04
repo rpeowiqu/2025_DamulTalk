@@ -11,7 +11,7 @@ public enum ErrorCode {
     REFRESH_TOKEN_NOT_FOUND(HttpStatus.BAD_REQUEST, "리프레시 토큰을 찾을 수 없습니다."),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "권한이 없습니다."),
 
-    INVALID_USER(HttpStatus.FORBIDDEN, "유효하지 않은 유저입니다."),
+    INVALID_USER(HttpStatus.BAD_REQUEST, "유효하지 않은 유저입니다."),
     EXISTING_USER(HttpStatus.OK, "이미 존재하는 유저입니다."),
     INCORRECT_PASSWORD(HttpStatus.UNAUTHORIZED, "패스워드가 일치하지 않습니다."),
     EXISTING_NICKNAME(HttpStatus.OK, "이미 존재하는 닉네임입니다."),
