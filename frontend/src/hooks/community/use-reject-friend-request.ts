@@ -14,10 +14,9 @@ const useRejectFriendRequest = (userId: number) => {
         ["friend-requests"],
         (prev) => prev?.filter((user) => user.userId !== userId) ?? [],
       );
-      queryClient.invalidateQueries({
-        queryKey: ["friend-requests"],
-      });
-      console.log(queryClient.getQueryData(["current-user"]));
+      // queryClient.invalidateQueries({
+      //   queryKey: ["friend-requests"],
+      // });
     },
   });
 };
