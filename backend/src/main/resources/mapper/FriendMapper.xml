@@ -66,8 +66,8 @@
             IFNULL((
                 SELECT status
                 FROM friends
-                WHERE (user_id = #{userId} AND friend_id = #{friendId})
-                   OR (user_id = #{friendId} AND friend_id = #{userId})
+                WHERE (first_user_id = #{userId} AND second_user_id = #{friendId})
+                   OR (first_user_id = #{friendId} AND second_user_id = #{userId})
                 LIMIT 1
                 ), 'NONE') AS status
     </select>
