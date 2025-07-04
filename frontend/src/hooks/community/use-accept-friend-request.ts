@@ -20,10 +20,13 @@ const useAcceptFriendRequest = (userId: number) => {
       //   queryKey: ["friend-requests"],
       // });
 
-      // 친구 목록을 다시 불러온다.
+      // 친구 목록과 프로필 정보를 다시 불러온다.
       const currentUser = queryClient.getQueryData<User>(["current-user"]);
       queryClient.refetchQueries({
         queryKey: ["friends", currentUser?.userId],
+      });
+      queryClient.refetchQueries({
+        queryKey: ["profile", currentUser?.userId],
       });
     },
   });

@@ -18,7 +18,7 @@ const useFriends = (userId: number) => {
       return data;
     },
     staleTime: 30 * 1_000 * 60,
-    gcTime: 30 * 10 * 1_000 * 60,
+    gcTime: 30 * 1_000 * 60,
     refetchOnWindowFocus: false,
     retry: 1,
     enabled: !!userId,
