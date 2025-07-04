@@ -47,13 +47,10 @@
         FROM users u
             JOIN (
                 SELECT
-                    CASE
-                        WHEN first_user_id = #{userId} THEN second_user_id
-                        ELSE first_user_id
-                        END AS user_id
+                    first_user_id AS user_id
                 FROM friends
                 WHERE status = 'PENDING'
-                  AND (first_user_id = #{userId} OR second_user_id = #{userId})
+                  AND second_user_id = #{userId}
             ) f ON u.user_id = f.user_id
     </select>
 
