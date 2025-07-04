@@ -64,7 +64,7 @@ const SideBarFriendContent = ({ user }: SideBarFriendContentProps) => {
             <FriendRequestList
               isLoading={isLoadingFriendRequests}
               users={friendRequests ?? []}
-              onSelect={(user) => navigate(`/profile/${user.userId}`)}
+              onSelect={(user) => navigate(`/profiles/${user.userId}`)}
             />
           </AccordionContent>
         </AccordionItem>
@@ -77,7 +77,7 @@ const SideBarFriendContent = ({ user }: SideBarFriendContentProps) => {
               isLoading={isLoadingFriends}
               users={friends ?? []}
               visibleStatus={true}
-              onSelect={(user) => navigate(`/profile/${user.userId}`)}
+              onSelect={(user) => navigate(`/profiles/${user.userId}`)}
             />
           </AccordionContent>
         </AccordionItem>
