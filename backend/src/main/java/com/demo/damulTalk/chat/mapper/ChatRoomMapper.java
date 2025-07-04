@@ -31,4 +31,10 @@ public interface ChatRoomMapper {
 
     List<User> selectParticipantsByIds(@Param("userIds") List<Integer> userIds);
 
+    ChatRoom selectRoomById(@Param("roomId") Integer roomId);
+
+    int deleteParticipant(@Param("roomId") Integer roomId, @Param("userId") Integer userId);
+
+    int updateRoomName(@Param("roomId") Integer roomId, @Param("roomName") String roomName);
+
 }

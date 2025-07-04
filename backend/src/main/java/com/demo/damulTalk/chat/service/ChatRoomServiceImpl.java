@@ -130,9 +130,48 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         }
 
         List<RoomMemberInfo> members = chatRoomMapper.selectRoomMembers(roomId);
+
         info.setRoomMembers(members);
 
         return info;
+    }
+
+    @Override
+    public void deleteChatRoom(Integer roomId) {
+        log.info("[ChatRoomService] 채팅방 나가기 시작 - roomId: {}", roomId);
+
+        int userId = userUtil.getCurrentUserId();
+
+        ChatRoom room = chatRoomMapper.selectRoomById(roomId);
+        if(room == null){
+            throw new BusinessException(
+                    ErrorCode.CHAT_ROOM_NOTFOUND,
+                    "채팅방이 존재하지 않습니다."
+            );
+        }
+
+        List<RoomMemberInfo> participants = chatRoomMapper.selectRoomMembers(roomId);
+        if(participants.stream().noneMatch(u -> u.getUserId() == userId)){
+            throw new BusinessException(
+                    ErrorCode.UNAUTHORIZED,
+                    "채팅방에 참여중인 사용자가 아닙니다."
+            );
+        }
+
+        chatRoomMapper.deleteParticipant(roomId, userId);
+
+        List<RoomMemberInfo> remainedMembers = participants.stream()
+                .filter(user -> user.getUserId() != userId)
+                .toList();
+
+        String updatedName = room.getRoomName();
+        if(room.getRoomType() == RoomType.GROUP && !remainedMembers.isEmpty()) {
+            updatedName = remainedMembers.stream()
+                    .map(RoomMemberInfo::getNickname)
+                    .sorted()
+                    .collect(Collectors.joining(", "));
+            chatRoomMapper.updateRoomName(roomId, updatedName);
+        }
     }
 
 }

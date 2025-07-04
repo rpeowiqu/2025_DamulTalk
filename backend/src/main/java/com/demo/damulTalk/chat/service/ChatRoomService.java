@@ -14,4 +14,6 @@ public interface ChatRoomService {
 
     SimpleRoomInfo getChatRoomInfo(Integer roomId);
 
+    void deleteChatRoom(Integer roomId);
+
 }

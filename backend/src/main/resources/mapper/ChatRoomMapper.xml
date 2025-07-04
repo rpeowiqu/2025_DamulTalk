@@ -72,6 +72,17 @@
         </foreach>
     </select>
 
+    <select id="selectRoomById" resultType="com.demo.damulTalk.chat.domain.ChatRoom">
+        SELECT
+            room_id AS roomId,
+            room_type AS roomType,
+            room_name AS roomName,
+            room_size AS roomSize,
+            created_at AS createdAt
+        FROM chat_rooms
+        WHERE room_id = #{roomId}
+    </select>
+
     <insert id="insertChatRoom" parameterType="com.demo.damulTalk.chat.domain.ChatRoom"
             useGeneratedKeys="true" keyProperty="roomId">
         INSERT INTO chat_rooms (room_type, room_name, room_size)
@@ -85,5 +96,15 @@
                 (#{roomId}, #{userId})
             </foreach>
     </insert>
+
+    <update id="updateRoomName">
+        UPDATE chat_rooms SET room_name = #{roomName}
+        WHERE room_id = #{roomId}
+    </update>
+
+    <delete id="deleteParticipant">
+        DELETE FROM chat_room_members
+        WHERE room_id = #{roomId} AND user_id = #{userId}
+    </delete>
 
 </mapper>

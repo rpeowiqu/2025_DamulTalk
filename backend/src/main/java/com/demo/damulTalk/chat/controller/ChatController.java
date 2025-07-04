@@ -67,4 +67,12 @@ public class ChatController {
         return ResponseEntity.ok(response);
     }
 
+    @DeleteMapping("/{roomId}")
+    public ResponseEntity<?> deleteChatRoom(@PathVariable("roomId") Integer roomId) {
+        log.info("[ChatController] 채팅방 나가기 시작 - roomId: {}", roomId);
+
+        chatRoomService.deleteChatRoom(roomId);
+        return ResponseEntity.ok().build();
+    }
+
 }
