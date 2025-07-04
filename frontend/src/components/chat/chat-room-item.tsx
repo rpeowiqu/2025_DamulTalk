@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import type { MouseEvent } from "react";
 
 import { cn } from "@/utils/style";
@@ -19,8 +18,7 @@ const ChatRoomItem = ({
   className,
 }: ChatRoomItemProps) => {
   return (
-    <Link
-      to={`/chats/${chatRoomPreview.roomId}`}
+    <div
       className={cn(
         "flex w-full cursor-pointer items-center gap-3 rounded-xl bg-white p-2 hover:bg-neutral-50",
         className,
@@ -49,7 +47,7 @@ const ChatRoomItem = ({
           {chatRoomPreview.lastMessage}
         </p>
       </div>
-    </Link>
+    </div>
   );
 };
 
