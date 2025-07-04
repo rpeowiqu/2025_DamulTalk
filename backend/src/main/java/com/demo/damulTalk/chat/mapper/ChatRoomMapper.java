@@ -1,6 +1,8 @@
 package com.demo.damulTalk.chat.mapper;
 
 import com.demo.damulTalk.chat.domain.ChatRoom;
+import com.demo.damulTalk.chat.dto.RoomMemberInfo;
+import com.demo.damulTalk.chat.dto.SimpleRoomInfo;
 import com.demo.damulTalk.user.domain.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -22,5 +24,9 @@ public interface ChatRoomMapper {
     int insertChatRoom(ChatRoom chatRoom);
 
     int insertParticipants(@Param("roomId") Integer roomId, @Param("userIds") List<Integer> userIds);
+
+    SimpleRoomInfo selectRoomInfo(@Param("roomId") Integer roomId);
+
+    List<RoomMemberInfo> selectRoomMembers(@Param("roomId") Integer roomId);
 
 }

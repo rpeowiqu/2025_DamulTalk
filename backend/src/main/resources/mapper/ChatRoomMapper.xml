@@ -44,6 +44,26 @@
         LIMIT 1
     </select>
 
+    <select id="selectRoomInfo">
+        SELECT
+            room_name AS roomName,
+            room_size AS roomSize
+        FROM chat_rooms
+        WHERE room_id = #{roomId}
+    </select>
+
+    <select id="selectRoomMembers" resultType="com.demo.damulTalk.chat.dto.RoomMemberInfo">
+        SELECT
+            u.user_id AS userId,
+            u.nickname,
+            u.profile_image_url AS profileImageUrl,
+            crm.last_read_at AS lastReadAt
+        FROM chat_room_members crm
+        JOIN users u ON crm.user_id = u.user_id
+        WHERE crm.room_id = #{roomId}
+        ORDER BY u.nickname
+    </select>
+
     <insert id="insertChatRoom" parameterType="com.demo.damulTalk.chat.domain.ChatRoom"
             useGeneratedKeys="true" keyProperty="roomId">
         INSERT INTO chat_rooms (room_type, room_name, room_size)

@@ -2,6 +2,7 @@ package com.demo.damulTalk.chat.controller;
 
 import com.demo.damulTalk.chat.dto.ChatRoomCreate;
 import com.demo.damulTalk.chat.dto.ChatRoomInfo;
+import com.demo.damulTalk.chat.dto.SimpleRoomInfo;
 import com.demo.damulTalk.chat.service.ChatRoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +37,14 @@ public class ChatController {
 
         Integer roomId = chatRoomService.createChatRoom(chatRoomCreate);
         return ResponseEntity.ok(roomId);
+    }
+
+    @GetMapping("/{roomId}")
+    public ResponseEntity<?> getChatRoomInfo(@PathVariable("roomId") Integer roomId) {
+        log.info("[ChatController] 채팅방 정보 조회 시작 - roomId: {}", roomId);
+
+        SimpleRoomInfo info = chatRoomService.getChatRoomInfo(roomId);
+        return ResponseEntity.ok(info);
     }
 
 }

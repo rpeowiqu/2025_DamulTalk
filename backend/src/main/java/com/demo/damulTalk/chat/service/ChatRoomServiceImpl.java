@@ -2,11 +2,11 @@ package com.demo.damulTalk.chat.service;
 
 import com.demo.damulTalk.chat.domain.ChatMessage;
 import com.demo.damulTalk.chat.domain.ChatRoom;
-import com.demo.damulTalk.chat.dto.ChatRoomCreate;
-import com.demo.damulTalk.chat.dto.ChatRoomInfo;
-import com.demo.damulTalk.chat.dto.RoomType;
+import com.demo.damulTalk.chat.dto.*;
 import com.demo.damulTalk.chat.mapper.ChatRoomMapper;
 import com.demo.damulTalk.chat.repository.ChatMessageRepository;
+import com.demo.damulTalk.exception.BusinessException;
+import com.demo.damulTalk.exception.ErrorCode;
 import com.demo.damulTalk.user.domain.User;
 import com.demo.damulTalk.util.UserUtil;
 import lombok.RequiredArgsConstructor;
@@ -96,6 +96,24 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
         log.info("[ChatRoomService] 채팅방 생성 완료: {}", newRoomId);
         return newRoomId;
+    }
+
+    @Override
+    public SimpleRoomInfo getChatRoomInfo(Integer roomId) {
+        log.info("[ChatRoomService] 채팅방 정보 조회 시작 - roomId: {}", roomId);
+
+        SimpleRoomInfo info = chatRoomMapper.selectRoomInfo(roomId);
+        if(info == null){
+            throw new BusinessException(
+                    ErrorCode.CHAT_ROOM_NOTFOUND,
+                    "해당 채팅방이 존재하지 않습니다."
+            );
+        }
+
+        List<RoomMemberInfo> members = chatRoomMapper.selectRoomMembers(roomId);
+        info.setRoomMembers(members);
+
+        return info;
     }
 
 }
