@@ -28,7 +28,7 @@ const useToggleFriendRequest = (
 
   const cancelMutation = useMutation({
     mutationKey: ["cancel-request-friend", userId],
-    mutationFn: (request: FriendRequestRequest) => deleteFriendRequest(request),
+    mutationFn: (userId: number) => deleteFriendRequest(userId),
     onMutate: () => {
       setOptimisticState("NONE");
     },
@@ -41,7 +41,7 @@ const useToggleFriendRequest = (
     switch (optimisticState) {
       case "ACCEPTED":
       case "PENDING":
-        cancelMutation.mutate({ id: userId });
+        cancelMutation.mutate(userId);
         break;
       case "NONE":
         requestMutation.mutate({ id: userId });
