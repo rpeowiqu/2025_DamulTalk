@@ -1,11 +1,10 @@
 import { useState, type Dispatch, type SetStateAction } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 
 import { ChatCreateStep, type ChatCreateInfo } from "@/types/chat/type";
 import ChatCreateUserForm from "@/components/chat/chat-create-user-form";
 import ChatCreateTitleForm from "@/components/chat/chat-create-title-form";
+import useCreateChatRoom from "@/hooks/chat/use-create-chat-room";
 
 export interface ChatCreateFormProps {
   chatCreateInfo: ChatCreateInfo;
@@ -19,7 +18,7 @@ const ChatCreateForm = ({
   setChatCreateInfo,
 }: ChatCreateFormProps) => {
   const [step, setStep] = useState<ChatCreateStep>(ChatCreateStep.SELECT_USER);
-  const navigate = useNavigate();
+  const { mutate: createChatRoom } = useCreateChatRoom();
 
   const renderForm = () => {
     switch (step) {
@@ -37,10 +36,14 @@ const ChatCreateForm = ({
             chatCreateInfo={chatCreateInfo}
             setChatCreateInfo={setChatCreateInfo}
             onPrev={() => setStep((prev) => prev - 1)}
-            onNext={() => {
-              toast.success("채팅방을 만들었어요");
-              navigate(`/chats/${1}`);
-            }}
+            onNext={() =>
+              createChatRoom({
+                roomName: chatCreateInfo.roomName,
+                userIds: chatCreateInfo.selectedUsers.map(
+                  (item) => item.userId,
+                ),
+              })
+            }
           />
         );
     }

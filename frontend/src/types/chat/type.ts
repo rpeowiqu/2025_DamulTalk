@@ -8,7 +8,7 @@ export enum ChatCreateStep {
 }
 
 export interface ChatCreateInfo {
-  title: string;
+  roomName: string;
   selectedUsers: User[];
 }
 
