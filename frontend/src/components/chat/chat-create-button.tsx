@@ -7,12 +7,12 @@ import type { ChatCreateInfo } from "@/types/chat/type";
 
 const ChatCreateButton = () => {
   const [chatCreateInfo, setChatCreateInfo] = useState<ChatCreateInfo>({
-    title: "",
+    roomName: "",
     selectedUsers: [],
   });
   const { isOpen, openModal, closeModal } = useModal({
     modalKey: "chat-create",
-    onClose: () => setChatCreateInfo({ title: "", selectedUsers: [] }),
+    onClose: () => setChatCreateInfo({ roomName: "", selectedUsers: [] }),
   });
 
   const handleClick = () => {

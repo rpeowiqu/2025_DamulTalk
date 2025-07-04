@@ -7,14 +7,18 @@ import Button from "@/components/common/button";
 import ChatCreateUserItem from "@/components/chat/chat-create-user-item";
 import SearchBar from "@/components/common/search-bar";
 import FriendList from "@/components/community/friend-list";
-import UserDummyData from "@/mocks/friends.json";
+import useFriends from "@/hooks/community/use-friends";
+import useCurrentUser from "@/hooks/auth/use-current-user";
 
 const ChatCreateUserForm = ({
   chatCreateInfo,
   setChatCreateInfo,
   onNext,
 }: ChatCreateFormProps) => {
-  const getDefaultTitle = (users: User[]): string => {
+  const { data: currentUser } = useCurrentUser();
+  const { data: friends, isLoading } = useFriends(currentUser?.userId ?? 0);
+
+  const getDefaultRoomName = (users: User[]): string => {
     const maxDisplay = 4;
     const nicknames = users.map((item) => item.nickname);
     nicknames.sort();
@@ -30,11 +34,11 @@ const ChatCreateUserForm = ({
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // 선택한 유저의 닉네임을 기반으로 title 값 설정
-    const defaultTitle = getDefaultTitle(chatCreateInfo.selectedUsers);
+    // 선택한 유저의 닉네임을 기반으로 roomName 값 설정
+    const defaultRoomName = getDefaultRoomName(chatCreateInfo.selectedUsers);
     setChatCreateInfo((prev) => ({
       ...prev,
-      title: defaultTitle,
+      roomName: defaultRoomName,
     }));
 
     onNext?.();
@@ -88,8 +92,8 @@ const ChatCreateUserForm = ({
       )}
       <SearchBar onSearch={(keyword) => console.log(keyword)} />
       <FriendList
-        isLoading={false}
-        users={UserDummyData}
+        isLoading={isLoading}
+        users={friends ?? []}
         visibleStatus={false}
         className="scroll-hidden min-h-0 flex-1 overflow-y-auto"
         selectedUsers={chatCreateInfo.selectedUsers}
