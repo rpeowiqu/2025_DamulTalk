@@ -16,8 +16,6 @@ public interface FriendMapper {
 
     List<Integer> selectFriendIds(Integer userId);
 
-    int deleteFriendRequestById(@Param("userId") Integer userId, @Param("friendId") Integer friendId);
-
     List<FriendDto> selectFriendRequestsById(Integer userId);
 
     int selectFriendRelationShipCount(@Param("userId") Integer userId, @Param("targetId") Integer targetId);

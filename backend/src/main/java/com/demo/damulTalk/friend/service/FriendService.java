@@ -14,8 +14,6 @@ public interface FriendService {
 
     void deleteFriend(Integer friendId);
 
-    void deleteFriendRequest(Integer friendId);
-
     List<FriendDto> getFriendRequests();
 
     FriendDto addFriend(Integer targetId);

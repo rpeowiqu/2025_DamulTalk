@@ -95,15 +95,7 @@
     <delete id="deleteFriendById">
         DELETE FROM friends
         WHERE ((first_user_id = #{userId} AND second_user_id = #{friendId})
-          OR (first_user_id = #{frinedId} AND second_user_id = #{userId}))
-          AND status = 'ACCEPTED'
-    </delete>
-
-    <delete id="deleteFriendRequestById">
-        DELETE FROM friends
-        WHERE ((first_user_id = #{userId} AND second_user_id = #{friendId})
           OR (first_user_id = #{friendId} AND second_user_id = #{userId}))
-          AND status = 'PENDING'
     </delete>
 
 </mapper>
