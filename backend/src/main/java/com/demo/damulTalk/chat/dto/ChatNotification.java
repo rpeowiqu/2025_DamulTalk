@@ -10,13 +10,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ChatMessageResponse {
+public class ChatNotification {
 
     private String messageId;
 
     private Integer roomId;
-
-    private Integer senderId;
 
     private String profileImageUrl;
 
@@ -26,12 +24,6 @@ public class ChatMessageResponse {
 
     private String content;
 
-    private String fileUrl;
-
     private LocalDateTime sendTime;
-
-    private Integer unReadCount;
-
-    private String clientId;
 
 }

@@ -15,7 +15,7 @@ import java.nio.charset.StandardCharsets;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class UserStatusSubscriber implements MessageListener {
+public class NotificationSubscriber implements MessageListener {
 
     private final SimpMessagingTemplate messagingTemplate;
     private final ObjectMapper objectMapper;
@@ -26,12 +26,12 @@ public class UserStatusSubscriber implements MessageListener {
             String payload = new String(message.getBody(), StandardCharsets.UTF_8);
             ConnectionDto connection = objectMapper.readValue(payload, ConnectionDto.class);
 
-            String topic = "/sub/friends" + connection.getUserId();
+            String topic = "/sub/notifications" + connection.getUserId();
             messagingTemplate.convertAndSend(topic, connection);
 
             log.info("Redis -> WebSocket: [{}] {}", topic, connection.isOnline());
         } catch(JsonProcessingException e) {
-            log.error("[UserStatusSubscriber] JSON 역직렬화 실패: {}", e.getMessage());
+            log.error("[NotificationSubscriber] JSON 역직렬화 실패: {}", e.getMessage());
         }
     }
 

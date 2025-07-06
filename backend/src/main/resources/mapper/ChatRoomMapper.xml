@@ -28,18 +28,18 @@
     </select>
 
     <select id="selectRoomIdByExactUserIds" resultType="int">
-        SELECT crm.room_id
-        FROM chat_room_members crm
-        WHERE crm.user_id IN
+        SELECT room_id
+        FROM chat_room_members
+        WHERE user_id IN
         <foreach item="userId" collection="userIds" open="(" separator="," close=")">
             #{userId}
         </foreach>
-        GROUP BY crm.room_id
+        GROUP BY room_id
         HAVING COUNT(*) = #{size}
           AND COUNT(*) = (
               SELECT COUNT(*)
               FROM chat_room_members
-              WHERE room_id = crm.room_id
+              WHERE room_id = chat_room_members.room_id
           )
         LIMIT 1
     </select>

@@ -84,7 +84,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
         String roomName = chatRoomCreate.getRoomName();
         if(roomName == null || roomName.isBlank()) {
-            List<User> users = chatRoomMapper.selectParticipantsByIds(userIds);
+            List<User> users = chatRoomMapper.selectUsersByIds(userIds);
 
             if(userIds.size() == 2) {
                 roomName = users.stream()

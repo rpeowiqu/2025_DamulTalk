@@ -29,7 +29,7 @@ public interface ChatRoomMapper {
 
     List<RoomMemberInfo> selectRoomMembers(@Param("roomId") Integer roomId);
 
-    List<User> selectParticipantsByIds(@Param("userIds") List<Integer> userIds);
+    List<User> selectUsersByIds(@Param("userIds") List<Integer> userIds);
 
     ChatRoom selectRoomById(@Param("roomId") Integer roomId);
 
