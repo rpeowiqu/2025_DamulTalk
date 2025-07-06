@@ -21,11 +21,10 @@ const useCreateChatRoom = () => {
       }
       // created: 새로운 채팅방을 만든 경우
       else if (response.status === 201) {
+        // 사이드 바의 채팅 목록을 새롭게 불러온다.
+        queryClient.refetchQueries({ queryKey: ["chat-room-previews"] });
         toast.success("채팅방을 만들었어요!");
       }
-
-      // 사이드 바의 채팅 목록을 새롭게 불러온다.
-      queryClient.refetchQueries({ queryKey: ["chat-room-previews"] });
 
       // 해당 채팅방으로 이동
       navigate(`/chats/${data.id}`);
