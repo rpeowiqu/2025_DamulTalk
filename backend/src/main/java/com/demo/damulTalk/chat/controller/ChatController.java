@@ -3,6 +3,7 @@ package com.demo.damulTalk.chat.controller;
 import com.demo.damulTalk.chat.dto.*;
 import com.demo.damulTalk.chat.service.ChatMessageService;
 import com.demo.damulTalk.chat.service.ChatRoomService;
+import com.demo.damulTalk.common.CommonIdDto;
 import com.demo.damulTalk.common.scroll.ScrollResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,8 +41,12 @@ public class ChatController {
 
         ChatRoomCreated room = chatRoomService.createChatRoom(chatRoomCreate);
         if(room.isExisted())
-            return ResponseEntity.ok(room.getRoomId());
-        return ResponseEntity.status(HttpStatus.CREATED).body(room.getRoomId());
+            return ResponseEntity.ok(CommonIdDto.builder()
+                    .id(room.getRoomId())
+                    .build());
+        return ResponseEntity.status(HttpStatus.CREATED).body(CommonIdDto.builder()
+                .id(room.getRoomId())
+                .build());
     }
 
     @GetMapping("/{roomId}")
