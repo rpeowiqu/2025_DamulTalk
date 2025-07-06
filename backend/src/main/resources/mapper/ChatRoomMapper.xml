@@ -17,12 +17,12 @@
         FROM users u
                  JOIN chat_room_members crm ON u.user_id = crm.user_id
         WHERE crm.room_id = #{roomId}
-          AND u.user_id != #{excludeUserId}
+          AND u.user_id != #{userId}
     </select>
 
     <select id="selectLastReadTime" resultType="java.time.LocalDateTime">
-        SELECT last_read_time
-        FROM chat_read
+        SELECT last_read_at
+        FROM chat_room_members
         WHERE room_id = #{roomId}
           AND user_id = #{userId}
     </select>

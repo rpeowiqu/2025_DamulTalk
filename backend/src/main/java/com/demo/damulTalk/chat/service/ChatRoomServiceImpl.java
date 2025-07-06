@@ -66,7 +66,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     }
 
     @Override
-    public Integer createChatRoom(ChatRoomCreate chatRoomCreate) {
+    public ChatRoomCreated createChatRoom(ChatRoomCreate chatRoomCreate) {
         log.info("[ChatRoomService] 채팅방 생성 시작");
 
         int userId = userUtil.getCurrentUserId();
@@ -79,7 +79,10 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         Integer existingRoomId = chatRoomMapper.selectRoomIdByExactUserIds(userIds, userIds.size());
         if(existingRoomId != null){
             log.info("[ChatRoomService] 기존 채팅방 존재");
-            return existingRoomId;
+            return ChatRoomCreated.builder()
+                    .roomId(existingRoomId)
+                    .isExisted(true)
+                    .build();
         }
 
         String roomName = chatRoomCreate.getRoomName();
@@ -114,7 +117,10 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         chatRoomMapper.insertParticipants(newRoomId, userIds);
 
         log.info("[ChatRoomService] 채팅방 생성 완료: {}", newRoomId);
-        return newRoomId;
+        return ChatRoomCreated.builder()
+                .roomId(newRoomId)
+                .isExisted(false)
+                .build();
     }
 
     @Override

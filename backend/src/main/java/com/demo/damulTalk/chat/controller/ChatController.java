@@ -6,6 +6,7 @@ import com.demo.damulTalk.chat.service.ChatRoomService;
 import com.demo.damulTalk.common.scroll.ScrollResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,8 +38,10 @@ public class ChatController {
     public ResponseEntity<?> addChatRoom(@RequestBody ChatRoomCreate chatRoomCreate) {
         log.info("[ChatController] 채팅방 생성 시작");
 
-        Integer roomId = chatRoomService.createChatRoom(chatRoomCreate);
-        return ResponseEntity.ok(roomId);
+        ChatRoomCreated room = chatRoomService.createChatRoom(chatRoomCreate);
+        if(room.isExisted())
+            return ResponseEntity.ok(room.getRoomId());
+        return ResponseEntity.status(HttpStatus.CREATED).body(room.getRoomId());
     }
 
     @GetMapping("/{roomId}")

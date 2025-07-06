@@ -1,6 +1,7 @@
 package com.demo.damulTalk.chat.service;
 
 import com.demo.damulTalk.chat.dto.ChatRoomCreate;
+import com.demo.damulTalk.chat.dto.ChatRoomCreated;
 import com.demo.damulTalk.chat.dto.ChatRoomInfo;
 import com.demo.damulTalk.chat.dto.SimpleRoomInfo;
 
@@ -10,7 +11,7 @@ public interface ChatRoomService {
 
     List<ChatRoomInfo> getChatRooms();
 
-    Integer createChatRoom(ChatRoomCreate chatRoomCreate);
+    ChatRoomCreated createChatRoom(ChatRoomCreate chatRoomCreate);
 
     SimpleRoomInfo getChatRoomInfo(Integer roomId);
 
