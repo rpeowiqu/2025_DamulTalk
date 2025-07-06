@@ -1,4 +1,3 @@
-import { AlertTriangleIcon } from "lucide-react";
 import { useParams } from "react-router-dom";
 
 import Dialog, { type DialogProps } from "@/components/common/dialog";
