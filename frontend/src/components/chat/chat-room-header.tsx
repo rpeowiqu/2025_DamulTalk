@@ -12,7 +12,9 @@ const ChatRoomHeader = ({ room }: ChatRoomHeaderProps) => {
   return (
     <div className="sticky top-0 z-10 flex items-center gap-6 border-b border-neutral-200 bg-white px-6 py-4">
       <div className="flex flex-1 items-center gap-4">
-        <ChatPortrait profileImages={room.profileImages} />
+        <ChatPortrait
+          profileImages={room.roomMembers.map((item) => item.profileImageUrl)}
+        />
         <div className="flex flex-col break-all">
           <h1 className="line-clamp-1 text-lg font-bold">{room.roomName}</h1>
           <ChatRoomHeadCountButton room={room} />
