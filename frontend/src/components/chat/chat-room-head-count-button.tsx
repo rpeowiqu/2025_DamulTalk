@@ -43,7 +43,7 @@ const ChatRoomHeadCountButton = ({
       <ChatRoomMemberModal
         open={isOpen}
         onOpenChange={handleOpenChange}
-        members={room.members}
+        members={room.roomMembers}
       />
     </>
   );
