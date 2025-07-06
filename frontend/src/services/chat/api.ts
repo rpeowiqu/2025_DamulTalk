@@ -1,5 +1,4 @@
 import type {
-  ChatRoomPreviewsResponse,
   ChatRoomResponse,
   CreateChatRoomRequest,
   MessagesRequest,
@@ -12,8 +11,8 @@ import { getQueryString } from "@/utils/url";
 
 // 채팅 목록 조회
 export const getChatRoomPreviews = async () => {
-  const data = await apiClient.get("chats").json<ChatRoomPreviewsResponse>();
-  return data;
+  const response = await apiClient.get("chats");
+  return response;
 };
 
 // 새 채팅방 만들기
