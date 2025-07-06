@@ -24,7 +24,7 @@ const useExitChatRoom = () => {
 
       // 유저의 프로필 페이지로 리다이렉트
       navigate(`/profiles/${data ? data.userId : 0}`, { replace: true });
-      };
+    },
   });
 };
 
