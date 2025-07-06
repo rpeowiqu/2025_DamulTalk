@@ -36,13 +36,10 @@ const ChatRoomExitModal = ({
       title="채팅방 나가기"
       titleClassName="text-damul-main-300 border-b border-damul-main-500 pb-4"
       {...props}>
-      <div className="mt-3 flex flex-col items-center gap-10">
-        <div className="flex items-center gap-8">
-          <AlertTriangleIcon className="size-10 text-red-400" />
-          <div className="flex flex-col items-center gap-3">
-            <h1 className="text-lg font-bold">{room.roomName}</h1>
-            <p className="text-neutral-500">정말 이 채팅방을 나갈까요?</p>
-          </div>
+      <div className="mt-3 flex flex-col items-center gap-8">
+        <div className="flex flex-1 flex-col items-center justify-center gap-3">
+          <h1 className="text-lg font-bold">{room.roomName}</h1>
+          <p className="text-neutral-600">정말 이 채팅방을 나갈까요?</p>
         </div>
 
         <div className="flex w-full gap-4">
