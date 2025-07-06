@@ -28,8 +28,12 @@ export const postFriendRequest = async (request: FriendRequestRequest) => {
 };
 
 // 친구 추가 요청 수락
-export const postAcceptFriendRequest = async (userId: number) => {
-  const response = await apiClient.post(`friends/requests/${userId}`);
+export const postAcceptFriendRequest = async (
+  request: FriendRequestRequest,
+) => {
+  const response = await apiClient.patch("friends/requests", {
+    json: request,
+  });
   return response;
 };
 
