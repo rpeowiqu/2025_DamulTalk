@@ -5,6 +5,7 @@ import type {
   ReadMessageRequest,
   SearchMessageRequest,
   SearchMessageResponse,
+  SendFileRequest,
 } from "@/types/chat/type";
 import apiClient from "@/utils/http-common";
 import { getQueryString } from "@/utils/url";
@@ -59,6 +60,18 @@ export const getSearchMessage = async (request: SearchMessageRequest) => {
 export const postReadMessage = async (request: ReadMessageRequest) => {
   const response = await apiClient.post(`chats/${request.roomId}`, {
     json: { lastReadAt: request.lastReadAt },
+  });
+  return response;
+};
+
+// 이미지 혹은 동영상 전송
+export const postSendFile = async (request: SendFileRequest) => {
+  const formData = new FormData();
+  formData.append("clientId", request.clientId);
+  formData.append("file", request.file);
+
+  const response = await apiClient.post(`files/upload/${request.roomId}`, {
+    body: formData,
   });
   return response;
 };

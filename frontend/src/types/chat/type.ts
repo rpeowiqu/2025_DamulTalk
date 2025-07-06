@@ -88,6 +88,12 @@ export interface SearchMessageRequest {
   size?: number; // 50 ~ 100
 }
 
+export interface SendFileRequest {
+  roomId: number;
+  clientId: string;
+  file: File;
+}
+
 // Response ==========================================================================================================================
 export type ChatRoomPreviewsResponse = ChatRoomPreview[];
 
