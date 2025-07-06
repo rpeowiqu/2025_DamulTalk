@@ -1,10 +1,10 @@
 import { AlertTriangleIcon } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
+import { useParams } from "react-router-dom";
 
 import Dialog, { type DialogProps } from "@/components/common/dialog";
 import type { ChatRoom } from "@/types/chat/type";
 import Button from "@/components/common/button";
+import useExitChatRoom from "@/hooks/chat/use-exit-chat-room";
 
 interface ChatRoomExitModalProps extends DialogProps {
   room: ChatRoom;
@@ -18,15 +18,15 @@ const ChatRoomExitModal = ({
   onOpenChange,
   ...props
 }: ChatRoomExitModalProps) => {
-  const navigate = useNavigate();
+  const { roomId } = useParams();
+  const { mutate: exitChatRoom } = useExitChatRoom();
 
-  const handleClickCancel = () => {
+  const handleCancel = () => {
     closeModal();
   };
 
-  const handleClickExit = () => {
-    toast.success("해당 채팅방에서 빠져 나왔어요");
-    navigate(`/profiles/${1}`);
+  const handleExit = () => {
+    exitChatRoom(roomId ? Number(roomId) : 0);
   };
 
   return (
@@ -46,13 +46,10 @@ const ChatRoomExitModal = ({
         </div>
 
         <div className="flex w-full gap-4">
-          <Button className="w-full" onClick={handleClickCancel}>
+          <Button className="w-full" onClick={handleCancel}>
             돌아가기
           </Button>
-          <Button
-            variant="dangerous"
-            className="w-full"
-            onClick={handleClickExit}>
+          <Button variant="dangerous" className="w-full" onClick={handleExit}>
             나가기
           </Button>
         </div>
