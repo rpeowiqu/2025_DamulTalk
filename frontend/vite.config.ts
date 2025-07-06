@@ -13,6 +13,9 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react(), tailwindcss()],
+    define: {
+      global: "window", // global을 window로 매핑
+    },
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "src"),
@@ -24,6 +27,11 @@ export default defineConfig(({ mode }) => {
           target: env.VITE_API_BASE_URL,
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, "/api/v1"),
+        },
+        "/ws": {
+          target: env.VITE_WS_BASE_URL,
+          ws: true,
+          changeOrigin: true,
         },
       },
     },
