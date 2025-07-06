@@ -8,15 +8,15 @@
     <select id="selectChatRoomsByUserId" parameterType="int" resultType="com.demo.damulTalk.chat.domain.ChatRoom">
         SELECT cr.*
         FROM chat_rooms cr
-                 JOIN chat_participants cp ON cr.room_id = cp.room_id
-        WHERE cp.user_id = #{userId}
+                 JOIN chat_room_members crm ON cr.room_id = crm.room_id
+        WHERE crm.user_id = #{userId}
     </select>
 
     <select id="selectParticipants" resultType="com.demo.damulTalk.user.domain.User">
         SELECT u.*
         FROM users u
-                 JOIN chat_participants cp ON u.user_id = cp.user_id
-        WHERE cp.room_id = #{roomId}
+                 JOIN chat_room_members crm ON u.user_id = crm.user_id
+        WHERE crm.room_id = #{roomId}
           AND u.user_id != #{excludeUserId}
     </select>
 
