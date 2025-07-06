@@ -23,7 +23,7 @@ const useExitChatRoom = (roomId: number) => {
       toast.success("해당 채팅방에서 빠져 나왔어요");
 
       // 유저의 프로필 페이지로 리다이렉트
-      navigate(`/profiles/${data ? data.userId : 0}`);
+      navigate(`/profiles/${data ? data.userId : 0}`, { replace: true });
     },
   });
 };
