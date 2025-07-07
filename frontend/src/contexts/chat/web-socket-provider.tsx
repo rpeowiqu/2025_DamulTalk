@@ -50,6 +50,9 @@ const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
           });
           console.log("웹소켓 연결을 종료합니다.");
         },
+        onStompError: (error) => {
+          console.error("에러가 발생 했습니다: ", error.body);
+        },
       });
 
       client.activate();
