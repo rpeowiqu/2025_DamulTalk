@@ -26,18 +26,23 @@ public class WebSocketSubscribeListener {
     @EventListener
     public void handleSessionSubscribeEvent(SessionSubscribeEvent event) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
-        Principal principal = accessor.getUser();
-
-        if (principal == null || !(principal instanceof CustomUserDetails details)) {
-            log.warn("[SubscribeListener] 사용자 인증 정보가 없습니다.");
-            return;
-        }
 
         String destination = accessor.getDestination();
         String subscriptionId = accessor.getSubscriptionId();
 
         if (destination == null || subscriptionId == null) {
             log.warn("[SubscribeListener] destination 또는 subscriptionId가 없습니다.");
+            return;
+        }
+
+        if (!chatRoomPattern.matcher(destination).matches()) {
+            return; // 채팅방 구독이 아니면 무시
+        }
+
+        Principal principal = accessor.getUser();
+
+        if (principal == null || !(principal instanceof CustomUserDetails details)) {
+            log.warn("[SubscribeListener] 사용자 인증 정보가 없습니다.");
             return;
         }
 

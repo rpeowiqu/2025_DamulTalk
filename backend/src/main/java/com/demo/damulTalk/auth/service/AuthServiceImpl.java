@@ -124,6 +124,7 @@ public class AuthServiceImpl implements AuthService {
                 .forEach(friendId -> {
                     try {
                         redisTemplate.convertAndSend("notifications", objectMapper.writeValueAsString(CommonWrapperDto.<ConnectionDto>builder()
+                                .userId(friendId)
                                 .type(NotificationType.ONLINE_STATUS)
                                 .data(connectionDto)
                                 .build()));

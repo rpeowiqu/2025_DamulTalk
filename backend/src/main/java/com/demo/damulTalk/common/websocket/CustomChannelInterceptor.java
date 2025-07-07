@@ -21,15 +21,11 @@ public class CustomChannelInterceptor implements ChannelInterceptor {
 
         StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
 
-        if (accessor != null && StompCommand.CONNECT.equals(accessor.getCommand())) {
-            UsernamePasswordAuthenticationToken authentication =
-                    (UsernamePasswordAuthenticationToken) accessor.getSessionAttributes().get("user");
-
-            if (authentication != null) {
-                accessor.setUser(authentication);
-                log.info("[CustomChannelInterceptor] 세션에서 사용자 정보 설정 완료 - 사용자: {}", authentication.getName());
-            } else {
-                log.warn("[CustomChannelInterceptor] 세션에서 사용자 정보 없음 - 인증 실패로 간주");
+        if (accessor != null) {
+            Object auth = accessor.getSessionAttributes().get("user");
+            if (auth instanceof UsernamePasswordAuthenticationToken token) {
+                accessor.setUser(token);
+                log.info("[CustomChannelInterceptor] 사용자 설정됨 - {}", token.getName());
             }
         }
 
