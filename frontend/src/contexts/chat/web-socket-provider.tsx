@@ -1,20 +1,28 @@
-import { createContext, useEffect, useRef, type ReactNode } from "react";
+import { createContext, useEffect, useState, type ReactNode } from "react";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 
 import { getAccessToken, isTokenExpired } from "@/utils/jwt-token";
 import { reissueAccessToken } from "@/utils/http-common";
+import type { WsState } from "@/types/web-socket/type";
 
-export const WebSocketContext = createContext<Client | null>(null);
+export const WebSocketContext = createContext<WsState | null>(null);
 
 interface WebSocketProviderProps {
   children: ReactNode;
 }
 
 const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
-  const clientRef = useRef<Client | null>(null);
+  const [socket, setSocket] = useState<WsState>({
+    client: null,
+    isConnected: false,
+  });
 
   useEffect(() => {
+    if (socket.client) {
+      return;
+    }
+
     const connectSocket = async () => {
       // 액세스 토큰이 만료 됐는지 검사하고, 만료 됐다면 리이슈 요청 후 웹 소켓에 연결한다.
       const isExpired = isTokenExpired();
@@ -23,31 +31,42 @@ const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
       }
 
       const accessToken = getAccessToken();
-      clientRef.current = new Client({
+      const client = new Client({
         webSocketFactory: () =>
           new SockJS(
             import.meta.env.VITE_WS_BASE_URL + `?token=${accessToken}`,
           ),
         onConnect: () => {
-          console.log("WebSocket connected!");
+          setSocket((prev) => ({
+            ...prev,
+            isConnected: true,
+          }));
+          console.log("웹소켓에 연결을 시작합니다.");
         },
         onDisconnect: () => {
-          console.log("WebSocket disconnected.");
+          setSocket({
+            client: null,
+            isConnected: false,
+          });
+          console.log("웹소켓 연결을 종료합니다.");
         },
       });
-      clientRef.current.activate();
+
+      client.activate();
+      setSocket((prev) => ({
+        ...prev,
+        client,
+      }));
     };
 
     connectSocket();
 
     return () => {
-      clientRef.current?.deactivate();
+      socket.client?.deactivate();
     };
   }, []);
 
-  return (
-    <WebSocketContext value={clientRef.current}>{children}</WebSocketContext>
-  );
+  return <WebSocketContext value={socket}>{children}</WebSocketContext>;
 };
 
 export default WebSocketProvider;
