@@ -75,6 +75,8 @@ const SignupEmailForm = ({
                 : "focus:ring-red-400",
             )}
             autoFocus
+            autoComplete="off"
+            autoCapitalize="off"
             required
             maxLength={64}
             onChange={handleChange}

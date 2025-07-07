@@ -72,6 +72,8 @@ const SignupPasswordForm = ({
               : "focus:ring-red-400",
           )}
           autoFocus
+          autoComplete="off"
+          autoCapitalize="off"
           required
           maxLength={32}
           onChange={handleChangePassword}
@@ -89,6 +91,8 @@ const SignupPasswordForm = ({
                 ? "focus:ring-damul-main-300"
                 : "focus:ring-red-400",
             )}
+            autoComplete="off"
+            autoCapitalize="off"
             required
             maxLength={32}
             onChange={handleChangePasswordCheck}
