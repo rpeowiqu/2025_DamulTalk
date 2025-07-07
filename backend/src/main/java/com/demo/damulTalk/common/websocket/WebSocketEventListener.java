@@ -5,6 +5,8 @@ import com.demo.damulTalk.common.NotificationType;
 import com.demo.damulTalk.friend.mapper.FriendMapper;
 import com.demo.damulTalk.user.domain.CustomUserDetails;
 import com.demo.damulTalk.user.dto.ConnectionDto;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -26,6 +28,7 @@ public class WebSocketEventListener {
 
     private final FriendMapper friendMapper;
     private final RedisTemplate<String, String> redisTemplate;
+    private final ObjectMapper objectMapper;
 
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectedEvent event) {
@@ -61,11 +64,16 @@ public class WebSocketEventListener {
 
             friendIds.stream()
                     .filter(friendId -> redisTemplate.hasKey("user:online:" + friendId))
-                    .forEach(friendId -> redisTemplate.convertAndSend("notifications", CommonWrapperDto.<ConnectionDto>builder()
-                                    .userId(friendId)
+                    .forEach(friendId -> {
+                        try {
+                            redisTemplate.convertAndSend("notifications", objectMapper.writeValueAsString(CommonWrapperDto.<ConnectionDto>builder()
                                     .type(NotificationType.ONLINE_STATUS)
                                     .data(connectionDto)
-                    .build()));
+                                    .build()));
+                        } catch (JsonProcessingException e) {
+                            log.error("[WebSocketEventListener] 직렬화 실패");
+                        }
+                    });
         }
     }
 
@@ -102,10 +110,16 @@ public class WebSocketEventListener {
 
             friendIds.stream()
                     .filter(friendId -> redisTemplate.hasKey("user:online:" + friendId))
-                    .forEach(friendId -> redisTemplate.convertAndSend("notifications", CommonWrapperDto.<ConnectionDto>builder()
-                            .type(NotificationType.ONLINE_STATUS)
-                            .data(connectionDto)
-                            .build()));
+                    .forEach(friendId -> {
+                        try {
+                            redisTemplate.convertAndSend("notifications", objectMapper.writeValueAsString(CommonWrapperDto.<ConnectionDto>builder()
+                                    .type(NotificationType.ONLINE_STATUS)
+                                    .data(connectionDto)
+                                    .build()));
+                        } catch (JsonProcessingException e) {
+                            log.error("[WebSocketEventListener] 직렬화 실패");
+                        }
+                    });
         }
     }
 

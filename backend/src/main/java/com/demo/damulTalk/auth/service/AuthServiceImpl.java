@@ -16,6 +16,8 @@ import com.demo.damulTalk.user.mapper.UserMapper;
 import com.demo.damulTalk.user.service.CustomUserDetailsService;
 import com.demo.damulTalk.util.CookieUtil;
 import com.demo.damulTalk.util.UserUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -48,6 +50,7 @@ public class AuthServiceImpl implements AuthService {
     private final RedisTemplate<String, String> redisTemplate;
     private final SimpMessagingTemplate messagingTemplate;
     private final UserUtil userUtil;
+    private final ObjectMapper objectMapper;
 
     @Override
     public void signup(SignupRequest request) {
@@ -118,11 +121,16 @@ public class AuthServiceImpl implements AuthService {
 
         friendIds.stream()
                 .filter(friendId -> redisTemplate.hasKey("user:online:" + friendId))
-                .forEach(friendId -> redisTemplate.convertAndSend("notifications", CommonWrapperDto.<ConnectionDto>builder()
-                                .userId(friendId)
+                .forEach(friendId -> {
+                    try {
+                        redisTemplate.convertAndSend("notifications", objectMapper.writeValueAsString(CommonWrapperDto.<ConnectionDto>builder()
                                 .type(NotificationType.ONLINE_STATUS)
                                 .data(connectionDto)
-                        .build()));
+                                .build()));
+                    } catch (JsonProcessingException e) {
+                        log.error("[WebSocketEventListener] 직렬화 실패");
+                    }
+                });
     }
 
     @Override
