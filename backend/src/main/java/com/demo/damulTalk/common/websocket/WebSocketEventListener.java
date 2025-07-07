@@ -30,6 +30,20 @@ public class WebSocketEventListener {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
         Principal user = accessor.getUser();
 
+        if (user == null) {
+            Object auth = accessor.getSessionAttributes().get("user");
+            if (auth instanceof UsernamePasswordAuthenticationToken token) {
+                user = token;
+            }
+        }
+
+        if (user == null) {
+            log.error("[WebSocketEventListener] 연결된 사용자 정보가 없습니다.");
+            return;
+        }
+
+        log.info("[WebSocketEventListener] @@@@@@@@@@Received a new connection event for user {}", user.getName());
+
         if(user instanceof UsernamePasswordAuthenticationToken auth) {
             CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
             int userId = userDetails.getUserId();
