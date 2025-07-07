@@ -19,4 +19,6 @@ public interface ChatMessageRepository extends MongoRepository<ChatMessage, Stri
 
     List<ChatMessage> findByRoomIdOrderBySendTimeDesc(Integer roomId, Pageable pageable);
 
+    List<ChatMessage> findByRoomIdAndSendTimeAfterOrderBySendTimeAsc(Integer roomId, LocalDateTime sendTime);
+
 }

@@ -60,11 +60,13 @@ public class ChatController {
     @GetMapping("/{roomId}/messages")
     public ResponseEntity<?> getChatMessages(
             @PathVariable("roomId") Integer roomId,
-            @RequestParam(required = false) LocalDateTime cursor,
-            @RequestParam(defaultValue = "10") Integer size) {
+            @RequestParam(required = false) String cursor,
+            @RequestParam(defaultValue = "50") Integer size) {
         log.info("[ChatController] 채팅 메시지 조회 시작 - roomId: {}", roomId);
 
-        ScrollResponse<List<ChatMessageResponse>, String> response = chatMessageService.getChatMessages(roomId, cursor, size);
+        LocalDateTime cursorTime = cursor.isEmpty() ? null : LocalDateTime.parse(cursor);
+        ScrollResponse<List<ChatMessageResponse>, String> response = chatMessageService.getChatMessages(roomId,
+                cursorTime, size);
         if(response.getData().isEmpty()) {
             return ResponseEntity.noContent().build();
         }

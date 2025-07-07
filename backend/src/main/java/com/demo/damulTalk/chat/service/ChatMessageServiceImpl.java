@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +26,6 @@ import java.util.stream.Collectors;
 public class ChatMessageServiceImpl implements ChatMessageService {
 
     private final ChatMessageRepository chatMessageRepository;
-    private final RestClient.Builder builder;
     private final ChatRoomMapper chatRoomMapper;
     private final UserUtil userUtil;
 
@@ -32,15 +33,27 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     public ScrollResponse<List<ChatMessageResponse>, String> getChatMessages(Integer roomId, LocalDateTime cursor, Integer size) {
         log.info("[ChatMessageService] 채팅 내역 조회 시작 - roomId: {}, cursor: {}, size: {}", roomId, cursor, size);
 
-        Pageable pageable = PageRequest.of(0, size + 1);
-        List<ChatMessage> messages = (cursor != null) ?
-                chatMessageRepository.findByRoomIdAndSendTimeBeforeOrderBySendTimeDesc(roomId, cursor, pageable) :
-                chatMessageRepository.findByRoomIdOrderBySendTimeDesc(roomId, pageable);
-
-        boolean hasNext = messages.size() > size;
-        if(hasNext) {
-            messages = messages.subList(0, size);
+        int userId = userUtil.getCurrentUserId();
+        if(cursor == null) {
+            cursor = chatRoomMapper.selectLastReadTime(roomId, userId);
         }
+
+        List<ChatMessage> newerMessages = chatMessageRepository.findByRoomIdAndSendTimeAfterOrderBySendTimeAsc(roomId, cursor);
+
+        Pageable pageable = PageRequest.of(0, size + 1);
+        List<ChatMessage> olderMessages = chatMessageRepository.findByRoomIdAndSendTimeBeforeOrderBySendTimeDesc(roomId, cursor, pageable);
+
+        boolean hasNext = false;
+        if (olderMessages.size() > size) {
+            hasNext = true;
+            olderMessages = olderMessages.subList(0, size);
+        }
+
+        List<ChatMessage> messages = new ArrayList<>();
+
+        Collections.reverse(newerMessages);
+        messages.addAll(newerMessages);
+        messages.addAll(olderMessages);
 
         List<ChatMessageResponse> response = messages.stream()
                 .map(msg -> ChatMessageResponse.builder()
