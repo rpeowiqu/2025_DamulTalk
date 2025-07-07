@@ -4,7 +4,7 @@ import { postTokenUpdate } from "@/services/auth/api";
 
 let refreshPromise: Promise<string> | null = null;
 
-const reissueAccessToken = async () => {
+export const reissueAccessToken = async () => {
   if (refreshPromise) {
     return refreshPromise;
   }
