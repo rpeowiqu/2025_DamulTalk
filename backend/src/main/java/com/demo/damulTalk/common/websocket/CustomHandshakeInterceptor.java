@@ -4,6 +4,7 @@ import com.demo.damulTalk.auth.service.JwtService;
 import com.demo.damulTalk.user.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,7 +27,7 @@ public class CustomHandshakeInterceptor implements HandshakeInterceptor {
 
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response,
-                                   WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
+                                   WebSocketHandler wsHandler, Map<String, Object> attributes) {
 
         URI uri = request.getURI();
         String query = uri.getQuery();
@@ -56,6 +57,7 @@ public class CustomHandshakeInterceptor implements HandshakeInterceptor {
                     }
                 } catch (Exception e) {
                     log.error("[JwtHandshakeInterceptor] WebSocket 인증 실패: {}", e.getMessage());
+                    response.setStatusCode(HttpStatus.UNAUTHORIZED);
                     return false;
                 }
             }

@@ -64,7 +64,8 @@ public class WebSocketEventListener {
                     .forEach(friendId -> redisTemplate.convertAndSend("notifications", CommonWrapperDto.<ConnectionDto>builder()
                                     .userId(friendId)
                                     .type(NotificationType.ONLINE_STATUS)
-                                    .data(connectionDto)));
+                                    .data(connectionDto)
+                    .build()));
         }
     }
 
@@ -103,7 +104,8 @@ public class WebSocketEventListener {
                     .filter(friendId -> redisTemplate.hasKey("user:online:" + friendId))
                     .forEach(friendId -> redisTemplate.convertAndSend("notifications", CommonWrapperDto.<ConnectionDto>builder()
                             .type(NotificationType.ONLINE_STATUS)
-                            .data(connectionDto)));
+                            .data(connectionDto)
+                            .build()));
         }
     }
 
