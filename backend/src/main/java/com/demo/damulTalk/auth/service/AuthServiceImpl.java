@@ -3,6 +3,8 @@ package com.demo.damulTalk.auth.service;
 import com.demo.damulTalk.auth.dto.LoginRequestDto;
 import com.demo.damulTalk.auth.dto.LoginResponseDto;
 import com.demo.damulTalk.auth.dto.ValidValue;
+import com.demo.damulTalk.common.CommonWrapperDto;
+import com.demo.damulTalk.common.NotificationType;
 import com.demo.damulTalk.exception.BusinessException;
 import com.demo.damulTalk.exception.ErrorCode;
 import com.demo.damulTalk.friend.mapper.FriendMapper;
@@ -72,7 +74,7 @@ public class AuthServiceImpl implements AuthService {
             log.info("[AuthService] 존재하지 않는 유저입니다.");
             throw new BusinessException(
                     ErrorCode.INVALID_USER,
-                    "존재하지 않는 유저입니다."
+                    "ID 혹은 패스워드가 일치하지 않습니다."
             );
         }
 
@@ -80,7 +82,7 @@ public class AuthServiceImpl implements AuthService {
             log.info("[AuthService] 비밀번호가 틀립니다.");
             throw new BusinessException(
                     ErrorCode.INCORRECT_PASSWORD,
-                    "비밀번호가 틀립니다."
+                    "ID 혹은 패스워드가 일치하지 않습니다."
             );
         }
 
@@ -116,7 +118,10 @@ public class AuthServiceImpl implements AuthService {
 
         friendIds.stream()
                 .filter(friendId -> redisTemplate.hasKey("user:online:" + friendId))
-                .forEach(friendId -> messagingTemplate.convertAndSend("/sub/friends/" + friendId, connectionDto));
+                .forEach(friendId -> redisTemplate.convertAndSend("notifications", CommonWrapperDto.<ConnectionDto>builder()
+                                .userId(friendId)
+                                .type(NotificationType.ONLINE_STATUS)
+                                .data(connectionDto)));
     }
 
     @Override

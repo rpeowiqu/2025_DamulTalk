@@ -1,6 +1,8 @@
 package com.demo.damulTalk.config;
 
 import com.demo.damulTalk.chat.dto.ChatMessageResponse;
+import com.demo.damulTalk.common.CommonWrapperDto;
+import com.demo.damulTalk.common.NotificationType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +28,9 @@ public class ChatSubscriber implements MessageListener {
             ChatMessageResponse chatMessage = objectMapper.readValue(payload, ChatMessageResponse.class);
 
             String topic = "/sub/chats/" + chatMessage.getRoomId();
-            messagingTemplate.convertAndSend(topic, chatMessage);
+            messagingTemplate.convertAndSend(topic, CommonWrapperDto.<ChatMessageResponse>builder()
+                    .type(NotificationType.CHAT_MESSAGE)
+                    .data(chatMessage));
         } catch (Exception e) {
             log.error("[ChatSubscriber] 메시지 수신 실패", e);
         }

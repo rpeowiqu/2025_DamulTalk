@@ -1,5 +1,6 @@
 package com.demo.damulTalk.config;
 
+import com.demo.damulTalk.common.CommonWrapperDto;
 import com.demo.damulTalk.user.dto.ConnectionDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,12 +25,10 @@ public class NotificationSubscriber implements MessageListener {
     public void onMessage(Message message, byte[] pattern) {
         try {
             String payload = new String(message.getBody(), StandardCharsets.UTF_8);
-            ConnectionDto connection = objectMapper.readValue(payload, ConnectionDto.class);
+            CommonWrapperDto commonWrapperDto = objectMapper.readValue(payload, CommonWrapperDto.class);
 
-            String topic = "/sub/notifications" + connection.getUserId();
-            messagingTemplate.convertAndSend(topic, connection);
-
-            log.info("Redis -> WebSocket: [{}] {}", topic, connection.isOnline());
+            String topic = "/sub/notifications/" + commonWrapperDto.getUserId();
+            messagingTemplate.convertAndSend(topic, commonWrapperDto);
         } catch(JsonProcessingException e) {
             log.error("[NotificationSubscriber] JSON 역직렬화 실패: {}", e.getMessage());
         }
