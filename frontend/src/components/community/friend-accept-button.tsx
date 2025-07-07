@@ -12,7 +12,7 @@ const FriendAcceptButton = ({ userId }: FriendAcceptButtonProps) => {
 
   const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    acceptRequest(userId);
+    acceptRequest({ id: userId });
   };
 
   return (
