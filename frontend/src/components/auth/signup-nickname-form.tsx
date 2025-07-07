@@ -75,6 +75,8 @@ const SignupNicknameForm = ({
                 : "focus:ring-red-400",
             )}
             autoFocus
+            autoComplete="off"
+            autoCapitalize="off"
             required
             maxLength={12}
             onChange={handleChange}
