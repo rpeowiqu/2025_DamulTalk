@@ -8,18 +8,24 @@ import BlankLayout from "@/components/layout/blank-layout";
 import LoginPage from "@/pages/login-page";
 import LoginForm from "@/components/auth/login-form";
 import PasswordResetForm from "@/components/auth/password-reset-form";
+import ProtectedRoute from "@/components/route/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
-    element: <MainLayout />,
+    element: <ProtectedRoute />,
     children: [
       {
-        path: "/profiles/:userId",
-        element: <ProfilePage />,
-      },
-      {
-        path: "/chats/:roomId",
-        element: <ChatPage />,
+        element: <MainLayout />,
+        children: [
+          {
+            path: "/profiles/:userId",
+            element: <ProfilePage />,
+          },
+          {
+            path: "/chats/:roomId",
+            element: <ChatPage />,
+          },
+        ],
       },
     ],
   },

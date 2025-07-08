@@ -16,7 +16,7 @@ const getPayload = () => {
   try {
     return jwtDecode<JWTPayload>(accessToken);
   } catch (error) {
-    console.error("Fail to decode jwt token:", error);
+    console.error("JWT 토큰을 복호화하지 못했습니다.", error);
     return null;
   }
 };
@@ -28,7 +28,7 @@ export const isTokenExpired = () => {
   } else {
     const now = Math.floor(Date.now() / 1_000);
     if (now >= payload.exp) {
-      console.error("jwt token was expired!");
+      console.error("JWT 토큰이 만료 되었습니다.");
       return true;
     }
   }

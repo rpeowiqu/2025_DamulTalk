@@ -2,8 +2,7 @@ import { createContext, useEffect, useState, type ReactNode } from "react";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 
-import { getAccessToken, isTokenExpired } from "@/utils/jwt-token";
-import { reissueAccessToken } from "@/utils/http-common";
+import { getAccessToken } from "@/utils/jwt-token";
 import type { WsState } from "@/types/web-socket/type";
 
 export const WebSocketContext = createContext<WsState | null>(null);
@@ -24,13 +23,12 @@ const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
     }
 
     const connectSocket = async () => {
-      // 액세스 토큰이 만료 됐는지 검사하고, 만료 됐다면 리이슈 요청 후 웹 소켓에 연결한다.
-      const isExpired = isTokenExpired();
-      if (isExpired) {
-        await reissueAccessToken();
+      const accessToken = getAccessToken();
+      if (!accessToken) {
+        console.error("액세스 토큰이 존재하지 않습니다.");
+        return;
       }
 
-      const accessToken = getAccessToken();
       const client = new Client({
         webSocketFactory: () =>
           new SockJS(
