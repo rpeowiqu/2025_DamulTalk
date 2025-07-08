@@ -8,7 +8,7 @@ import useLogin from "@/hooks/auth/use-login";
 
 const LoginForm = () => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const { mutate: login } = useLogin();
+  const { message, mutate: login } = useLogin();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -92,6 +92,8 @@ const LoginForm = () => {
           </Link>
         </div>
       </div>
+
+      {message && <p className="text-sm text-red-400">{message}</p>}
 
       <div className="flex flex-col gap-3">
         <Button>로그인</Button>
