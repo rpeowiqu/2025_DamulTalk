@@ -20,6 +20,21 @@ export const enum SignupStep {
   LENGTH,
 }
 
+export interface PasswordResetInfo {
+  email: string;
+  code: string;
+  password: string;
+  passwordCheck: string;
+}
+
+export const enum PasswordResetStep {
+  EMAIL,
+  CODE,
+  NEW_PASSWORD,
+  COMPLETION,
+  LENGTH,
+}
+
 // Request ==========================================================================================================================
 export interface SignupRequest {
   username: string;
@@ -32,8 +47,21 @@ export interface LoginRequest {
   password: string;
 }
 
-export interface ValueCheckRequest {
+export interface CheckValueRequest {
   value: string;
+}
+
+export interface CheckEmailRequest {
+  email: string;
+}
+
+export interface CheckCodeReqeust {
+  email: string;
+  code: string;
+}
+
+export interface NewPasswordReqeust {
+  password: string;
 }
 
 // Response ==========================================================================================================================

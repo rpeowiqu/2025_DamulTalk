@@ -86,7 +86,7 @@ const LoginForm = () => {
           />
 
           <Link
-            to="/"
+            to="password-reset"
             className="text-damul-main-300 w-fit font-bold select-none">
             비밀번호를 잊어 버리셨나요?
           </Link>

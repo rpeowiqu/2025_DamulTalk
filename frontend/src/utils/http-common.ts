@@ -1,6 +1,6 @@
 import ky, { type KyResponse } from "ky";
 
-import { postTokenUpdate } from "@/services/auth/api";
+import { postUpdateToken } from "@/services/auth/api";
 import type { DamulError } from "@/types/common/type";
 
 let refreshPromise: Promise<string> | null = null;
@@ -11,7 +11,7 @@ const reissueAccessToken = async () => {
   }
 
   refreshPromise = (async () => {
-    const response = await postTokenUpdate();
+    const response = await postUpdateToken();
     const accessToken = response.headers.get("Authorization");
     if (!accessToken) {
       throw new Error("응답 헤더에 엑세스 토큰이 존재하지 않습니다.");

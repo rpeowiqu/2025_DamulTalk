@@ -17,7 +17,6 @@ const useLogin = () => {
         const errorBody = await response.json<DamulError>();
         throw new Error(errorBody.message);
       }
-
       return response;
     },
     onSuccess: async (response) => {

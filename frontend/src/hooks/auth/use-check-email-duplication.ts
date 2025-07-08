@@ -1,25 +1,27 @@
 import { useMutation } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
-import { postEmailCheck } from "@/services/auth/api";
+import { postCheckEmailDuplication } from "@/services/auth/api";
 
-const useEmailCheck = (email: string) => {
+const useCheckEmailDuplication = (email: string) => {
   const [messageType, setMessageType] = useState<"valid" | "invalid">("valid");
   const [message, setMessage] = useState("");
 
   const { mutate } = useMutation({
-    mutationFn: (email: string) => postEmailCheck({ value: email }),
-    onSuccess: (response) => {
-      switch (response.status) {
-        case 200:
-          setMessageType("invalid");
-          setMessage("이미 사용 중인 이메일이에요");
-          break;
-        case 204:
-          setMessageType("valid");
-          setMessage("사용 가능한 이메일이에요");
-          break;
+    mutationFn: async (email: string) => {
+      const response = await postCheckEmailDuplication({ value: email });
+      if (response.status === 200) {
+        throw new Error("이미 사용 중인 이메일이에요");
       }
+      return response;
+    },
+    onSuccess: () => {
+      setMessageType("valid");
+      setMessage("사용 가능한 이메일이에요");
+    },
+    onError: (error) => {
+      setMessageType("invalid");
+      setMessage(error.message);
     },
   });
 
@@ -46,4 +48,4 @@ const useEmailCheck = (email: string) => {
   return { messageType, message };
 };
 
-export default useEmailCheck;
+export default useCheckEmailDuplication;

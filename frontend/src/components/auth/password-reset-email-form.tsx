@@ -7,48 +7,44 @@ import {
 } from "react";
 import { debounce } from "lodash-es";
 
-import Button from "@/components/common/button";
 import Input from "@/components/common/input";
-import type { SignupInfo } from "@/types/auth/type";
+import Button from "@/components/common/button";
+import type { PasswordResetInfo } from "@/types/auth/type";
 import { cn } from "@/utils/style";
-import useCheckNickname from "@/hooks/auth/use-check-nickname";
-import useSignup from "@/hooks/auth/use-signup";
+import useCheckEmail from "@/hooks/auth/use-check-email";
 
-interface SignupNicknameFormProps {
-  formData: SignupInfo;
-  setFormData: Dispatch<SetStateAction<SignupInfo>>;
+interface PasswordResetEmailFormProps {
+  formData: PasswordResetInfo;
+  setFormData: Dispatch<SetStateAction<PasswordResetInfo>>;
   onPrev: () => void;
   onNext: () => void;
 }
 
-const SignupNicknameForm = ({
+const PasswordResetEmailForm = ({
   formData,
   setFormData,
   onPrev,
   onNext,
-}: SignupNicknameFormProps) => {
-  const { messageType, message } = useCheckNickname(formData.nickname);
-  const { mutate: signup } = useSignup({ onSuccess: onNext });
+}: PasswordResetEmailFormProps) => {
+  const {
+    messageType,
+    message,
+    mutate: receiveCode,
+  } = useCheckEmail({ email: formData.email, onSuccess: onNext });
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    signup({
-      username: formData.email,
-      password: formData.password,
-      nickname: formData.nickname,
-    });
+    receiveCode(formData.email);
   };
 
   const updateFormData = useMemo(
     () =>
-      debounce(
-        (nickname: string) =>
-          setFormData((prev) => ({
-            ...prev,
-            nickname,
-          })),
-        400,
-      ),
+      debounce((email: string) => {
+        setFormData((prev) => ({
+          ...prev,
+          email,
+        }));
+      }, 400),
     [],
   );
 
@@ -62,17 +58,16 @@ const SignupNicknameForm = ({
       className="flex h-full flex-col justify-between gap-6">
       <div className="flex flex-col gap-4">
         <h1 className="text-2xl leading-9 font-bold">
-          사용하실 닉네임을
+          가입하신 이메일을
           <br />
           입력해주세요
         </h1>
         <div className="flex flex-col gap-2">
           <Input
-            type="text"
-            placeholder="닉네임을 입력해 주세요"
-            defaultValue={formData.nickname}
+            type="email"
+            placeholder="이메일을 입력해 주세요"
             className={cn(
-              messageType === "valid" || formData.nickname.length === 0
+              messageType === "valid" || formData.email.length === 0
                 ? "focus:ring-damul-main-300"
                 : "focus:ring-red-400",
             )}
@@ -80,7 +75,7 @@ const SignupNicknameForm = ({
             autoComplete="off"
             autoCapitalize="off"
             required
-            maxLength={12}
+            maxLength={64}
             onChange={handleChange}
           />
 
@@ -96,14 +91,14 @@ const SignupNicknameForm = ({
 
       <div className="flex gap-3">
         <Button className="w-full" type="button" onClick={onPrev}>
-          이전
+          로그인 화면
         </Button>
         <Button className="w-full" disabled={messageType === "invalid"}>
-          회원가입
+          다음
         </Button>
       </div>
     </form>
   );
 };
 
-export default SignupNicknameForm;
+export default PasswordResetEmailForm;

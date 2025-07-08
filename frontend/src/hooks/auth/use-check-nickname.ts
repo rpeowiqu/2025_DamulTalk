@@ -1,25 +1,27 @@
 import { useMutation } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
-import { postNicknameCheck } from "@/services/auth/api";
+import { postCheckNicknameDuplication } from "@/services/auth/api";
 
-const useNicknameCheck = (nickname: string) => {
+const useCheckNickname = (nickname: string) => {
   const [messageType, setMessageType] = useState<"valid" | "invalid">("valid");
   const [message, setMessage] = useState("");
 
   const { mutate } = useMutation({
-    mutationFn: (nickname: string) => postNicknameCheck({ value: nickname }),
-    onSuccess: (response) => {
-      switch (response.status) {
-        case 200:
-          setMessageType("invalid");
-          setMessage("이미 사용 중인 닉네임이에요");
-          break;
-        case 204:
-          setMessageType("valid");
-          setMessage("사용 가능한 닉네임이에요");
-          break;
+    mutationFn: async (nickname: string) => {
+      const response = await postCheckNicknameDuplication({ value: nickname });
+      if (response.status === 200) {
+        throw new Error("이미 사용 중인 닉네임이에요.");
       }
+      return response;
+    },
+    onSuccess: () => {
+      setMessageType("valid");
+      setMessage("사용 가능한 닉네임이에요");
+    },
+    onError: (error) => {
+      setMessageType("invalid");
+      setMessage(error.message);
     },
   });
 
@@ -46,4 +48,4 @@ const useNicknameCheck = (nickname: string) => {
   return { messageType, message };
 };
 
-export default useNicknameCheck;
+export default useCheckNickname;

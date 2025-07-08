@@ -1,6 +1,5 @@
 import {
   useMemo,
-  useState,
   type ChangeEvent,
   type Dispatch,
   type FormEvent,
@@ -11,35 +10,34 @@ import { debounce } from "lodash-es";
 import Button from "@/components/common/button";
 import Input from "@/components/common/input";
 import type { SignupInfo } from "@/types/auth/type";
-import useEmailCheck from "@/hooks/auth/use-email-check";
+import useCheckEmailDuplication from "@/hooks/auth/use-check-email-duplication";
 import { cn } from "@/utils/style";
 
 interface SignupEmailFormProps {
-  signupInfo: SignupInfo;
-  setSignupInfo: Dispatch<SetStateAction<SignupInfo>>;
+  formData: SignupInfo;
+  setFormData: Dispatch<SetStateAction<SignupInfo>>;
   onPrev: () => void;
   onNext: () => void;
 }
 
 const SignupEmailForm = ({
-  signupInfo,
-  setSignupInfo,
+  formData,
+  setFormData,
   onPrev,
   onNext,
 }: SignupEmailFormProps) => {
-  const [email, setEmail] = useState(signupInfo.email);
-  const { messageType, message } = useEmailCheck(signupInfo.email);
+  const { messageType, message } = useCheckEmailDuplication(formData.email);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     onNext();
   };
 
-  const updateSignupEmail = useMemo(
+  const updateFormData = useMemo(
     () =>
       debounce(
         (email: string) =>
-          setSignupInfo((prev) => ({
+          setFormData((prev) => ({
             ...prev,
             email,
           })),
@@ -49,9 +47,7 @@ const SignupEmailForm = ({
   );
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    setEmail(value);
-    updateSignupEmail(value);
+    updateFormData(e.target.value);
   };
 
   return (
@@ -68,9 +64,9 @@ const SignupEmailForm = ({
           <Input
             type="email"
             placeholder="이메일을 입력해 주세요"
-            value={email}
+            defaultValue={formData.email}
             className={cn(
-              messageType === "valid" || signupInfo.email.length === 0
+              messageType === "valid" || formData.email.length === 0
                 ? "focus:ring-damul-main-300"
                 : "focus:ring-red-400",
             )}

@@ -2,58 +2,55 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 
+import { type PasswordResetInfo, PasswordResetStep } from "@/types/auth/type";
 import StepProgress from "@/components/common/step-progress";
-import { type SignupInfo, SignupStep } from "@/types/auth/type";
-import SignupEmailForm from "@/components/auth/signup-email-form";
-import SignupPasswordForm from "@/components/auth/signup-password-form";
-import SignupNicknameForm from "@/components/auth/signup-nickname-form";
-import SignupCompletionForm from "@/components/auth/signup-completion-form";
+import PasswordResetEmailForm from "@/components/auth/password-reset-email-form";
+import PasswordResetCodeForm from "@/components/auth/password-reset-code-form";
+import PasswordResetNewPasswordForm from "@/components/auth/password-reset-new-password-form";
+import PasswordResetCompletionForm from "@/components/auth/password-reset-completion-form";
 
-const SignupForm = () => {
-  const [formData, setFormData] = useState<SignupInfo>({
+const PasswordResetForm = () => {
+  const [formData, setFormData] = useState<PasswordResetInfo>({
     email: "",
+    code: "",
     password: "",
     passwordCheck: "",
-    nickname: "",
   });
-  const [step, setStep] = useState<SignupStep>(SignupStep.EMAIL);
+  const [step, setStep] = useState<PasswordResetStep>(PasswordResetStep.EMAIL);
   const navigate = useNavigate();
 
   const renderForm = () => {
     switch (step) {
-      case SignupStep.EMAIL:
+      case PasswordResetStep.EMAIL:
         return (
-          <SignupEmailForm
+          <PasswordResetEmailForm
             formData={formData}
             setFormData={setFormData}
             onPrev={() => navigate("/login")}
             onNext={() => setStep((prev) => prev + 1)}
           />
         );
-      case SignupStep.PASSWORD:
+      case PasswordResetStep.CODE:
         return (
-          <SignupPasswordForm
+          <PasswordResetCodeForm
             formData={formData}
             setFormData={setFormData}
-            onPrev={() => setStep((prev) => prev - 1)}
+            onPrev={() => navigate("/login")}
             onNext={() => setStep((prev) => prev + 1)}
           />
         );
-      case SignupStep.NICKNAME:
+      case PasswordResetStep.NEW_PASSWORD:
         return (
-          <SignupNicknameForm
+          <PasswordResetNewPasswordForm
             formData={formData}
             setFormData={setFormData}
-            onPrev={() => setStep((prev) => prev - 1)}
+            onPrev={() => navigate("/login")}
             onNext={() => setStep((prev) => prev + 1)}
           />
         );
-      case SignupStep.COMPLETION:
+      case PasswordResetStep.COMPLETION:
         return (
-          <SignupCompletionForm
-            signupInfo={formData}
-            onNext={() => navigate("/login")}
-          />
+          <PasswordResetCompletionForm onNext={() => navigate("/login")} />
         );
     }
   };
@@ -61,12 +58,12 @@ const SignupForm = () => {
   return (
     <div className="flex h-full flex-col gap-10 bg-white">
       <StepProgress
-        value={Math.floor(100 / (SignupStep.LENGTH - 1)) * step}
-        stepCount={SignupStep.LENGTH}
+        value={Math.floor(100 / (PasswordResetStep.LENGTH - 1)) * step}
+        stepCount={PasswordResetStep.LENGTH}
         className="h-1 bg-neutral-200"
         indicatorClassName="bg-damul-main-300"
         stepClassName="size-7"
-        stepLabels={["이메일", "비밀번호", "닉네임", "가입 완료"]}
+        stepLabels={["이메일", "인증코드", "새 비밀번호", "변경 완료"]}
       />
 
       <AnimatePresence mode="wait">
@@ -83,4 +80,4 @@ const SignupForm = () => {
   );
 };
 
-export default SignupForm;
+export default PasswordResetForm;
