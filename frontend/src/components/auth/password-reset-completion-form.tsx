@@ -1,16 +1,13 @@
 import Button from "@/components/common/button";
-import type { SignupInfo } from "@/types/auth/type";
 import CircularCheckMark from "@/animations/CircularCheckMark";
 
-interface SignupCompletionFormProps {
-  signupInfo: SignupInfo;
+interface PasswordResetCompletionFormProps {
   onNext: () => void;
 }
 
-const SignupCompletionForm = ({
-  signupInfo,
+const PasswordResetCompletionForm = ({
   onNext,
-}: SignupCompletionFormProps) => {
+}: PasswordResetCompletionFormProps) => {
   return (
     <div className="flex h-full flex-col gap-6">
       <div className="flex flex-1 flex-col items-center justify-center gap-8">
@@ -22,11 +19,8 @@ const SignupCompletionForm = ({
 
         <div className="text-center">
           <h1 className="text-2xl leading-9 font-bold">
-            회원가입이 완료되었어요!
+            비밀번호가 재설정 되었어요!
           </h1>
-          <p className="text-lg">
-            <span className="font-bold">{signupInfo.nickname}</span> 님 반가워요
-          </p>
         </div>
       </div>
 
@@ -37,4 +31,4 @@ const SignupCompletionForm = ({
   );
 };
 
-export default SignupCompletionForm;
+export default PasswordResetCompletionForm;

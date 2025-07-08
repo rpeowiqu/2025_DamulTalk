@@ -9,7 +9,7 @@ const useCurrentUser = () => {
     staleTime: 30 * 60 * 1_000,
     gcTime: 30 * 60 * 1_000,
     refetchOnWindowFocus: false,
-    retry: 1,
+    retry: 0,
   });
 };
 

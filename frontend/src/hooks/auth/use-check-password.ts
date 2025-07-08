@@ -1,7 +1,7 @@
 import { debounce } from "lodash-es";
 import { useEffect, useMemo, useState } from "react";
 
-const usePasswordCheck = (password: string, passwordCheck: string) => {
+const useCheckPassword = (password: string, passwordCheck: string) => {
   const [messageType, setMessageType] = useState<"valid" | "invalid">("valid");
   const [message, setMessage] = useState("");
 
@@ -10,7 +10,7 @@ const usePasswordCheck = (password: string, passwordCheck: string) => {
       debounce((newMessageType: "valid" | "invalid", newMessage: string) => {
         setMessageType(newMessageType);
         setMessage(newMessage);
-      }, 300),
+      }, 400),
     [],
   );
 
@@ -40,4 +40,4 @@ const usePasswordCheck = (password: string, passwordCheck: string) => {
   return { messageType, message };
 };
 
-export default usePasswordCheck;
+export default useCheckPassword;

@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 import { postLogout } from "@/services/auth/api";
 
@@ -13,7 +14,7 @@ const useLogout = () => {
     onSuccess: () => {
       queryClient.removeQueries();
       localStorage.removeItem("access-token");
-      alert("로그아웃 되었어요");
+      toast.success("로그아웃 되었어요");
       navigate("/login");
     },
   });

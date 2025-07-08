@@ -5,25 +5,25 @@ import {
   type SetStateAction,
 } from "react";
 
-import type { SignupInfo } from "@/types/auth/type";
+import type { PasswordResetInfo } from "@/types/auth/type";
 import Button from "@/components/common/button";
 import Input from "@/components/common/input";
 import useCheckPassword from "@/hooks/auth/use-check-password";
 import { cn } from "@/utils/style";
 
-interface SignupPasswordFormProps {
-  formData: SignupInfo;
-  setFormData: Dispatch<SetStateAction<SignupInfo>>;
+interface PasswordResetNewPasswordFormProps {
+  formData: PasswordResetInfo;
+  setFormData: Dispatch<SetStateAction<PasswordResetInfo>>;
   onPrev: () => void;
   onNext: () => void;
 }
 
-const SignupPasswordForm = ({
+const PasswordResetNewPasswordForm = ({
   formData,
   setFormData,
   onPrev,
   onNext,
-}: SignupPasswordFormProps) => {
+}: PasswordResetNewPasswordFormProps) => {
   const { messageType, message } = useCheckPassword(
     formData.password,
     formData.passwordCheck,
@@ -54,7 +54,7 @@ const SignupPasswordForm = ({
       className="flex h-full flex-col justify-between gap-6">
       <div className="flex flex-col gap-4">
         <h1 className="text-2xl leading-9 font-bold">
-          사용하실 비밀번호를
+          새 비밀번호를
           <br />
           입력해주세요
         </h1>
@@ -108,7 +108,7 @@ const SignupPasswordForm = ({
 
       <div className="flex gap-3">
         <Button className="w-full" type="button" onClick={onPrev}>
-          이전
+          로그인 화면
         </Button>
         <Button className="w-full" disabled={messageType === "invalid"}>
           다음
@@ -118,4 +118,4 @@ const SignupPasswordForm = ({
   );
 };
 
-export default SignupPasswordForm;
+export default PasswordResetNewPasswordForm;

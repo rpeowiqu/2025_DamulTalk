@@ -7,6 +7,7 @@ import ChatPage from "@/pages/chat-page";
 import BlankLayout from "@/components/layout/blank-layout";
 import LoginPage from "@/pages/login-page";
 import LoginForm from "@/components/auth/login-form";
+import PasswordResetForm from "@/components/auth/password-reset-form";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
           {
             path: "signup",
             element: <SignupForm />,
+          },
+          {
+            path: "password-reset",
+            element: <PasswordResetForm />,
           },
         ],
       },
