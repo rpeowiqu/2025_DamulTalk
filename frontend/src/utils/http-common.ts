@@ -1,6 +1,7 @@
-import ky from "ky";
+import ky, { type KyResponse } from "ky";
 
 import { postTokenUpdate } from "@/services/auth/api";
+import type { DamulError } from "@/types/common/type";
 
 let refreshPromise: Promise<string> | null = null;
 
@@ -27,9 +28,19 @@ const reissueAccessToken = async () => {
   }
 };
 
+export const handleJsonResponse = async <T>(response: KyResponse<T>) => {
+  if (!response.ok) {
+    const errorBody = await response.json<DamulError>();
+    throw new Error(errorBody.message);
+  }
+
+  return await response.json<T>();
+};
+
 const apiClient = ky.create({
   prefixUrl: "/api",
   timeout: 1_000 * 10, // 10초
+  // throwHttpErrors: false, // ky가 자동으로 예외를 던지지 않도록 설정
   hooks: {
     beforeRequest: [
       (request) => {
