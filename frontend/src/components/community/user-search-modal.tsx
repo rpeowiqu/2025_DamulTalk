@@ -1,10 +1,10 @@
 import { type Dispatch, type SetStateAction } from "react";
+import type { QueryFunctionContext } from "@tanstack/react-query";
 
 import Dialog, { type DialogProps } from "@/components/common/dialog";
 import AutocompleteSearchBar from "@/components/common/auto-complete-search-bar";
 import { getUserSearch } from "@/services/community/api";
-import type { User } from "@/types/community/type";
-import type { FriendSearchResponse } from "@/types/community/type";
+import type { User, FriendSearchResponse } from "@/types/community/type";
 import UserSearchItem from "@/components/community/user-search-item";
 
 interface UserSearchModalProps extends DialogProps {
@@ -19,10 +19,10 @@ const UserSearchModal = ({
   onOpenChange,
   ...props
 }: UserSearchModalProps) => {
-  const queryFn = async (pageParam: string) => {
+  const queryFn = async ({ pageParam }: QueryFunctionContext) => {
     const response = await getUserSearch({
       nickname: keyword,
-      cursor: pageParam,
+      cursor: pageParam as string,
       size: 10,
     });
 
@@ -52,10 +52,10 @@ const UserSearchModal = ({
         setKeyword={setKeyword}
         infiniteQueryOptions={{
           queryKey: ["user-search", keyword],
-          queryFn: ({ pageParam }) => queryFn(pageParam as string),
+          queryFn,
           initialPageParam: "",
           getNextPageParam: (lastPage) =>
-            lastPage.meta.hasNext ? lastPage.meta.nextCursor : undefined,
+            lastPage.meta.hasNext ? lastPage.meta.nextCursor : null,
         }}
         renderItem={(item, keyword) => (
           <UserSearchItem key={item.userId} user={item} keyword={keyword} />
