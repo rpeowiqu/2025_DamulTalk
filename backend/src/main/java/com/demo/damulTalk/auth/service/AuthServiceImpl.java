@@ -135,29 +135,19 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void checkDuplicatesUsername(ValidValue value) {
+    public boolean checkDuplicatesUsername(ValidValue value) {
         log.info("[AuthService] username 중복확인 시작");
 
         User user = userMapper.findByUsername(value.getValue());
-        if (user != null) {
-            throw new BusinessException(
-                    ErrorCode.EXISTING_USER,
-                    "이미 존재하는 유저입니다."
-            );
-        }
+        return user != null;
     }
 
     @Override
-    public void checkDuplicatesNickname(ValidValue value) {
+    public boolean checkDuplicatesNickname(ValidValue value) {
         log.info("[AuthService] nickname 중복확인 시작");
 
         User user = userMapper.findByNickname(value.getValue());
-        if (user != null) {
-            throw new BusinessException(
-                    ErrorCode.EXISTING_USER,
-                    "이미 존재하는 유저입니다."
-            );
-        }
+        return user != null;
     }
 
     @Override

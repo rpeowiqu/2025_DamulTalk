@@ -1,8 +1,11 @@
 package com.demo.damulTalk.friend.service;
 
+import com.demo.damulTalk.common.CommonWrapperDto;
+import com.demo.damulTalk.common.NotificationType;
 import com.demo.damulTalk.exception.BusinessException;
 import com.demo.damulTalk.exception.ErrorCode;
 import com.demo.damulTalk.friend.dto.FriendDto;
+import com.demo.damulTalk.friend.dto.FriendIdDto;
 import com.demo.damulTalk.friend.mapper.FriendMapper;
 import com.demo.damulTalk.user.dto.UserStatusDto;
 import com.demo.damulTalk.user.mapper.UserMapper;
@@ -10,7 +13,6 @@ import com.demo.damulTalk.util.UserUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,7 +25,6 @@ public class FriendServiceImpl implements FriendService {
     private final UserMapper userMapper;
     private final FriendMapper friendMapper;
     private final UserUtil userUtil;
-    private final SimpMessagingTemplate messagingTemplate;
     private final RedisTemplate<String, String> redisTemplate;
 
     @Override
@@ -70,9 +71,11 @@ public class FriendServiceImpl implements FriendService {
         boolean isOnline = redisTemplate.hasKey(redisKey);
 
         if(isOnline) {
-            String destination = "/sub/follow" + targetId;
-            messagingTemplate.convertAndSend(destination, response);
-            log.info("[FriendService] 실시간 알림 전송: {}", destination);
+            redisTemplate.convertAndSend("notifications", CommonWrapperDto.<FriendDto>builder()
+                    .userId(targetId)
+                    .type(NotificationType.FRIEND_REQUEST)
+                    .data(response)
+                    .build());
         } else {
             log.info("[FriendService] 타겟 유저 오프라인");
         }
@@ -83,6 +86,7 @@ public class FriendServiceImpl implements FriendService {
         log.info("[FriendService] 친구 삭제 시작 - friendId: {}", friendId);
 
         int userId = userUtil.getCurrentUserId();
+        String status = friendMapper.selectFriendStatus(userId, friendId);
 
         int delete = friendMapper.deleteFriendById(userId, friendId);
         if(delete < 1) {
@@ -91,6 +95,15 @@ public class FriendServiceImpl implements FriendService {
                     "해당 친구는 존재하지 않습니다."
             );
         }
+
+        CommonWrapperDto dto = CommonWrapperDto.<FriendIdDto>builder()
+                        .userId(friendId)
+                        .type(status.equals("PENDING") ? NotificationType.FRIEND_REQUEST_CANCEL : NotificationType.FRIEND_DELETE)
+                        .data(FriendIdDto.builder()
+                                .userId(userId)
+                                .build())
+                        .build();
+        redisTemplate.convertAndSend("notifications", dto);
     }
 
     @Override
@@ -118,6 +131,12 @@ public class FriendServiceImpl implements FriendService {
         }
 
         FriendDto friend = friendMapper.selectFriendInfoById(targetId);
+        redisTemplate.convertAndSend("notifications", CommonWrapperDto.<FriendDto>builder()
+                .userId(targetId)
+                .type(NotificationType.FRIEND_ACCEPT)
+                .data(friend)
+                .build());
+
         return friend;
     }
 

@@ -45,14 +45,20 @@ public class AuthController {
     @PostMapping("/duplicates/usernames")
     public ResponseEntity<?> checkDuplicatesUsername(@RequestBody ValidValue value) {
         log.info("[AuthController] 이메일 중복확인 시작");
-        authService.checkDuplicatesUsername(value);
+        boolean isDuplicated = authService.checkDuplicatesUsername(value);
+        if (isDuplicated) {
+            return ResponseEntity.ok().build();
+        }
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/duplicates/nicknames")
     public ResponseEntity<?> checkDuplicatesNickname(@RequestBody ValidValue value) {
         log.info("[AuthController] 닉네임 중복확인 시작");
-        authService.checkDuplicatesNickname(value);
+        boolean isDuplicated = authService.checkDuplicatesNickname(value);
+        if (isDuplicated) {
+            return ResponseEntity.ok().build();
+        }
         return ResponseEntity.noContent().build();
     }
 

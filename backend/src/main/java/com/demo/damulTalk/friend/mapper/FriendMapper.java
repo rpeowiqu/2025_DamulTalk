@@ -26,4 +26,6 @@ public interface FriendMapper {
 
     FriendDto selectFriendInfoById(Integer userId);
 
+    String selectFriendStatus(Integer userId, Integer friendId);
+
 }
