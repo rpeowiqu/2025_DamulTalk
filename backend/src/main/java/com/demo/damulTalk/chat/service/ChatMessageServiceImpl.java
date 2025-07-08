@@ -139,7 +139,11 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                     .clientId(messageRequest.getClientId())
                     .build();
 
-            redisTemplate.convertAndSend("chats", objectMapper.writeValueAsString(responseMessage));
+            redisTemplate.convertAndSend("chats", CommonWrapperDto.<ChatMessageResponse>builder()
+                    .userId(userId)
+                    .type(NotificationType.CHAT_MESSAGE)
+                    .data(responseMessage)
+                    .build());
 
             List<User> participants = chatRoomMapper.selectParticipants(message.getRoomId(), userId);
             for (User participant : participants) {
@@ -161,7 +165,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 
                     redisTemplate.convertAndSend("notifications", CommonWrapperDto.<ChatNotification>builder()
                             .userId(participant.getUserId())
-                            .type(NotificationType.CHAT_MESSAGE)
+                            .type(NotificationType.CHAT_NOTI)
                             .data(notification)
                             .build());
                 }

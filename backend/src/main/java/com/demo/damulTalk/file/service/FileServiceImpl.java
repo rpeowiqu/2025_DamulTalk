@@ -104,7 +104,11 @@ public class FileServiceImpl implements FileService {
                     .clientId(clientId)
                     .build();
 
-            redisTemplate.convertAndSend("chats", objectMapper.writeValueAsString(senderMessage));
+            redisTemplate.convertAndSend("chats", CommonWrapperDto.<ChatMessageResponse>builder()
+                    .userId(userId)
+                    .type(NotificationType.CHAT_MESSAGE)
+                    .data(senderMessage)
+                    .build());
 
             List<User> participants = chatRoomMapper.selectParticipants(roomId, userId)
                     .stream()
@@ -128,7 +132,7 @@ public class FileServiceImpl implements FileService {
 
                     redisTemplate.convertAndSend("notifications", CommonWrapperDto.<ChatNotification>builder()
                             .userId(participant.getUserId())
-                            .type(NotificationType.CHAT_MESSAGE)
+                            .type(NotificationType.CHAT_NOTI)
                             .data(notification)
                             .build());
                 }
