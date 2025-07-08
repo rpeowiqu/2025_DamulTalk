@@ -3,9 +3,10 @@ import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 
 import { getAccessToken } from "@/utils/jwt-token";
-import type { WsState } from "@/types/web-socket/type";
+import type { WsDispatch, WsState } from "@/types/web-socket/type";
 
-export const WebSocketContext = createContext<WsState | null>(null);
+export const WebSocketStateContext = createContext<WsState | null>(null);
+export const WebSocketDispatchContext = createContext<WsDispatch | null>(null);
 
 interface WebSocketProviderProps {
   children: ReactNode;
@@ -16,6 +17,18 @@ const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
     client: null,
     isConnected: false,
   });
+
+  const publishMessage = <T,>(dest: string, body: T) => {
+    if (!socket.client || !socket.client.connected) {
+      console.error("웹소켓에 연결되어 있지 않아 패킷을 전송할 수 없습니다.");
+      return;
+    }
+
+    socket.client.publish({
+      destination: dest,
+      body: JSON.stringify(body),
+    });
+  };
 
   useEffect(() => {
     if (socket.client) {
@@ -67,7 +80,13 @@ const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
     };
   }, []);
 
-  return <WebSocketContext value={socket}>{children}</WebSocketContext>;
+  return (
+    <WebSocketStateContext value={socket}>
+      <WebSocketDispatchContext value={{ publishMessage }}>
+        {children}
+      </WebSocketDispatchContext>
+    </WebSocketStateContext>
+  );
 };
 
 export default WebSocketProvider;

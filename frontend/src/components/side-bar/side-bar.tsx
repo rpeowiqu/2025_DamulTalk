@@ -4,7 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import SideBarTab from "@/components/side-bar/side-bar-tab";
 import SideBarContent from "@/components/side-bar/side-bar-content";
 import { type SideBarTabType } from "@/types/side-bar/type";
-import { WebSocketContext } from "@/contexts/chat/web-socket-provider";
+import { WebSocketStateContext } from "@/contexts/chat/web-socket-provider";
 import useCurrentUser from "@/hooks/auth/use-current-user";
 import type { UserStatus, WsResponse } from "@/types/web-socket/type";
 import type {
@@ -20,7 +20,7 @@ import type {
 const SideBar = () => {
   const [currentTab, setCurrentTab] = useState<SideBarTabType>("FRIEND");
   const { data } = useCurrentUser();
-  const socket = useContext(WebSocketContext);
+  const socket = useContext(WebSocketStateContext);
   const { client, isConnected } = socket ?? {};
   const queryClient = useQueryClient();
 
@@ -74,6 +74,10 @@ const SideBar = () => {
                 queryKey: ["friend-requests"],
               });
             }
+            break;
+          case "FRIEND_ACCEPT":
+            break;
+          case "FRIEND_DELETE":
             break;
           case "ONLINE_STATUS":
             {
