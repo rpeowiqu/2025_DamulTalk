@@ -121,11 +121,9 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                 .build();
 
         try {
-            // Redis에 메시지 임시 저장 (리스트로 유지)
             String redisKey = "chat:room:" + message.getRoomId() + ":messages";
             redisTemplate.opsForList().rightPush(redisKey, objectMapper.writeValueAsString(message));
 
-            // 수신자용 메시지 DTO
             ChatMessageResponse responseMessage = ChatMessageResponse.builder()
                     .messageId(message.getMessageId())
                     .roomId(message.getRoomId())
