@@ -102,7 +102,7 @@ public class EmailServiceImpl implements EmailService {
 
         Cookie tokenCookie = cookieUtil.getCookie(request, "temporary_token");
         if (tokenCookie == null) {
-            throw new BusinessException(ErrorCode.INVALID_TOKEN, "임시 토큰이 존재하지 않습니다.");
+            throw new BusinessException(ErrorCode.INVALID_TEMPORARY_TOKEN, "임시 토큰이 존재하지 않습니다.");
         }
 
         String email = jwtService.extractUsername(tokenCookie.getValue());
