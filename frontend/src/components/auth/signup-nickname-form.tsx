@@ -11,7 +11,7 @@ import Button from "@/components/common/button";
 import Input from "@/components/common/input";
 import type { SignupInfo } from "@/types/auth/type";
 import { cn } from "@/utils/style";
-import useCheckNickname from "@/hooks/auth/use-check-nickname";
+import useCheckNicknameDuplication from "@/hooks/auth/use-check-nickname-duplication";
 import useSignup from "@/hooks/auth/use-signup";
 
 interface SignupNicknameFormProps {
@@ -27,7 +27,9 @@ const SignupNicknameForm = ({
   onPrev,
   onNext,
 }: SignupNicknameFormProps) => {
-  const { messageType, message } = useCheckNickname(formData.nickname);
+  const { messageType, message } = useCheckNicknameDuplication(
+    formData.nickname,
+  );
   const { mutate: signup } = useSignup({ onSuccess: onNext });
 
   const handleSubmit = (e: FormEvent) => {
