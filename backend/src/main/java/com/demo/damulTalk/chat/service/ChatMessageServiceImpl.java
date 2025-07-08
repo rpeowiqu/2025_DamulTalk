@@ -7,6 +7,8 @@ import com.demo.damulTalk.chat.dto.ChatMessageResponse;
 import com.demo.damulTalk.chat.dto.ChatNotification;
 import com.demo.damulTalk.chat.mapper.ChatRoomMapper;
 import com.demo.damulTalk.chat.repository.ChatMessageRepository;
+import com.demo.damulTalk.common.CommonWrapperDto;
+import com.demo.damulTalk.common.NotificationType;
 import com.demo.damulTalk.common.scroll.CursorPageMetaDto;
 import com.demo.damulTalk.common.scroll.ScrollResponse;
 import com.demo.damulTalk.user.domain.User;
@@ -157,7 +159,11 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                             .sendTime(message.getSendTime())
                             .build();
 
-                    redisTemplate.convertAndSend("notifications", objectMapper.writeValueAsString(notification));
+                    redisTemplate.convertAndSend("notifications", CommonWrapperDto.<ChatNotification>builder()
+                            .userId(participant.getUserId())
+                            .type(NotificationType.CHAT_MESSAGE)
+                            .data(notification)
+                            .build());
                 }
             }
 
