@@ -5,6 +5,7 @@ import com.demo.damulTalk.chat.domain.ChatMessage;
 import com.demo.damulTalk.chat.dto.ChatMessageResponse;
 import com.demo.damulTalk.chat.dto.ChatNotification;
 import com.demo.damulTalk.chat.mapper.ChatRoomMapper;
+import com.demo.damulTalk.chat.service.ChatMessageFlushService;
 import com.demo.damulTalk.common.CommonWrapperDto;
 import com.demo.damulTalk.common.NotificationType;
 import com.demo.damulTalk.file.dto.ContentType;
@@ -38,6 +39,7 @@ public class FileServiceImpl implements FileService {
     private final RedisTemplate<String, Object> redisTemplate;
     private final ObjectMapper objectMapper;
     private final ChatRoomMapper chatRoomMapper;
+    private final ChatMessageFlushService chatMessageFlushService;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
@@ -86,6 +88,7 @@ public class FileServiceImpl implements FileService {
 
             String redisKey = "chat:room:" + roomId + ":messages";
             redisTemplate.opsForList().rightPush(redisKey, objectMapper.writeValueAsString(message));
+            chatMessageFlushService.tryFlush(redisKey);
 
             ChatMessageResponse senderMessage = ChatMessageResponse.builder()
                     .messageId(message.getMessageId())

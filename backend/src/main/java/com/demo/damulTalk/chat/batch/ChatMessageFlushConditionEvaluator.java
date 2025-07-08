@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class ChatMessageFlushConditionEvaluator {
 
     private final RedisTemplate<String, String> redisTemplate;
-    private static final int FLUSH_MESSAGE_THRESHOLD = 30;
+    private static final int FLUSH_MESSAGE_THRESHOLD = 100;
     private static final long FLUSH_INTERVAL_MILLIS = 30000;
     private static final String FLUSH_TIMESTAMP_SUFFIX = ":flush:timestamp";
 

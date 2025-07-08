@@ -39,6 +39,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     private final UserUtil userUtil;
     private final RedisTemplate<String, String> redisTemplate;
     private final ObjectMapper objectMapper;
+    private final ChatMessageFlushService chatMessageFlushService;
 
     @Override
     public ScrollResponse<List<ChatMessageResponse>, String> getChatMessages(Integer roomId, LocalDateTime cursor, Integer size) {
@@ -123,6 +124,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
         try {
             String redisKey = "chat:room:" + message.getRoomId() + ":messages";
             redisTemplate.opsForList().rightPush(redisKey, objectMapper.writeValueAsString(message));
+            chatMessageFlushService.tryFlush(redisKey);
 
             ChatMessageResponse responseMessage = ChatMessageResponse.builder()
                     .messageId(message.getMessageId())
