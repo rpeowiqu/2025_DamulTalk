@@ -73,6 +73,8 @@ public class AuthServiceImpl implements AuthService {
         log.info("[AuthService] 로그인 시작 - username: {}", loginRequest.getUsername());
 
         User user = userMapper.findByUsername(loginRequest.getUsername());
+        log.info("[AuthService] loginPassword: {}", passwordEncoder.encode(loginRequest.getPassword()));
+        log.info("[AuthService] savedPassword: {}", user.getPassword());
         if(user == null) {
             log.info("[AuthService] 존재하지 않는 유저입니다.");
             throw new BusinessException(
@@ -154,8 +156,14 @@ public class AuthServiceImpl implements AuthService {
     public void changePassword(HttpServletRequest request, String password) {
         log.info("[AuthService] 비밀번호 변경 시작");
 
-        String email = cookieUtil.getCookie(request, "temporary_token").getValue();
+        String token = cookieUtil.getCookie(request, "temporary_token").getValue();
+        String email = jwtService.extractUsername(token);
+        log.info("[AuthService] email: {}", email);
+        User user = userMapper.findByUsername(email);
+        log.info("[AuthService] 바꾸기 전 비밀번호: {}", user.getPassword());
         userMapper.updatePassword(email, passwordEncoder.encode(password));
+        user = userMapper.findByUsername(email);
+        log.info("[AuthService] 바꾸기 후 비밀번호: {}", user.getPassword());
     }
 
     @Override
