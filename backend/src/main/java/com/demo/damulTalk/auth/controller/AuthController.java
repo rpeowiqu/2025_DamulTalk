@@ -56,7 +56,7 @@ public class AuthController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/password/reset-request")
+    @PostMapping("/password-reset/email")
     public ResponseEntity<?> resetPassword(@RequestBody EmailDto emailDto, HttpServletResponse response) {
         log.info("[AuthController] 비밀번호 변경 요청 시작");
 
@@ -64,7 +64,7 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/email-validation")
+    @PostMapping("/password-reset/code")
     public ResponseEntity<?> validateEmail(@RequestBody EmailCodeDto code, HttpServletRequest request) {
         log.info("[AuthController] 이메일 인증코드 검증 시작");
 
@@ -72,7 +72,7 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/password")
+    @PostMapping("/password-reset/new-password")
     public ResponseEntity<?> changePassword(@RequestBody PasswordDto passwordDto, HttpServletRequest request) {
         log.info("[AuthController] 비밀번호 변경 시작");
 
