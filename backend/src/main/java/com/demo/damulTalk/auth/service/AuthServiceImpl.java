@@ -158,12 +158,7 @@ public class AuthServiceImpl implements AuthService {
 
         String token = cookieUtil.getCookie(request, "temporary_token").getValue();
         String email = jwtService.extractUsername(token);
-        log.info("[AuthService] email: {}", email);
-        User user = userMapper.findByUsername(email);
-        log.info("[AuthService] 바꾸기 전 비밀번호: {}", user.getPassword());
         userMapper.updatePassword(email, passwordEncoder.encode(password));
-        user = userMapper.findByUsername(email);
-        log.info("[AuthService] 바꾸기 후 비밀번호: {}", user.getPassword());
     }
 
     @Override
