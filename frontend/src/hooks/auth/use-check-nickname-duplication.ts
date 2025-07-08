@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 import { postCheckNicknameDuplication } from "@/services/auth/api";
 
-const useCheckNickname = (nickname: string) => {
+const useCheckNicknameDuplication = (nickname: string) => {
   const [messageType, setMessageType] = useState<"valid" | "invalid">("valid");
   const [message, setMessage] = useState("");
 
@@ -48,4 +48,4 @@ const useCheckNickname = (nickname: string) => {
   return { messageType, message };
 };
 
-export default useCheckNickname;
+export default useCheckNicknameDuplication;
