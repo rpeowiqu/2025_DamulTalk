@@ -64,7 +64,7 @@ public class ChatController {
             @RequestParam(defaultValue = "50") Integer size) {
         log.info("[ChatController] 채팅 메시지 조회 시작 - roomId: {}", roomId);
 
-        LocalDateTime cursorTime = cursor.isEmpty() ? null : LocalDateTime.parse(cursor);
+        LocalDateTime cursorTime = (cursor == null || cursor.isEmpty()) ? null : LocalDateTime.parse(cursor);
         ScrollResponse<List<ChatMessageResponse>, String> response = chatMessageService.getChatMessages(roomId,
                 cursorTime, size);
         if(response.getData().isEmpty()) {
