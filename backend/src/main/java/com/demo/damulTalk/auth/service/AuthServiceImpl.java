@@ -72,7 +72,7 @@ public class AuthServiceImpl implements AuthService {
     public LoginResponseDto login(LoginRequestDto loginRequest, HttpServletResponse response) {
         log.info("[AuthService] 로그인 시작 - username: {}", loginRequest.getUsername());
 
-        User user = userMapper.findByUsername(loginRequest.getUsername());
+        User user = userMapper.selectUserByUsername(loginRequest.getUsername());
         log.info("[AuthService] loginPassword: {}", passwordEncoder.encode(loginRequest.getPassword()));
         log.info("[AuthService] savedPassword: {}", user.getPassword());
         if(user == null) {
@@ -140,7 +140,7 @@ public class AuthServiceImpl implements AuthService {
     public boolean checkDuplicatesUsername(ValidValue value) {
         log.info("[AuthService] username 중복확인 시작");
 
-        User user = userMapper.findByUsername(value.getValue());
+        User user = userMapper.selectUserByUsername(value.getValue());
         return user != null;
     }
 
@@ -148,7 +148,7 @@ public class AuthServiceImpl implements AuthService {
     public boolean checkDuplicatesNickname(ValidValue value) {
         log.info("[AuthService] nickname 중복확인 시작");
 
-        User user = userMapper.findByNickname(value.getValue());
+        User user = userMapper.selectUserByNickname(value.getValue());
         return user != null;
     }
 
@@ -219,7 +219,7 @@ public class AuthServiceImpl implements AuthService {
     private void validateSignupForm(SignupRequest request) {
         log.info("[AuthService] 회원가입 요청 validation 시작");
 
-        User existingUserByUsername = userMapper.findByUsername(request.getUsername());
+        User existingUserByUsername = userMapper.selectUserByUsername(request.getUsername());
         if (existingUserByUsername != null) {
             log.info("[UserService] 이미 존재하는 username - {}", request.getUsername());
             throw new BusinessException(
@@ -236,7 +236,7 @@ public class AuthServiceImpl implements AuthService {
             );
         }
 
-        User existingUserByNickname = userMapper.findByNickname(request.getNickname());
+        User existingUserByNickname = userMapper.selectUserByNickname(request.getNickname());
         if (existingUserByNickname != null) {
             log.info("[AuthService] 이미 존재하는 닉네임 - {}", request.getNickname());
             throw new BusinessException(
@@ -250,7 +250,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void issueTestTokens(String username, HttpServletResponse response) {
-        User user = userMapper.findByUsername(username);
+        User user = userMapper.selectUserByUsername(username);
         if (user == null)
             throw new BusinessException(ErrorCode.INVALID_USER, "테스트 유저가 존재하지 않습니다.");
 

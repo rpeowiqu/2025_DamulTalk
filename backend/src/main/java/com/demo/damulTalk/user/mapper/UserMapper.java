@@ -12,9 +12,11 @@ import java.util.List;
 @Mapper
 public interface UserMapper {
 
-    User findByUsername(String username);
+    User selectUserByUserId(@Param("userId") Integer userId);
 
-    User findByNickname(String nickname);
+    User selectUserByUsername(String username);
+
+    User selectUserByNickname(String nickname);
 
     int insertUser(User user);
 

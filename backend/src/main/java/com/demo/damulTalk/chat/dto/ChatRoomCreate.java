@@ -13,7 +13,10 @@ import java.util.List;
 @AllArgsConstructor
 public class ChatRoomCreate {
 
-    String roomName;
-    List<Integer> userIds;
+    private String roomName;
+
+    private List<Integer> userIds;
+
+    private Boolean isNameChanged;
 
 }

@@ -10,6 +10,7 @@ import com.demo.damulTalk.common.NotificationType;
 import com.demo.damulTalk.common.scroll.CursorPageMetaDto;
 import com.demo.damulTalk.common.scroll.ScrollResponse;
 import com.demo.damulTalk.user.domain.User;
+import com.demo.damulTalk.user.mapper.UserMapper;
 import com.demo.damulTalk.util.UserUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     private final RedisTemplate<String, String> redisTemplate;
     private final ObjectMapper objectMapper;
     private final ChatMessageFlushService chatMessageFlushService;
+    private final UserMapper userMapper;
 
     @Override
     public ScrollResponse<List<ChatMessageResponse>, String> getChatMessages(Integer roomId, LocalDateTime cursor, Integer size) {
@@ -113,13 +115,12 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     public void sendMessage(ChatMessageRequest messageRequest) {
         log.info("[ChatMessageService] 메시지 발송 요청: {}", messageRequest);
 
-        int userId = userUtil.getCurrentUserId();
-        User currentUser = userUtil.getCurrentUser();
+        User currentUser = userMapper.selectUserByUserId(messageRequest.getSenderId());
 
         ChatMessage message = ChatMessage.builder()
                 .messageId(UUID.randomUUID().toString())
                 .roomId(messageRequest.getRoomId())
-                .senderId(userId)
+                .senderId(currentUser.getUserId())
                 .nickname(currentUser.getNickname())
                 .profileImageUrl(currentUser.getProfileImageUrl())
                 .messageType(MessageType.TEXT)
@@ -185,9 +186,9 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                     .data(responseMessage)
                     .build());
 
-            List<User> participants = chatRoomMapper.selectParticipants(message.getRoomId(), userId);
+            List<User> participants = chatRoomMapper.selectParticipants(message.getRoomId(), currentUser.getUserId());
             for (User participant : participants) {
-                if (participant.getUserId() == userId) continue;
+                if (participant.getUserId() == currentUser.getUserId()) continue;
 
                 String presenceKey = "chat:room:" + message.getRoomId() + ":user:" + participant.getUserId();
                 Boolean isPresent = redisTemplate.hasKey(presenceKey);

@@ -12,6 +12,8 @@ public class ChatMessageRequest {
 
     private Integer roomId;
 
+    private Integer senderId;
+
     private MessageType messageType;
 
     private String content;
