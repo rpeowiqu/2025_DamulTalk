@@ -28,11 +28,9 @@ const chatFilters = [
 const SideBarChatContent = () => {
   const { data, isLoading } = useChatRoomPreviews();
   const [selectedFilter, setSelectedFilter] = useState("recent");
-  const [selectedChatRoomId, setSelectedChatRoomId] = useState(0);
   const navigate = useNavigate();
 
   const handleSelect = (room: ChatRoomPreview) => {
-    setSelectedChatRoomId(room.roomId);
     navigate(`/chats/${room.roomId}`);
   };
 
@@ -59,7 +57,6 @@ const SideBarChatContent = () => {
             <ChatRoomList
               isLoading={isLoading}
               chatRoomPreviews={data ?? []}
-              selecetedChatRoomId={selectedChatRoomId}
               onSelect={handleSelect}
             />
           </AccordionContent>

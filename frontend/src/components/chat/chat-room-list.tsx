@@ -1,3 +1,5 @@
+import { useParams } from "react-router-dom";
+
 import ChatRoomItem from "@/components/chat/chat-room-item";
 import type { ChatRoomPreview } from "@/types/chat/type";
 import ChatRoomItemSkeleton from "@/components/chat/chat-room-item-skeleton";
@@ -5,16 +7,16 @@ import ChatRoomItemSkeleton from "@/components/chat/chat-room-item-skeleton";
 interface ChatRoomListProps {
   isLoading: boolean;
   chatRoomPreviews: ChatRoomPreview[];
-  selecetedChatRoomId: number;
   onSelect?: (_item: ChatRoomPreview) => void;
 }
 
 const ChatRoomList = ({
   isLoading,
   chatRoomPreviews,
-  selecetedChatRoomId,
   onSelect,
 }: ChatRoomListProps) => {
+  const { roomId } = useParams();
+
   return (
     <div className="flex flex-col gap-2">
       {isLoading
@@ -25,7 +27,7 @@ const ChatRoomList = ({
             <ChatRoomItem
               key={item.roomId}
               chatRoomPreview={item}
-              selected={item.roomId === selecetedChatRoomId}
+              selected={item.roomId === Number(roomId)}
               onClick={() => onSelect?.(item)}
             />
           ))}
