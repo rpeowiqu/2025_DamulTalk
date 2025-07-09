@@ -149,7 +149,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 
                     redisTemplate.opsForList().rightPush(redisKey, objectMapper.writeValueAsString(systemMessage));
                     chatMessageFlushService.tryFlush(redisKey);
-                    redisTemplate.convertAndSend("chats", CommonWrapperDto.<ChatSystemMessage>builder()
+                    redisTemplate.convertAndSend("chats", objectMapper.writeValueAsString(CommonWrapperDto.<ChatSystemMessage>builder()
                             .roomId(messageRequest.getRoomId())
                             .type(NotificationType.CHAT_SYSTEM_MESSAGE)
                             .data(ChatSystemMessage.builder()
@@ -159,7 +159,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                                     .content(systemMessage.getContent())
                                     .sendTime(systemMessage.getSendTime())
                                     .build())
-                            .build());
+                            .build()));
                 }
             }
 
@@ -180,11 +180,11 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                     .clientId(messageRequest.getClientId())
                     .build();
 
-            redisTemplate.convertAndSend("chats", CommonWrapperDto.<ChatMessageResponse>builder()
+            redisTemplate.convertAndSend("chats", objectMapper.writeValueAsString(CommonWrapperDto.<ChatMessageResponse>builder()
                     .roomId(messageRequest.getRoomId())
                     .type(NotificationType.CHAT_MESSAGE)
                     .data(responseMessage)
-                    .build());
+                    .build()));
 
             List<User> participants = chatRoomMapper.selectParticipants(message.getRoomId(), currentUser.getUserId());
             for (User participant : participants) {
@@ -204,11 +204,11 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                             .sendTime(message.getSendTime())
                             .build();
 
-                    redisTemplate.convertAndSend("notifications", CommonWrapperDto.<ChatNotification>builder()
+                    redisTemplate.convertAndSend("notifications", objectMapper.writeValueAsString(CommonWrapperDto.<ChatNotification>builder()
                             .userId(participant.getUserId())
                             .type(NotificationType.CHAT_NOTI)
                             .data(notification)
-                            .build());
+                            .build()));
                 }
             }
 

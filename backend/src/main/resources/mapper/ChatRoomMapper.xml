@@ -86,8 +86,8 @@
 
     <insert id="insertChatRoom" parameterType="com.demo.damulTalk.chat.domain.ChatRoom"
             useGeneratedKeys="true" keyProperty="roomId">
-        INSERT INTO chat_rooms (room_type, room_name, room_size)
-        VALUES (#{roomType}, #{roomName}, #{roomSize})
+        INSERT INTO chat_rooms (room_type, room_name, room_size, name_changed)
+        VALUES (#{roomType}, #{roomName}, #{roomSize}, #{isNameChanged})
     </insert>
 
     <insert id="insertParticipants">

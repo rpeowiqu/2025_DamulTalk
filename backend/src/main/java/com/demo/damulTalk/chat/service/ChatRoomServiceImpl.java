@@ -11,6 +11,7 @@ import com.demo.damulTalk.user.domain.User;
 import com.demo.damulTalk.util.UserUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -26,6 +27,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
     private final ChatRoomMapper chatRoomMapper;
     private final ChatMessageRepository chatMessageRepository;
+    private final RedisTemplate<String, String> redisTemplate;
 
     private final UserUtil userUtil;
 
