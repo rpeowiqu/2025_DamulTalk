@@ -25,7 +25,7 @@ const SideBar = () => {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    if (!data || !client || !isConnected) {
+    if (!data || !client || !client.connected || !isConnected) {
       return;
     }
 
