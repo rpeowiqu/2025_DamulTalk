@@ -2,10 +2,7 @@ package com.demo.damulTalk.chat.service;
 
 import com.demo.damulTalk.chat.MessageType;
 import com.demo.damulTalk.chat.domain.ChatMessage;
-import com.demo.damulTalk.chat.dto.ChatMessageRequest;
-import com.demo.damulTalk.chat.dto.ChatMessageResponse;
-import com.demo.damulTalk.chat.dto.ChatNotification;
-import com.demo.damulTalk.chat.dto.MessageReadResponse;
+import com.demo.damulTalk.chat.dto.*;
 import com.demo.damulTalk.chat.mapper.ChatRoomMapper;
 import com.demo.damulTalk.chat.repository.ChatMessageRepository;
 import com.demo.damulTalk.common.CommonWrapperDto;
@@ -23,6 +20,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -132,6 +130,39 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 
         try {
             String redisKey = "chat:room:" + message.getRoomId() + ":messages";
+
+            ChatMessage lastMessage = findLastMessage(message.getRoomId());
+            if(lastMessage != null) {
+                LocalDate lastDate = lastMessage.getSendTime().toLocalDate();
+                LocalDate nowDate = message.getSendTime().toLocalDate();
+
+                if(!lastDate.equals(nowDate)) {
+                    ChatMessage systemMessage = ChatMessage.builder()
+                            .messageId(UUID.randomUUID().toString())
+                            .roomId(messageRequest.getRoomId())
+                            .senderId(0)
+                            .messageType(MessageType.DATE)
+                            .content(nowDate.toString())
+                            .sendTime(LocalDateTime.now())
+                            .build();
+
+                    redisTemplate.opsForList().rightPush(redisKey, objectMapper.writeValueAsString(systemMessage));
+                    chatMessageFlushService.tryFlush(redisKey);
+                    redisTemplate.convertAndSend("chats", CommonWrapperDto.<ChatSystemMessage>builder()
+                            .roomId(messageRequest.getRoomId())
+                            .type(NotificationType.CHAT_SYSTEM_MESSAGE)
+                            .data(ChatSystemMessage.builder()
+                                    .messageId(systemMessage.getMessageId())
+                                    .senderId(systemMessage.getSenderId())
+                                    .messageType(systemMessage.getMessageType())
+                                    .content(systemMessage.getContent())
+                                    .sendTime(systemMessage.getSendTime())
+                                    .build())
+                            .build());
+                }
+            }
+
+
             redisTemplate.opsForList().rightPush(redisKey, objectMapper.writeValueAsString(message));
             chatMessageFlushService.tryFlush(redisKey);
 
@@ -184,6 +215,24 @@ public class ChatMessageServiceImpl implements ChatMessageService {
             log.error("[ChatMessageService] 메시지 전송 실패", e);
             throw new RuntimeException("메시지 전송 실패");
         }
+    }
+
+    private ChatMessage findLastMessage(int roomId) {
+        String redisKey = "chat:room:" + roomId + ":messages";
+        Long size = redisTemplate.opsForList().size(redisKey);
+
+        if (size != null && size > 0) {
+            String json = redisTemplate.opsForList().index(redisKey, size - 1);
+            if (json != null) {
+                try {
+                    return objectMapper.readValue(json, ChatMessage.class);
+                } catch (Exception e) {
+                    log.warn("[ChatMessageService] Redis 메시지 역직렬화 실패", e);
+                }
+            }
+        }
+
+        return chatMessageRepository.findTopByRoomIdOrderBySendTimeDesc(roomId);
     }
 
 

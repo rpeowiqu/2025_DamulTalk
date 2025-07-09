@@ -4,7 +4,9 @@ import com.demo.damulTalk.chat.MessageType;
 import com.demo.damulTalk.chat.domain.ChatMessage;
 import com.demo.damulTalk.chat.dto.ChatMessageResponse;
 import com.demo.damulTalk.chat.dto.ChatNotification;
+import com.demo.damulTalk.chat.dto.ChatSystemMessage;
 import com.demo.damulTalk.chat.mapper.ChatRoomMapper;
+import com.demo.damulTalk.chat.repository.ChatMessageRepository;
 import com.demo.damulTalk.chat.service.ChatMessageFlushService;
 import com.demo.damulTalk.common.CommonWrapperDto;
 import com.demo.damulTalk.common.NotificationType;
@@ -24,6 +26,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -36,10 +39,11 @@ public class FileServiceImpl implements FileService {
 
     private final S3Client s3Client;
     private final UserUtil userUtil;
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
     private final ObjectMapper objectMapper;
     private final ChatRoomMapper chatRoomMapper;
     private final ChatMessageFlushService chatMessageFlushService;
+    private final ChatMessageRepository chatMessageRepository;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
@@ -87,6 +91,38 @@ public class FileServiceImpl implements FileService {
                     .build();
 
             String redisKey = "chat:room:" + roomId + ":messages";
+
+            ChatMessage lastMessage = findLastMessage(message.getRoomId());
+            if(lastMessage != null) {
+                LocalDate lastDate = lastMessage.getSendTime().toLocalDate();
+                LocalDate nowDate = message.getSendTime().toLocalDate();
+
+                if(!lastDate.equals(nowDate)) {
+                    ChatMessage systemMessage = ChatMessage.builder()
+                            .messageId(UUID.randomUUID().toString())
+                            .roomId(roomId)
+                            .senderId(0)
+                            .messageType(MessageType.DATE)
+                            .content(nowDate.toString())
+                            .sendTime(LocalDateTime.now())
+                            .build();
+
+                    redisTemplate.opsForList().rightPush(redisKey, objectMapper.writeValueAsString(systemMessage));
+                    chatMessageFlushService.tryFlush(redisKey);
+                    redisTemplate.convertAndSend("chats", CommonWrapperDto.<ChatSystemMessage>builder()
+                            .roomId(roomId)
+                            .type(NotificationType.CHAT_SYSTEM_MESSAGE)
+                            .data(ChatSystemMessage.builder()
+                                    .messageId(systemMessage.getMessageId())
+                                    .senderId(systemMessage.getSenderId())
+                                    .messageType(systemMessage.getMessageType())
+                                    .content(systemMessage.getContent())
+                                    .sendTime(systemMessage.getSendTime())
+                                    .build())
+                            .build());
+                }
+            }
+
             redisTemplate.opsForList().rightPush(redisKey, objectMapper.writeValueAsString(message));
             chatMessageFlushService.tryFlush(redisKey);
 
@@ -143,6 +179,24 @@ public class FileServiceImpl implements FileService {
             log.error("[FileService] 파일 업로드 실패", e);
             throw new RuntimeException("파일 업로드 실패");
         }
+    }
+
+    private ChatMessage findLastMessage(int roomId) {
+        String redisKey = "chat:room:" + roomId + ":messages";
+        Long size = redisTemplate.opsForList().size(redisKey);
+
+        if (size != null && size > 0) {
+            String json = redisTemplate.opsForList().index(redisKey, size - 1);
+            if (json != null) {
+                try {
+                    return objectMapper.readValue(json, ChatMessage.class);
+                } catch (Exception e) {
+                    log.warn("[ChatMessageService] Redis 메시지 역직렬화 실패", e);
+                }
+            }
+        }
+
+        return chatMessageRepository.findTopByRoomIdOrderBySendTimeDesc(roomId);
     }
 
 }
