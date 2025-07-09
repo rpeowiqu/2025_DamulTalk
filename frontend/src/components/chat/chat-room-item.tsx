@@ -24,7 +24,7 @@ const ChatRoomItem = ({
         className,
       )}>
       <ChatPortrait
-        profileImages={chatRoomPreview.profileImages}
+        profileImages={chatRoomPreview.profileImageUrls}
         unreadMessageNum={chatRoomPreview.unReadMessageCount}
       />
 

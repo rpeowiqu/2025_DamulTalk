@@ -16,7 +16,7 @@ export interface ChatRoomPreview {
   roomId: number;
   roomName: string;
   roomSize: number;
-  profileImages: string[];
+  profileImageUrls: string[];
   lastMessage: string;
   lastMessageTime: string;
   unReadMessageCount: number;
