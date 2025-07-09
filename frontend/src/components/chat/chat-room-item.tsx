@@ -8,21 +8,23 @@ import type { ChatRoomPreview } from "@/types/chat/type";
 interface ChatRoomItemProps {
   chatRoomPreview: ChatRoomPreview;
   selected: boolean;
-  onClick?: (_e: MouseEvent<HTMLDivElement>) => void;
   className?: string;
+  onClick?: (_e: MouseEvent<HTMLDivElement>) => void;
 }
 
 const ChatRoomItem = ({
   chatRoomPreview,
   selected,
   className,
+  onClick,
 }: ChatRoomItemProps) => {
   return (
     <div
       className={cn(
         "flex w-full cursor-pointer items-center gap-3 rounded-xl bg-white p-2 hover:bg-neutral-50",
         className,
-      )}>
+      )}
+      onClick={onClick}>
       <ChatPortrait
         profileImages={chatRoomPreview.profileImageUrls}
         unreadMessageNum={chatRoomPreview.unReadMessageCount}

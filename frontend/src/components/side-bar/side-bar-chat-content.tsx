@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import {
   Accordion,
@@ -12,7 +13,6 @@ import SearchBar from "@/components/common/search-bar";
 import ChatRoomList from "@/components/chat/chat-room-list";
 import useChatRoomPreviews from "@/hooks/chat/use-chat-room-previews";
 import type { ChatRoomPreview } from "@/types/chat/type";
-import useEnterChatRoom from "@/hooks/chat/use-enter-chat-room";
 
 const chatFilters = [
   {
@@ -29,14 +29,11 @@ const SideBarChatContent = () => {
   const { data, isLoading } = useChatRoomPreviews();
   const [selectedFilter, setSelectedFilter] = useState("recent");
   const [selectedChatRoomId, setSelectedChatRoomId] = useState(0);
-  const { mutate: enterChatRoom } = useEnterChatRoom();
+  const navigate = useNavigate();
 
   const handleSelect = (room: ChatRoomPreview) => {
     setSelectedChatRoomId(room.roomId);
-    enterChatRoom({
-      roomId: room.roomId,
-      lastReadAt: new Date().toISOString(),
-    });
+    navigate(`/chats/${room.roomId}`);
   };
 
   return (
