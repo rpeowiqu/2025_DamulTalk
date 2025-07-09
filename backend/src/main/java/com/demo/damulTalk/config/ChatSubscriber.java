@@ -25,12 +25,10 @@ public class ChatSubscriber implements MessageListener {
     public void onMessage(Message message, byte[] pattern) {
         try {
             String payload = new String(message.getBody(), StandardCharsets.UTF_8);
-            ChatMessageResponse chatMessage = objectMapper.readValue(payload, ChatMessageResponse.class);
+            CommonWrapperDto dto = objectMapper.readValue(payload, CommonWrapperDto.class);
 
-            String topic = "/sub/chats/" + chatMessage.getRoomId();
-            messagingTemplate.convertAndSend(topic, CommonWrapperDto.<ChatMessageResponse>builder()
-                    .type(NotificationType.CHAT_MESSAGE)
-                    .data(chatMessage));
+            String topic = "/sub/chats/" + dto.getRoomId();
+            messagingTemplate.convertAndSend(topic, dto);
         } catch (Exception e) {
             log.error("[ChatSubscriber] 메시지 수신 실패", e);
         }

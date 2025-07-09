@@ -5,6 +5,7 @@ import com.demo.damulTalk.chat.domain.ChatMessage;
 import com.demo.damulTalk.chat.dto.ChatMessageRequest;
 import com.demo.damulTalk.chat.dto.ChatMessageResponse;
 import com.demo.damulTalk.chat.dto.ChatNotification;
+import com.demo.damulTalk.chat.dto.MessageReadResponse;
 import com.demo.damulTalk.chat.mapper.ChatRoomMapper;
 import com.demo.damulTalk.chat.repository.ChatMessageRepository;
 import com.demo.damulTalk.common.CommonWrapperDto;
@@ -100,6 +101,14 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 
         int userId = userUtil.getCurrentUserId();
         chatRoomMapper.updateReadStatus(userId, roomId, lastReadAt);
+        redisTemplate.convertAndSend("chats", CommonWrapperDto.<MessageReadResponse>builder()
+                .roomId(roomId)
+                .type(NotificationType.READ_TIME)
+                .data(MessageReadResponse.builder()
+                        .userId(userId)
+                        .lastReadAt(lastReadAt)
+                        .build())
+                .build());
     }
 
     @Override
@@ -140,7 +149,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                     .build();
 
             redisTemplate.convertAndSend("chats", CommonWrapperDto.<ChatMessageResponse>builder()
-                    .userId(userId)
+                    .roomId(messageRequest.getRoomId())
                     .type(NotificationType.CHAT_MESSAGE)
                     .data(responseMessage)
                     .build());
@@ -152,7 +161,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                 String presenceKey = "chat:room:" + message.getRoomId() + ":user:" + participant.getUserId();
                 Boolean isPresent = redisTemplate.hasKey(presenceKey);
 
-                if (Boolean.FALSE.equals(isPresent)) {
+                if (!isPresent) {
                     ChatNotification notification = ChatNotification.builder()
                             .messageId(message.getMessageId())
                             .roomId(message.getRoomId())

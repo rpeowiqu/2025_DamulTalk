@@ -105,7 +105,7 @@ public class FileServiceImpl implements FileService {
                     .build();
 
             redisTemplate.convertAndSend("chats", CommonWrapperDto.<ChatMessageResponse>builder()
-                    .userId(userId)
+                    .roomId(roomId)
                     .type(NotificationType.CHAT_MESSAGE)
                     .data(senderMessage)
                     .build());

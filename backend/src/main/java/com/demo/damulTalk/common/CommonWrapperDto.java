@@ -11,6 +11,8 @@ public class CommonWrapperDto<T> {
 
     private Integer userId;
 
+    private Integer roomId;
+
     private NotificationType type;
 
     private T data;
