@@ -38,7 +38,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
         List<ChatRoom> rooms = chatRoomMapper.selectChatRoomsByUserId(userId);
 
-        return rooms.stream().map(room -> {
+        List<ChatRoomInfo> chatRoomInfos = rooms.stream().map(room -> {
             ChatRoomInfo info = ChatRoomInfo.builder()
                     .roomId(room.getRoomId())
                     .roomName(room.getRoomName())
@@ -65,6 +65,11 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
             return info;
         }).collect(Collectors.toList());
+
+        chatRoomInfos.sort(Comparator.comparing(ChatRoomInfo::getLastMessageTime,
+                Comparator.nullsLast(Comparator.reverseOrder())));
+
+        return chatRoomInfos;
     }
 
     @Override
@@ -104,7 +109,6 @@ public class ChatRoomServiceImpl implements ChatRoomService {
                         .collect(Collectors.joining(", "));
             }
         }
-
 
         ChatRoom newRoom = ChatRoom.builder()
                 .roomName(roomName)
