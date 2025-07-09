@@ -19,7 +19,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClient;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -54,7 +53,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
         List<ChatMessage> newerMessages = chatMessageRepository.findByRoomIdAndSendTimeAfterOrderBySendTimeAsc(roomId, cursor);
 
         Pageable pageable = PageRequest.of(0, size + 1);
-        List<ChatMessage> olderMessages = chatMessageRepository.findByRoomIdAndSendTimeBeforeOrderBySendTimeDesc(roomId, cursor, pageable);
+        List<ChatMessage> olderMessages = chatMessageRepository.findByRoomIdAndSendTimeBeforeOrderBySendTimeAsc(roomId, cursor, pageable);
 
         boolean hasNext = false;
         if (olderMessages.size() > size) {
@@ -63,10 +62,8 @@ public class ChatMessageServiceImpl implements ChatMessageService {
         }
 
         List<ChatMessage> messages = new ArrayList<>();
-
-        Collections.reverse(newerMessages);
-        messages.addAll(newerMessages);
         messages.addAll(olderMessages);
+        messages.addAll(newerMessages);
 
         List<ChatMessageResponse> response = messages.stream()
                 .map(msg -> ChatMessageResponse.builder()

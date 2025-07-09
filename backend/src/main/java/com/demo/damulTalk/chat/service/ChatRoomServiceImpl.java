@@ -110,6 +110,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
                 .roomName(roomName)
                 .roomType(userIds.size() == 2 ? RoomType.PRIVATE : RoomType.GROUP)
                 .roomSize(userIds.size())
+                .isNameChanged(chatRoomCreate.getIsNameChanged())
                 .build();
 
         chatRoomMapper.insertChatRoom(newRoom);

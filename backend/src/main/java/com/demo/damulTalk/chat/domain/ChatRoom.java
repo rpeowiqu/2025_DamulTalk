@@ -22,4 +22,6 @@ public class ChatRoom {
 
     private LocalDateTime createdAt;
 
+    private Boolean isNameChanged;
+
 }
