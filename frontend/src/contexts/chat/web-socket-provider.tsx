@@ -28,6 +28,7 @@ const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
       destination: dest,
       body: JSON.stringify(body),
     });
+    console.log(`${dest}로 메시지 전송: ${body}`);
   };
 
   useEffect(() => {

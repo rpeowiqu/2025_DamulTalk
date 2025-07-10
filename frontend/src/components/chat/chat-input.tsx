@@ -1,14 +1,6 @@
-import {
-  useContext,
-  useEffect,
-  useRef,
-  type Dispatch,
-  type KeyboardEvent,
-  type SetStateAction,
-} from "react";
+import { useContext, useEffect, useRef, type KeyboardEvent } from "react";
+import { useParams } from "react-router-dom";
 
-import { getFormattedTime } from "@/utils/time";
-import type { Message, MessageType } from "@/types/chat/type";
 import Button from "@/components/common/button";
 import FileUploadButton from "@/components/common/file-upload-button";
 import ChatUploadFileItem from "@/components/chat/chat-upload-file-item";
@@ -17,17 +9,23 @@ import {
   FileUploadDispatchContext,
   FileUploadStateContext,
 } from "@/contexts/chat/file-upload-provider";
+import { WebSocketDispatchContext } from "@/contexts/chat/web-socket-provider";
+import type { WsMessageRequest } from "@/types/web-socket/type";
+import useCurrentUser from "@/hooks/auth/use-current-user";
+import useSendFile from "@/hooks/chat/use-send-file";
 
 interface ChatInputProps {
-  setChatMessages: Dispatch<SetStateAction<Message[]>>;
   triggerScroll: () => void;
 }
 
-const ChatInput = ({ setChatMessages, triggerScroll }: ChatInputProps) => {
+const ChatInput = ({ triggerScroll }: ChatInputProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const nextMessageId = useRef(13); // 임시 messageId 용도
   const uploadFile = useContext(FileUploadStateContext);
   const setUploadFile = useContext(FileUploadDispatchContext);
+  const { publishMessage } = useContext(WebSocketDispatchContext)!;
+  const { roomId } = useParams();
+  const { data } = useCurrentUser();
+  const { mutateAsync: sendFile } = useSendFile();
 
   useEffect(() => {
     if (uploadFile) {
@@ -35,38 +33,36 @@ const ChatInput = ({ setChatMessages, triggerScroll }: ChatInputProps) => {
     }
   }, [uploadFile]);
 
-  const sendMessage = () => {
-    if ((textareaRef.current && textareaRef.current.value) || uploadFile) {
-      let messageType: MessageType = "TEXT";
-      if (uploadFile) {
-        messageType = uploadFile.file.type.startsWith("image/")
-          ? "IMAGE"
-          : "VIDEO";
-      }
-      const content = textareaRef.current?.value ?? "";
-      const sentTime = getFormattedTime();
-      setChatMessages((prev) => [
-        ...prev,
-        {
-          messageId: nextMessageId.current++,
-          senderId: 1,
-          profileImageUrl: "",
-          nickname: "토마토러버전종우",
-          messageType,
-          content,
-          fileUrl: uploadFile?.objectUrl ?? undefined,
-          sentTime,
-          unReadCount: 1,
-        },
-      ]);
-
-      if (textareaRef.current) {
-        textareaRef.current.value = "";
-      }
-
-      triggerScroll();
-      setUploadFile!(null);
+  const sendMessage = async () => {
+    if (!data || !publishMessage) {
+      return;
     }
+
+    // 파일을 전송하는 경우
+    if (uploadFile) {
+      await sendFile({
+        roomId: Number(roomId),
+        file: uploadFile.file,
+        clientId: "clientId",
+      });
+    }
+    // 텍스트를 전송하는 경우
+    else if (textareaRef.current && textareaRef.current.value) {
+      publishMessage<WsMessageRequest>("/pub/chats/messages", {
+        roomId: Number(roomId),
+        senderId: data.userId,
+        messageType: "TEXT",
+        content: textareaRef.current.value,
+        clientId: "clientId",
+      });
+    }
+
+    if (textareaRef.current) {
+      textareaRef.current.value = "";
+    }
+
+    triggerScroll();
+    setUploadFile!(null);
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -85,7 +81,7 @@ const ChatInput = ({ setChatMessages, triggerScroll }: ChatInputProps) => {
   };
 
   return (
-    <div className="sticky bottom-0 z-10 bg-neutral-50 pb-6">
+    <div className="bg-neutral-50 p-6 pt-0">
       <div className="focus-within:ring-damul-main-300 flex h-40 flex-col gap-2 rounded-xl border border-neutral-200 bg-white p-4 transition-all duration-200 focus-within:ring-2">
         <div className="relative flex-1">
           {uploadFile && (

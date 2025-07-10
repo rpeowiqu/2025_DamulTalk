@@ -4,14 +4,16 @@ import { useScrollMove } from "@/hooks/chat/use-scroll-move";
 import { type Message } from "@/types/chat/type";
 import ChatMessageList from "@/components/chat/chat-message-list";
 import ChatInput from "@/components/chat/chat-input";
-import ChatDummyData from "@/mocks/chat-messages.json";
 import useModal from "@/hooks/common/use-modal";
 import ChatMessageFileModal from "@/components/chat/chat-message-file-modal";
+import { cn } from "@/utils/style";
 
-const ChatRoomContent = () => {
-  const [chatMessages, setChatMessages] = useState<Message[]>(
-    ChatDummyData as Message[],
-  );
+interface ChatRoomContentProps {
+  messages: Message[];
+  className?: string;
+}
+
+const ChatRoomContent = ({ messages, className }: ChatRoomContentProps) => {
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
   const { bottomRef, triggerScroll } = useScrollMove();
   const { isOpen, openModal, closeModal } = useModal({
@@ -35,16 +37,15 @@ const ChatRoomContent = () => {
   };
 
   return (
-    <div className="p-6 pb-0">
-      <ChatMessageList
-        chatMessages={chatMessages}
-        bottomRef={bottomRef}
-        onSelect={handleSelect}
-      />
-      <ChatInput
-        setChatMessages={setChatMessages}
-        triggerScroll={triggerScroll}
-      />
+    <div className={cn("flex flex-col", className)}>
+      <div className="min-h-0 flex-1 overflow-y-auto p-6">
+        <ChatMessageList
+          messages={messages}
+          bottomRef={bottomRef}
+          onSelect={handleSelect}
+        />
+      </div>
+      <ChatInput triggerScroll={triggerScroll} />
       <ChatMessageFileModal
         open={isOpen}
         onOpenChange={handleOpenChange}

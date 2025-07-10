@@ -50,8 +50,17 @@ export interface Message {
   messageType: MessageType;
   content: string;
   fileUrl?: string;
-  sentTime: string;
+  sendTime: string;
   unReadCount: number;
+}
+
+export type SystemMessageType = "DATE" | "EXIT";
+
+export interface SystemMessage {
+  type: SystemMessageType;
+  messageId: number;
+  content: string;
+  leftUserId?: number;
 }
 
 export interface UploadFile {
@@ -90,8 +99,8 @@ export interface SearchMessageRequest {
 
 export interface SendFileRequest {
   roomId: number;
-  clientId: string;
   file: File;
+  clientId: string;
 }
 
 // Response ==========================================================================================================================

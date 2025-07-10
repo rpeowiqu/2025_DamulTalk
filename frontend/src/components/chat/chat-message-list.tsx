@@ -6,14 +6,14 @@ import { cn } from "@/utils/style";
 import useChatMessages from "@/hooks/chat/use-chat-messages";
 
 interface ChatMessageListProps {
-  chatMessages: Message[];
+  messages: Message[];
   bottomRef: Ref<HTMLDivElement>;
   className?: string;
   onSelect?: (_message: Message) => void;
 }
 
 const ChatMessageList = ({
-  chatMessages,
+  messages,
   bottomRef,
   className,
   onSelect,
@@ -30,10 +30,10 @@ const ChatMessageList = ({
         )),
       )}
       <div ref={lastReadRef} className="-my-6" />
-      {chatMessages.map((item) => (
+      {messages.map((item) => (
         <ChatMessage key={item.messageId} message={item} onClick={onSelect} />
       ))}
-      <div ref={bottomRef} className="-mt-6" />
+      <div ref={bottomRef} className={cn(messages.length > 0 && "-mt-6")} />
     </div>
   );
 };

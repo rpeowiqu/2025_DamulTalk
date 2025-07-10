@@ -33,7 +33,7 @@ const FileUploadProvider = ({ children }: FileUploadProviderProps) => {
     <FileUploadStateContext value={uploadFile}>
       <FileUploadDispatchContext value={setUploadFile}>
         <div
-          className="relative h-full"
+          className="relative h-dvh"
           onDragEnter={handleDragEnter}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}

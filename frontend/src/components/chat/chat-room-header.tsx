@@ -10,7 +10,7 @@ interface ChatRoomHeaderProps {
 
 const ChatRoomHeader = ({ room }: ChatRoomHeaderProps) => {
   return (
-    <div className="sticky top-0 z-10 flex items-center gap-6 border-b border-neutral-200 bg-white px-6 py-4">
+    <div className="flex items-center gap-6 border-b border-neutral-200 bg-white px-6 py-4">
       <div className="flex flex-1 items-center gap-4">
         <ChatPortrait
           profileImages={room.roomMembers.map((item) => item.profileImageUrl)}
