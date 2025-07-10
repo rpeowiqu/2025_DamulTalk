@@ -32,9 +32,7 @@ const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
   };
 
   useEffect(() => {
-    if (socket.client) {
-      return;
-    }
+    let client: Client | null = null;
 
     const connectSocket = async () => {
       const accessToken = getAccessToken();
@@ -43,7 +41,7 @@ const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
         return;
       }
 
-      const client = new Client({
+      client = new Client({
         webSocketFactory: () =>
           new SockJS(
             import.meta.env.VITE_WS_BASE_URL + `?token=${accessToken}`,
@@ -77,7 +75,7 @@ const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
     connectSocket();
 
     return () => {
-      socket.client?.deactivate();
+      client?.deactivate();
     };
   }, []);
 
