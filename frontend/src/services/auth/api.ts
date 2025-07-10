@@ -1,6 +1,5 @@
 import apiClient from "@/utils/http-common";
 import type {
-  CheckEmailReqeust,
   LoginRequest,
   SignupRequest,
   CheckValueRequest,

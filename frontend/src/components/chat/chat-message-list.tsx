@@ -1,11 +1,11 @@
 import { useEffect, useRef, type Ref } from "react";
+import { useParams } from "react-router-dom";
 
 import ChatMessage from "@/components/chat/chat-message";
 import type { Message } from "@/types/chat/type";
 import { cn } from "@/utils/style";
 import useChatMessages from "@/hooks/chat/use-chat-messages";
 import useReadMessage from "@/hooks/chat/use-read-message";
-import { useParams } from "react-router-dom";
 
 interface ChatMessageListProps {
   messages: Message[];
