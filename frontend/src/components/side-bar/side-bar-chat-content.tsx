@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 
 import {
   Accordion,
@@ -12,7 +13,10 @@ import FilterButton from "@/components/common/filter-button";
 import SearchBar from "@/components/common/search-bar";
 import ChatRoomList from "@/components/chat/chat-room-list";
 import useChatRoomPreviews from "@/hooks/chat/use-chat-room-previews";
-import type { ChatRoomPreview } from "@/types/chat/type";
+import type {
+  ChatRoomPreview,
+  ChatRoomPreviewsResponse,
+} from "@/types/chat/type";
 
 const chatFilters = [
   {
@@ -28,9 +32,22 @@ const chatFilters = [
 const SideBarChatContent = () => {
   const { data, isLoading } = useChatRoomPreviews();
   const [selectedFilter, setSelectedFilter] = useState("recent");
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const handleSelect = (room: ChatRoomPreview) => {
+    queryClient.setQueryData<ChatRoomPreviewsResponse>(
+      ["chat-room-previews"],
+      (prev) =>
+        prev?.map((item) =>
+          item.roomId === room.roomId
+            ? {
+                ...item,
+                unReadMessageCount: 0,
+              }
+            : item,
+        ) ?? [],
+    );
     navigate(`/chats/${room.roomId}`);
   };
 
