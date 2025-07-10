@@ -14,7 +14,7 @@ interface UseFileDragOptions {
   setUploadFile: Dispatch<SetStateAction<UploadFile | null>>;
 }
 
-const useFileDrag = ({ uploadFile, setUploadFile }: UseFileDragOptions) => {
+const useDragFile = ({ uploadFile, setUploadFile }: UseFileDragOptions) => {
   const [isDragging, setIsDragging] = useState(false);
   const dragCounter = useRef(0);
 
@@ -80,4 +80,4 @@ const useFileDrag = ({ uploadFile, setUploadFile }: UseFileDragOptions) => {
   };
 };
 
-export default useFileDrag;
+export default useDragFile;

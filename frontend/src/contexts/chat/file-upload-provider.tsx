@@ -8,7 +8,7 @@ import {
 
 import type { UploadFile } from "@/types/chat/type";
 import FileUploadOverlay from "@/components/chat/file-upload-overlay";
-import useFileDrag from "@/hooks/chat/use-file-drag";
+import useDragFile from "@/hooks/chat/use-drag-file";
 
 interface FileUploadProviderProps {
   children: ReactNode;
@@ -27,7 +27,7 @@ const FileUploadProvider = ({ children }: FileUploadProviderProps) => {
     handleDragOver,
     handleDragLeave,
     handleDrop,
-  } = useFileDrag({ uploadFile, setUploadFile });
+  } = useDragFile({ uploadFile, setUploadFile });
 
   return (
     <FileUploadStateContext value={uploadFile}>
