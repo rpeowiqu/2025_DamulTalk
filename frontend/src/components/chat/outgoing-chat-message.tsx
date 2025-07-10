@@ -1,6 +1,7 @@
 import { PlayCircleIcon } from "lucide-react";
 
 import type { ChatMessageProps } from "@/components/chat/chat-message";
+import { getFormattedTime } from "@/utils/time";
 
 const OutgoingChatMessage = ({ message, onClick }: ChatMessageProps) => {
   const renderContent = () => {
@@ -32,10 +33,9 @@ const OutgoingChatMessage = ({ message, onClick }: ChatMessageProps) => {
     <div className="flex items-end gap-2 self-end break-all whitespace-pre-wrap">
       <div className="flex shrink-0 flex-col text-[0.675rem]">
         <p className="text-damul-main-500 text-end">
-          {" "}
           {message.unReadCount > 99 ? "99+" : message.unReadCount}
         </p>
-        <p className="text-neutral-500">{message.sentTime}</p>
+        <p className="text-neutral-500">{getFormattedTime(message.sendTime)}</p>
       </div>
 
       <div className="bg-damul-main-50 flex max-w-96 flex-col gap-2 rounded-xl p-3">
