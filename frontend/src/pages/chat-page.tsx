@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 
 import ChatRoomContent from "@/components/chat/chat-room-content";
 import ChatRoomHeader from "@/components/chat/chat-room-header";
@@ -9,13 +10,13 @@ import ChatRoomHeaderSkeleton from "@/components/chat/chat-room-header-skeleton"
 import ChatRoomContentSkeleton from "@/components/chat/chat-room-content-skeleton";
 import { WebSocketStateContext } from "@/contexts/chat/web-socket-provider";
 import type { WsResponse } from "@/types/web-socket/type";
-import type { Message } from "@/types/chat/type";
+import type { ChatRoomPreviewsResponse, Message } from "@/types/chat/type";
 
 const ChatPage = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const { roomId } = useParams();
   const { data, isLoading } = useChatRoom(roomId ? Number(roomId) : 0);
-
+  const queryClient = useQueryClient();
   const socket = useContext(WebSocketStateContext);
   const { client, isConnected } = socket ?? {};
 
@@ -30,7 +31,24 @@ const ChatPage = () => {
         case "CHAT_MESSAGE":
           {
             const casted = response as WsResponse<Message>;
+            // 수신한 메시지를 상태에 추가
             setMessages((prev) => (prev ? [...prev, casted.data] : []));
+
+            // 사이드 바의 채팅방 목록 상태 갱신
+            queryClient.setQueryData<ChatRoomPreviewsResponse>(
+              ["chat-room-previews"],
+              (prev) =>
+                prev?.map((item) =>
+                  item.roomId === Number(roomId)
+                    ? {
+                        ...item,
+                        lastMessage: casted.data.content,
+                        lastMessageTime: casted.data.sendTime,
+                        unReadMessageCount: item.unReadMessageCount + 1,
+                      }
+                    : item,
+                ) ?? [],
+            );
           }
           break;
       }

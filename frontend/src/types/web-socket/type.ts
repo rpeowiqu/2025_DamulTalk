@@ -31,10 +31,21 @@ export interface UserStatus {
   online: boolean;
 }
 
+// Request ==========================================================================================================================
 export interface WsMessageRequest {
   roomId: number;
   senderId: number;
   messageType: MessageType;
   content: string;
   clientId: string;
+}
+
+// Response ==========================================================================================================================
+export interface WsChatRoomPreviewResponse {
+  roomId: number;
+  profileImageUrl: string;
+  nickname: string;
+  messageType: MessageType;
+  content: string;
+  sendTime: string;
 }

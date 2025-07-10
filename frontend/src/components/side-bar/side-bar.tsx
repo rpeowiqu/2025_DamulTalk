@@ -6,16 +6,17 @@ import SideBarContent from "@/components/side-bar/side-bar-content";
 import { type SideBarTabType } from "@/types/side-bar/type";
 import { WebSocketStateContext } from "@/contexts/chat/web-socket-provider";
 import useCurrentUser from "@/hooks/auth/use-current-user";
-import type { UserStatus, WsResponse } from "@/types/web-socket/type";
+import type {
+  UserStatus,
+  WsChatRoomPreviewResponse,
+  WsResponse,
+} from "@/types/web-socket/type";
 import type {
   FriendRequestsResponse,
   FriendsResponse,
   User,
 } from "@/types/community/type";
-import type {
-  ChatRoomPreview,
-  ChatRoomPreviewsResponse,
-} from "@/types/chat/type";
+import type { ChatRoomPreviewsResponse } from "@/types/chat/type";
 
 const SideBar = () => {
   const [currentTab, setCurrentTab] = useState<SideBarTabType>("FRIEND");
@@ -36,17 +37,21 @@ const SideBar = () => {
         switch (response.type) {
           case "CHAT_NOTI":
             {
-              const casted = response as WsResponse<ChatRoomPreview>;
+              const casted = response as WsResponse<WsChatRoomPreviewResponse>;
               queryClient.setQueryData<ChatRoomPreviewsResponse>(
                 ["chat-room-previews"],
                 (prev) =>
                   prev?.map((item) =>
-                    item.roomId === casted.data.roomId ? casted.data : item,
+                    item.roomId === casted.data.roomId
+                      ? {
+                          ...item,
+                          lastMessage: casted.data.content,
+                          lastMessageTime: casted.data.sendTime,
+                          unReadMessageCount: item.unReadMessageCount + 1,
+                        }
+                      : item,
                   ) ?? [],
               );
-              queryClient.invalidateQueries({
-                queryKey: ["chat-room-previews"],
-              });
             }
             break;
           case "FRIEND_REQUEST":
@@ -56,9 +61,6 @@ const SideBar = () => {
                 ["friend-requests"],
                 (prev) => (prev ? [...prev, casted.data] : []),
               );
-              queryClient.invalidateQueries({
-                queryKey: ["friend-requests"],
-              });
             }
             break;
           case "FRIEND_REQUEST_CANCEL":
@@ -70,9 +72,6 @@ const SideBar = () => {
                   prev?.filter((item) => item.userId !== casted.data.userId) ??
                   [],
               );
-              queryClient.invalidateQueries({
-                queryKey: ["friend-requests"],
-              });
             }
             break;
           case "FRIEND_ACCEPT":
@@ -94,9 +93,6 @@ const SideBar = () => {
                       : item,
                   ) ?? [],
               );
-              queryClient.invalidateQueries({
-                queryKey: ["friends", data.userId],
-              });
             }
             break;
         }
