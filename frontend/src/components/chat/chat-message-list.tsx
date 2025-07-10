@@ -41,11 +41,11 @@ const ChatMessageList = ({
           <ChatMessage key={item.messageId} message={item} />
         )),
       )}
-      <div ref={lastReadRef} className="-my-6" />
+      <div ref={lastReadRef} className={cn(messages.length > 0 && "-mb-6")} />
       {messages.map((item) => (
         <ChatMessage key={item.messageId} message={item} onClick={onSelect} />
       ))}
-      <div ref={bottomRef} className={cn(messages.length > 0 && "-mt-6")} />
+      <div ref={bottomRef} className="-mt-6" />
     </div>
   );
 };
