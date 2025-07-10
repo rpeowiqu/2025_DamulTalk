@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { useScrollMove } from "@/hooks/chat/use-scroll-move";
+import { useMoveScroll } from "@/hooks/chat/use-move-scroll";
 import { type Message } from "@/types/chat/type";
 import ChatMessageList from "@/components/chat/chat-message-list";
 import ChatInput from "@/components/chat/chat-input";
@@ -15,7 +15,7 @@ interface ChatRoomContentProps {
 
 const ChatRoomContent = ({ messages, className }: ChatRoomContentProps) => {
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
-  const { bottomRef, triggerScroll } = useScrollMove();
+  const { bottomRef, triggerScroll } = useMoveScroll();
   const { isOpen, openModal, closeModal } = useModal({
     modalKey: "chat-message-detail",
   });

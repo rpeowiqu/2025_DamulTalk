@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-export const useScrollMove = () => {
+export const useMoveScroll = () => {
   const bottomRef = useRef<HTMLDivElement>(null);
   const [shouldScroll, setShouldScroll] = useState(false);
 
