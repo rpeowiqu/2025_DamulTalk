@@ -1,4 +1,4 @@
-import { useRef, type Ref } from "react";
+import { useEffect, useRef, type Ref } from "react";
 
 import ChatMessage from "@/components/chat/chat-message";
 import type { Message } from "@/types/chat/type";
@@ -20,6 +20,18 @@ const ChatMessageList = ({
 }: ChatMessageListProps) => {
   const { targetRef, data } = useChatMessages();
   const lastReadRef = useRef<HTMLDivElement>(null);
+  const initScrollRef = useRef(false);
+
+  useEffect(() => {
+    if (!data || initScrollRef.current) {
+      return;
+    }
+
+    if (data.pageParams.length === 1) {
+      lastReadRef.current?.scrollIntoView({ behavior: "smooth" });
+      initScrollRef.current = true;
+    }
+  }, [data]);
 
   return (
     <div className={cn("flex flex-col gap-6", className)}>
