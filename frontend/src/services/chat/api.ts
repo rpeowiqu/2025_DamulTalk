@@ -58,7 +58,7 @@ export const getSearchMessage = async (request: SearchMessageRequest) => {
 
 // 메시지 읽음 처리
 export const postReadMessage = async (request: ReadMessageRequest) => {
-  const response = await apiClient.post(`chats/${request.roomId}`, {
+  const response = await apiClient.post(`chats/${request.roomId}/read`, {
     json: { lastReadAt: request.lastReadAt },
   });
   return response;

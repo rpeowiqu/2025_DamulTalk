@@ -4,6 +4,8 @@ import ChatMessage from "@/components/chat/chat-message";
 import type { Message } from "@/types/chat/type";
 import { cn } from "@/utils/style";
 import useChatMessages from "@/hooks/chat/use-chat-messages";
+import useReadMessage from "@/hooks/chat/use-read-message";
+import { useParams } from "react-router-dom";
 
 interface ChatMessageListProps {
   messages: Message[];
@@ -18,20 +20,28 @@ const ChatMessageList = ({
   className,
   onSelect,
 }: ChatMessageListProps) => {
-  const { targetRef, data } = useChatMessages();
+  const { targetRef, data, isSuccess } = useChatMessages();
   const lastReadRef = useRef<HTMLDivElement>(null);
   const initScrollRef = useRef(false);
+  const { roomId } = useParams();
+  const { mutate: readMessage } = useReadMessage();
 
   useEffect(() => {
-    if (!data || initScrollRef.current) {
+    if (!data || !isSuccess || initScrollRef.current || !roomId) {
       return;
     }
 
+    // 최초로 이전 메시지를 가져왔을 때
     if (data.pageParams.length === 1) {
       lastReadRef.current?.scrollIntoView({ behavior: "smooth" });
+      // 읽음 시간 갱신
+      readMessage({
+        roomId: Number(roomId),
+        lastReadAt: new Date().toISOString(),
+      });
       initScrollRef.current = true;
     }
-  }, [data]);
+  }, [data, isSuccess]);
 
   return (
     <div className={cn("flex flex-col gap-6", className)}>
