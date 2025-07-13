@@ -20,12 +20,12 @@ public class FileController {
     @PostMapping("/upload/{roomId}")
     public ResponseEntity<?> uploadFile(
             @PathVariable("roomId") Integer roomId,
-            @RequestBody FileUploadRequest request,
+            @RequestParam("clientId") String clientId,
             @RequestPart("file") MultipartFile file
     ) {
         log.info("[FileController] 파일 업로드 시작 - roomId: {}", roomId);
 
-        FileUploadResponse response = fileService.uploadFile(file, roomId, request.getClientId());
+        FileUploadResponse response = fileService.uploadFile(file, roomId, clientId);
         return ResponseEntity.ok(response);
     }
 
