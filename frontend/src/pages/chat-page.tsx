@@ -1,6 +1,7 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
+import { debounce } from "lodash-es";
 
 import ChatRoomContent from "@/components/chat/chat-room-content";
 import ChatRoomHeader from "@/components/chat/chat-room-header";
@@ -12,8 +13,14 @@ import {
   WebSocketDispatchContext,
   WebSocketStateContext,
 } from "@/contexts/chat/web-socket-provider";
-import type { WsMessageRequest, WsResponse } from "@/types/web-socket/type";
 import type {
+  WsChatRoomReadResponse,
+  WsMessageRequest,
+  WsReadRequest,
+  WsResponse,
+} from "@/types/web-socket/type";
+import type {
+  ChatRoom,
   ChatRoomPreviewsResponse,
   Message,
   MessageTransferHistory,
@@ -37,6 +44,17 @@ const ChatPage = () => {
   const { mutate: sendFile } = useSendFile();
 
   const { data: user } = useCurrentUser();
+
+  const readMessage = useMemo(
+    () =>
+      debounce(() => {
+        publishMessage<WsReadRequest>("/pub/chats/read", {
+          userId: user?.userId ?? 0,
+          lastReadAt: new Date().toISOString(),
+        });
+      }, 1_000),
+    [],
+  );
 
   const sendMessage = async (message: Message, file?: File) => {
     // 낙관적 업데이트로 즉시 상태에 추가하기
@@ -125,6 +143,29 @@ const ChatPage = () => {
                       }
                     : item,
                 ) ?? [],
+            );
+
+            // 웹 소켓으로 현재 시각까지 읽었음을 알림
+            readMessage();
+          }
+          break;
+        case "READ_TIME":
+          {
+            const casted = response as WsResponse<WsChatRoomReadResponse>;
+            queryClient.setQueryData<ChatRoom>(["chat-room", roomId], (prev) =>
+              prev
+                ? {
+                    ...prev,
+                    roomMembers: prev.roomMembers.map((item) =>
+                      item.userId === casted.data.userId
+                        ? {
+                            ...item,
+                            lastReadAt: casted.data.lastReadAt,
+                          }
+                        : item,
+                    ),
+                  }
+                : prev,
             );
           }
           break;

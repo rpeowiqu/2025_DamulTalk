@@ -15,6 +15,7 @@ export type NotificationType =
   | "CHAT_NOTI"
   | "CHAT_MESSAGE"
   | "CHAT_SYSTEM_MESSAGE"
+  | "READ_TIME"
   | "FRIEND_REQUEST"
   | "FRIEND_REQUEST_CANCEL"
   | "FRIEND_ACCEPT"
@@ -40,6 +41,11 @@ export interface WsMessageRequest {
   clientId: string;
 }
 
+export interface WsReadRequest {
+  userId: number;
+  lastReadAt: string;
+}
+
 // Response ==========================================================================================================================
 export interface WsChatRoomPreviewResponse {
   roomId: number;
@@ -48,4 +54,9 @@ export interface WsChatRoomPreviewResponse {
   messageType: MessageType;
   content: string;
   sendTime: string;
+}
+
+export interface WsChatRoomReadResponse {
+  userId: number;
+  lastReadAt: string;
 }
