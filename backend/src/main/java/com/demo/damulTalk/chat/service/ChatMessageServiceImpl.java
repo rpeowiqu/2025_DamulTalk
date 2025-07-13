@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -93,17 +95,19 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     }
 
     @Override
-    public void updateReadStatus(Integer roomId, LocalDateTime lastReadAt) {
+    public void updateReadStatus(Integer roomId, OffsetDateTime lastReadAt) {
         log.info("[ChatMessageService] 채팅방 읽음 처리 시작 - roomId: {}, lastReadAt: {}", roomId, lastReadAt);
 
         int userId = userUtil.getCurrentUserId();
-        chatRoomMapper.updateReadStatus(userId, roomId, lastReadAt);
+        LocalDateTime now = lastReadAt.atZoneSameInstant(ZoneId.of("Asia/Seoul")).toLocalDateTime();
+
+        chatRoomMapper.updateReadStatus(userId, roomId, now);
         redisTemplate.convertAndSend("chats", CommonWrapperDto.<MessageReadResponse>builder()
                 .roomId(roomId)
                 .type(NotificationType.READ_TIME)
                 .data(MessageReadResponse.builder()
                         .userId(userId)
-                        .lastReadAt(lastReadAt)
+                        .lastReadAt(now)
                         .build())
                 .build());
     }
@@ -159,7 +163,6 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                             .build()));
                 }
             }
-
 
             redisTemplate.opsForList().rightPush(redisKey, objectMapper.writeValueAsString(message));
             chatMessageFlushService.tryFlush(redisKey);
