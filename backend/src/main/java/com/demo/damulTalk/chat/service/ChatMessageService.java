@@ -14,6 +14,8 @@ public interface ChatMessageService {
 
     void updateReadStatus(Integer roomId, OffsetDateTime lastReadAt);
 
+    void updateReadStatus(Integer roomId, Integer userId, OffsetDateTime lastReadAt);
+
     void sendMessage(ChatMessageRequest message);
 
 }

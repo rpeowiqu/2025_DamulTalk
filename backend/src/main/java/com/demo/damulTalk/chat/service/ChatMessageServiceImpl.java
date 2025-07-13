@@ -119,6 +119,28 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     }
 
     @Override
+    public void updateReadStatus(Integer roomId, Integer userId, OffsetDateTime lastReadAt) {
+        log.info("[ChatMessageService] 채팅방 읽음 처리 시작 - roomId: {}, lastReadAt: {}", roomId, lastReadAt);
+
+        LocalDateTime now = lastReadAt.atZoneSameInstant(ZoneId.of("Asia/Seoul")).toLocalDateTime();
+
+        try {
+            chatRoomMapper.updateReadStatus(userId, roomId, now);
+            redisTemplate.convertAndSend("chats", objectMapper.writeValueAsString(CommonWrapperDto.<MessageReadResponse>builder()
+                    .roomId(roomId)
+                    .type(NotificationType.READ_TIME)
+                    .data(MessageReadResponse.builder()
+                            .userId(userId)
+                            .lastReadAt(now)
+                            .build())
+                    .build()));
+        } catch (Exception e) {
+            log.error("[ChatMessageService] 메시지 전송 실패", e);
+            throw new RuntimeException("메시지 전송 실패");
+        }
+    }
+
+    @Override
     public void sendMessage(ChatMessageRequest messageRequest) {
         log.info("[ChatMessageService] 메시지 발송 요청: {}", messageRequest);
 
