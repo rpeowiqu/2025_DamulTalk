@@ -74,7 +74,13 @@ const ChatPage = () => {
         ) : data ? (
           <>
             <ChatRoomHeader room={data} />
-            <ChatRoomContent messages={messages} className="min-h-0 flex-1" />
+            <ChatRoomContent
+              messages={messages}
+              lastReadAts={
+                data?.roomMembers.map((item) => item.lastReadAt) ?? []
+              }
+              className="min-h-0 flex-1"
+            />
           </>
         ) : null}
       </div>

@@ -10,10 +10,15 @@ import { cn } from "@/utils/style";
 
 interface ChatRoomContentProps {
   messages: Message[];
+  lastReadAts: string[];
   className?: string;
 }
 
-const ChatRoomContent = ({ messages, className }: ChatRoomContentProps) => {
+const ChatRoomContent = ({
+  messages,
+  lastReadAts,
+  className,
+}: ChatRoomContentProps) => {
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
   const { bottomRef, triggerScroll } = useMoveScroll();
   const { isOpen, openModal, closeModal } = useModal({
@@ -41,6 +46,7 @@ const ChatRoomContent = ({ messages, className }: ChatRoomContentProps) => {
       <div className="min-h-0 flex-1 overflow-y-auto p-6">
         <ChatMessageList
           messages={messages}
+          lastReadAts={lastReadAts}
           bottomRef={bottomRef}
           onSelect={handleSelect}
         />
