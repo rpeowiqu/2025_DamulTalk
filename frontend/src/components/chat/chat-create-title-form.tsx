@@ -7,6 +7,7 @@ import Button from "@/components/common/button";
 const ChatCreateTitleForm = ({
   chatCreateInfo,
   setChatCreateInfo,
+  isDefaultName,
   onPrev,
   onNext,
 }: ChatCreateFormProps) => {
@@ -20,6 +21,7 @@ const ChatCreateTitleForm = ({
       ...prev,
       roomName: e.target.value,
     }));
+    isDefaultName.current = true;
   };
 
   return (

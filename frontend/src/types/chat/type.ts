@@ -80,6 +80,7 @@ export interface UploadFile {
 export interface CreateChatRoomRequest {
   roomName?: string;
   userIds: number[];
+  isNameChanged: boolean;
 }
 
 export interface ReadMessageRequest {

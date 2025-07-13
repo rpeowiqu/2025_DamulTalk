@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import ChatCreateIcon from "@/components/icon/chat-create-icon";
 import ChatCreateModal from "@/components/chat/chat-create-modal";
@@ -10,6 +10,7 @@ const ChatCreateButton = () => {
     roomName: "",
     selectedUsers: [],
   });
+  const isDefaultName = useRef(false);
   const { isOpen, openModal, closeModal } = useModal({
     modalKey: "chat-create",
     onClose: () => setChatCreateInfo({ roomName: "", selectedUsers: [] }),
@@ -38,6 +39,7 @@ const ChatCreateButton = () => {
         onOpenChange={handleOpenChange}
         chatCreateInfo={chatCreateInfo}
         setChatCreateInfo={setChatCreateInfo}
+        isDefaultName={isDefaultName}
       />
     </>
   );

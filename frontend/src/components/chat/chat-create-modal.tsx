@@ -1,4 +1,4 @@
-import { type Dispatch, type SetStateAction } from "react";
+import { type Dispatch, type RefObject, type SetStateAction } from "react";
 
 import Dialog, { type DialogProps } from "@/components/common/dialog";
 import type { ChatCreateInfo } from "@/types/chat/type";
@@ -7,11 +7,13 @@ import ChatCreateForm from "@/components/chat/chat-create-form";
 interface ChatCreateModalProps extends DialogProps {
   chatCreateInfo: ChatCreateInfo;
   setChatCreateInfo: Dispatch<SetStateAction<ChatCreateInfo>>;
+  isDefaultName: RefObject<boolean>;
 }
 
 const ChatCreateModal = ({
   chatCreateInfo,
   setChatCreateInfo,
+  isDefaultName,
   open,
   onOpenChange,
   ...props
@@ -26,6 +28,7 @@ const ChatCreateModal = ({
       <ChatCreateForm
         chatCreateInfo={chatCreateInfo}
         setChatCreateInfo={setChatCreateInfo}
+        isDefaultName={isDefaultName}
       />
     </Dialog>
   );

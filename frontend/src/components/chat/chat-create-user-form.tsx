@@ -13,6 +13,7 @@ import useCurrentUser from "@/hooks/auth/use-current-user";
 const ChatCreateUserForm = ({
   chatCreateInfo,
   setChatCreateInfo,
+  isDefaultName,
   onNext,
 }: ChatCreateFormProps) => {
   const { data: currentUser } = useCurrentUser();
@@ -41,6 +42,7 @@ const ChatCreateUserForm = ({
       roomName: defaultRoomName,
     }));
 
+    isDefaultName.current = false;
     onNext?.();
   };
 
