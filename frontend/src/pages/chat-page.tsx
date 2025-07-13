@@ -89,14 +89,7 @@ const ChatPage = () => {
   };
 
   useEffect(() => {
-    if (
-      !data ||
-      !client ||
-      !client.connected ||
-      !isConnected ||
-      !roomIdRef.current ||
-      !user
-    ) {
+    if (!data || !client || !client.connected || !isConnected || !user) {
       return;
     }
 

@@ -30,13 +30,7 @@ const SideBar = () => {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    if (
-      !data ||
-      !client ||
-      !client.connected ||
-      !isConnected ||
-      !roomIdRef.current
-    ) {
+    if (!data || !client || !client.connected || !isConnected) {
       return;
     }
 
