@@ -25,7 +25,6 @@ import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -101,15 +100,20 @@ public class ChatMessageServiceImpl implements ChatMessageService {
         int userId = userUtil.getCurrentUserId();
         LocalDateTime now = lastReadAt.atZoneSameInstant(ZoneId.of("Asia/Seoul")).toLocalDateTime();
 
-        chatRoomMapper.updateReadStatus(userId, roomId, now);
-        redisTemplate.convertAndSend("chats", CommonWrapperDto.<MessageReadResponse>builder()
-                .roomId(roomId)
-                .type(NotificationType.READ_TIME)
-                .data(MessageReadResponse.builder()
-                        .userId(userId)
-                        .lastReadAt(now)
-                        .build())
-                .build());
+        try {
+            chatRoomMapper.updateReadStatus(userId, roomId, now);
+            redisTemplate.convertAndSend("chats", objectMapper.writeValueAsString(CommonWrapperDto.<MessageReadResponse>builder()
+                    .roomId(roomId)
+                    .type(NotificationType.READ_TIME)
+                    .data(MessageReadResponse.builder()
+                            .userId(userId)
+                            .lastReadAt(now)
+                            .build())
+                    .build()));
+        } catch (Exception e) {
+            log.error("[ChatMessageService] 메시지 전송 실패", e);
+            throw new RuntimeException("메시지 전송 실패");
+        }
     }
 
     @Override
