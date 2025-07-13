@@ -158,8 +158,9 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     @Override
     public SimpleRoomInfo getChatRoomInfo(Integer roomId) {
         log.info("[ChatRoomService] 채팅방 정보 조회 시작 - roomId: {}", roomId);
+        int userId = userUtil.getCurrentUserId();
 
-        SimpleRoomInfo info = chatRoomMapper.selectRoomInfo(roomId);
+        SimpleRoomInfo info = chatRoomMapper.selectRoomInfo(roomId, userId);
         if(info == null){
             throw new BusinessException(
                     ErrorCode.CHAT_ROOM_NOTFOUND,

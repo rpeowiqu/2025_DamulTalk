@@ -26,7 +26,7 @@ public interface ChatRoomMapper {
 
     int insertParticipants(@Param("roomId") Integer roomId, @Param("userIds") List<Integer> userIds);
 
-    SimpleRoomInfo selectRoomInfo(@Param("roomId") Integer roomId);
+    SimpleRoomInfo selectRoomInfo(@Param("roomId") Integer roomId, @Param("userId") Integer userId);
 
     List<RoomMemberInfo> selectRoomMembers(@Param("roomId") Integer roomId);
 

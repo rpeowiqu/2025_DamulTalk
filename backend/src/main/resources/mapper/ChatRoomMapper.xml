@@ -52,7 +52,7 @@
         FROM chat_rooms cr
         JOIN chat_room_members crm
           ON cr.room_id = crm.room_id
-        WHERE cr.room_id = #{roomId}
+        WHERE cr.room_id = #{roomId} AND crm.user_id = #{userId}
     </select>
 
     <select id="selectRoomMembers" resultType="com.demo.damulTalk.chat.dto.RoomMemberInfo">

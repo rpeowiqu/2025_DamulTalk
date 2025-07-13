@@ -48,8 +48,10 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 
         int userId = userUtil.getCurrentUserId();
         if(cursor == null) {
-            cursor = chatRoomMapper.selectLastReadTime(roomId, userId);
+            cursor = chatRoomMapper.selectLastReadTime(userId, roomId);
         }
+
+        log.info("@@@@@@@@@@@@@@@@@ cursor: {}", cursor);
 
         List<ChatMessage> newerMessages = chatMessageRepository.findByRoomIdAndSendTimeAfterOrderBySendTimeAsc(roomId, cursor);
 
@@ -130,7 +132,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                 .profileImageUrl(currentUser.getProfileImageUrl())
                 .messageType(MessageType.TEXT)
                 .content(messageRequest.getContent())
-                .sendTime(LocalDateTime.now())
+                .sendTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .unReadCount(0)
                 .build();
 
@@ -149,7 +151,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                             .senderId(0)
                             .messageType(MessageType.DATE)
                             .content(nowDate.toString())
-                            .sendTime(LocalDateTime.now())
+                            .sendTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                             .build();
 
                     redisTemplate.opsForList().rightPush(redisKey, objectMapper.writeValueAsString(systemMessage));
