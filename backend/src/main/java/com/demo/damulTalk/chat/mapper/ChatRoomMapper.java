@@ -37,6 +37,6 @@ public interface ChatRoomMapper {
 
     int updateRoomName(@Param("roomId") Integer roomId, @Param("roomName") String roomName);
 
-    int updateReadStatus(@Param("userId") Integer userId, @Param("roomId") Integer roomId, @Param("readStatus") LocalDateTime lastReadAt);
+    int updateReadStatus(@Param("userId") Integer userId, @Param("roomId") Integer roomId, @Param("lastReadAt") LocalDateTime lastReadAt);
 
 }
