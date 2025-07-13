@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
 
 import SideBarTab from "@/components/side-bar/side-bar-tab";
 import SideBarContent from "@/components/side-bar/side-bar-content";
@@ -17,16 +18,26 @@ import type {
   User,
 } from "@/types/community/type";
 import type { ChatRoomPreviewsResponse } from "@/types/chat/type";
+import useRoomId from "@/hooks/chat/use-room-id";
 
 const SideBar = () => {
   const [currentTab, setCurrentTab] = useState<SideBarTabType>("FRIEND");
+
   const { data } = useCurrentUser();
+  const roomIdRef = useRoomId();
+
   const socket = useContext(WebSocketStateContext);
   const { client, isConnected } = socket ?? {};
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    if (!data || !client || !client.connected || !isConnected) {
+    if (
+      !data ||
+      !client ||
+      !client.connected ||
+      !isConnected ||
+      !roomIdRef.current
+    ) {
       return;
     }
 
@@ -47,7 +58,10 @@ const SideBar = () => {
                           ...item,
                           lastMessage: casted.data.content,
                           lastMessageTime: casted.data.sendTime,
-                          unReadMessageCount: item.unReadMessageCount + 1,
+                          unReadMessageCount:
+                            item.roomId === roomIdRef.current
+                              ? 0
+                              : item.unReadMessageCount + 1,
                         }
                       : item,
                   ) ?? [],

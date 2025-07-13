@@ -1,5 +1,4 @@
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { debounce } from "lodash-es";
 
@@ -27,6 +26,7 @@ import type {
 } from "@/types/chat/type";
 import useCurrentUser from "@/hooks/auth/use-current-user";
 import useSendFile from "@/hooks/chat/use-send-file";
+import useRoomId from "@/hooks/chat/use-room-id";
 
 const ChatPage = () => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -34,16 +34,15 @@ const ChatPage = () => {
     new Map(),
   );
 
-  const { roomId } = useParams();
-  const { data, isLoading } = useChatRoom(roomId ? Number(roomId) : 0);
+  const roomIdRef = useRoomId();
+  const { data, isLoading } = useChatRoom(roomIdRef.current);
+  const { data: user } = useCurrentUser();
 
   const queryClient = useQueryClient();
   const socket = useContext(WebSocketStateContext);
   const { client, isConnected } = socket ?? {};
   const { publishMessage } = useContext(WebSocketDispatchContext)!;
   const { mutate: sendFile } = useSendFile();
-
-  const { data: user } = useCurrentUser();
 
   const readMessage = useMemo(
     () =>
@@ -57,6 +56,10 @@ const ChatPage = () => {
   );
 
   const sendMessage = async (message: Message, file?: File) => {
+    if (!roomIdRef.current) {
+      return;
+    }
+
     // 낙관적 업데이트로 즉시 상태에 추가하기
     setMessages((prev) => [...prev, message]);
 
@@ -69,14 +72,14 @@ const ChatPage = () => {
     if (file) {
       // 파일 메시지일 경우 HTTP 통신으로 메시지 보내기
       await sendFile({
-        roomId: Number(roomId),
+        roomId: roomIdRef.current,
         file,
         clientId: "clientId",
       });
     } else {
       // 텍스트 메시지일 경우 웹소켓으로 메시지 보내기
       publishMessage<WsMessageRequest>("/pub/chats/messages", {
-        roomId: Number(roomId),
+        roomId: roomIdRef.current,
         senderId: message.senderId,
         messageType: "TEXT",
         content: message.content,
@@ -91,93 +94,103 @@ const ChatPage = () => {
       !client ||
       !client.connected ||
       !isConnected ||
-      !roomId ||
+      !roomIdRef.current ||
       !user
     ) {
       return;
     }
 
-    const subscription = client.subscribe(`/sub/chats/${roomId}`, (message) => {
-      const response = JSON.parse(message.body) as WsResponse<any>;
-      switch (response.type) {
-        case "CHAT_MESSAGE":
-          {
-            const casted = response as WsResponse<Message>;
+    const subscription = client.subscribe(
+      `/sub/chats/${roomIdRef.current}`,
+      (message) => {
+        const response = JSON.parse(message.body) as WsResponse<any>;
+        switch (response.type) {
+          case "CHAT_MESSAGE":
+            {
+              const casted = response as WsResponse<Message>;
 
-            // 내가 발신한 메시지를 수신한 경우
-            if (casted.data.senderId === user.userId) {
-              setMessages(
+              // 내가 발신한 메시지를 수신한 경우
+              if (casted.data.senderId === user.userId) {
+                setMessages(
+                  (prev) =>
+                    prev?.map((item) => {
+                      if (item.clientId === casted.data.clientId) {
+                        temporaryMessageSet.current.delete(
+                          casted.data.clientId!,
+                        );
+                        return {
+                          ...item,
+                          messageId: casted.data.messageId,
+                          messageStatus: "SENT",
+                          sendTime: casted.data.sendTime,
+                          fileUrl: casted.data.fileUrl ?? "",
+                        };
+                      }
+                      return item;
+                    }) ?? [],
+                );
+              }
+              // 다른 사람이 발신한 메시지를 수신한 경우
+              else {
+                // 수신한 메시지를 상태에 추가
+                setMessages((prev) => (prev ? [...prev, casted.data] : []));
+              }
+
+              // 사이드 바의 채팅방 목록 상태 갱신
+              queryClient.setQueryData<ChatRoomPreviewsResponse>(
+                ["chat-room-previews"],
                 (prev) =>
-                  prev?.map((item) => {
-                    if (item.clientId === casted.data.clientId) {
-                      temporaryMessageSet.current.delete(casted.data.clientId!);
-                      return {
-                        ...item,
-                        messageId: casted.data.messageId,
-                        messageStatus: "SENT",
-                        sendTime: casted.data.sendTime,
-                        fileUrl: casted.data.fileUrl ?? "",
-                      };
-                    }
-                    return item;
-                  }) ?? [],
+                  prev?.map((item) =>
+                    item.roomId === roomIdRef.current
+                      ? {
+                          ...item,
+                          lastMessage: casted.data.content,
+                          lastMessageTime: casted.data.sendTime,
+                          unReadMessageCount:
+                            item.roomId === roomIdRef.current
+                              ? 0
+                              : item.unReadMessageCount + 1,
+                        }
+                      : item,
+                  ) ?? [],
+              );
+
+              // 웹 소켓으로 현재 시각까지 읽었음을 알림
+              readMessage();
+            }
+            break;
+          case "READ_TIME":
+            {
+              const casted = response as WsResponse<WsChatRoomReadResponse>;
+              queryClient.setQueryData<ChatRoom>(
+                ["chat-room", roomIdRef.current],
+                (prev) =>
+                  prev
+                    ? {
+                        ...prev,
+                        roomMembers: prev.roomMembers.map((item) =>
+                          item.userId === casted.data.userId
+                            ? {
+                                ...item,
+                                lastReadAt: casted.data.lastReadAt,
+                              }
+                            : item,
+                        ),
+                      }
+                    : prev,
               );
             }
-            // 다른 사람이 발신한 메시지를 수신한 경우
-            else {
-              // 수신한 메시지를 상태에 추가
-              setMessages((prev) => (prev ? [...prev, casted.data] : []));
-            }
+            break;
+        }
 
-            // 사이드 바의 채팅방 목록 상태 갱신
-            queryClient.setQueryData<ChatRoomPreviewsResponse>(
-              ["chat-room-previews"],
-              (prev) =>
-                prev?.map((item) =>
-                  item.roomId === Number(roomId)
-                    ? {
-                        ...item,
-                        lastMessage: casted.data.content,
-                        lastMessageTime: casted.data.sendTime,
-                        unReadMessageCount: item.unReadMessageCount + 1,
-                      }
-                    : item,
-                ) ?? [],
-            );
-
-            // 웹 소켓으로 현재 시각까지 읽었음을 알림
-            readMessage();
-          }
-          break;
-        case "READ_TIME":
-          {
-            const casted = response as WsResponse<WsChatRoomReadResponse>;
-            queryClient.setQueryData<ChatRoom>(["chat-room", roomId], (prev) =>
-              prev
-                ? {
-                    ...prev,
-                    roomMembers: prev.roomMembers.map((item) =>
-                      item.userId === casted.data.userId
-                        ? {
-                            ...item,
-                            lastReadAt: casted.data.lastReadAt,
-                          }
-                        : item,
-                    ),
-                  }
-                : prev,
-            );
-          }
-          break;
-      }
-
-      console.log("수신한 메시지", message.body);
-    });
-    console.log(`/sub/chats/${roomId} 구독을 시작합니다.`);
+        console.log("수신한 메시지", message.body);
+      },
+    );
+    console.log(`/sub/chats/${roomIdRef.current} 구독을 시작합니다.`);
 
     return () => {
       subscription?.unsubscribe();
-      console.log(`/sub/chats/${roomId} 구독을 종료합니다.`);
+      console.log(`/sub/chats/${roomIdRef.current} 구독을 종료합니다.`);
     };
   }, [data, client, isConnected, user]);
 
