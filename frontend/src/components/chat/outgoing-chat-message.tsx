@@ -35,9 +35,11 @@ const OutgoingChatMessage = ({ message, onClick }: ChatMessageProps) => {
       {message.messageStatus === "SENDING" && <Spinner />}
 
       <div className="flex shrink-0 flex-col text-[0.675rem]">
-        <p className="text-damul-main-500 text-end">
-          {message.unReadCount > 99 ? "99+" : message.unReadCount}
-        </p>
+        {message.unReadCount > 0 && (
+          <p className="text-damul-main-500">
+            {message.unReadCount > 99 ? "99+" : message.unReadCount}
+          </p>
+        )}
         {/* 전송 중인 메시지는 날짜를 표시하지 않는다. */}
         {message.messageStatus !== "SENDING" && (
           <p className="text-neutral-500">

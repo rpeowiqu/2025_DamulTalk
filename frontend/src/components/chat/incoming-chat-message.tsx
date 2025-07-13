@@ -44,9 +44,11 @@ const IncomingChatMessage = ({ message, onClick }: ChatMessageProps) => {
           </div>
 
           <div className="flex shrink-0 flex-col text-[0.675rem]">
-            <p className="text-damul-main-500">
-              {message.unReadCount > 99 ? "99+" : message.unReadCount}
-            </p>
+            {message.unReadCount > 0 && (
+              <p className="text-damul-main-500">
+                {message.unReadCount > 99 ? "99+" : message.unReadCount}
+              </p>
+            )}
             <p className="text-neutral-500">
               {getFormattedTime(message.sendTime)}
             </p>
