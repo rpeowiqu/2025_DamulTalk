@@ -47,10 +47,12 @@
 
     <select id="selectRoomInfo">
         SELECT
-            room_name AS roomName,
-            room_size AS roomSize
-        FROM chat_rooms
-        WHERE room_id = #{roomId}
+            crm.room_name AS roomName,
+            cr.room_size AS roomSize
+        FROM chat_rooms cr
+        JOIN chat_room_members crm
+          ON cr.room_id = crm.room_id
+        WHERE cr.room_id = #{roomId}
     </select>
 
     <select id="selectRoomMembers" resultType="com.demo.damulTalk.chat.dto.RoomMemberInfo">
@@ -75,19 +77,29 @@
 
     <select id="selectRoomById" resultType="com.demo.damulTalk.chat.domain.ChatRoom">
         SELECT
-            room_id AS roomId,
-            room_type AS roomType,
-            room_name AS roomName,
-            room_size AS roomSize,
-            created_at AS createdAt
-        FROM chat_rooms
+            cr.room_id AS roomId,
+            cr.room_type AS roomType,
+            crm.room_name AS roomName,
+            cr.room_size AS roomSize,
+            cr.created_at AS createdAt
+        FROM chat_rooms cr
+        JOIN chat_room_members crm
+          ON cr.room_id = crm.room_id
+        WHERE cr.room_id = #{roomId}
+    </select>
+
+    <select id="selectRoomName">
+        SELECT
+            room_name
+        FROM chat_room_members
         WHERE room_id = #{roomId}
+          AND user_id = #{userId}
     </select>
 
     <insert id="insertChatRoom" parameterType="com.demo.damulTalk.chat.domain.ChatRoom"
             useGeneratedKeys="true" keyProperty="roomId">
-        INSERT INTO chat_rooms (room_type, room_name, room_size, name_changed)
-        VALUES (#{roomType}, #{roomName}, #{roomSize}, #{isNameChanged})
+        INSERT INTO chat_rooms (room_type, room_size, name_changed)
+        VALUES (#{roomType}, #{roomSize}, #{isNameChanged})
     </insert>
 
     <insert id="insertParticipants">
@@ -98,9 +110,17 @@
             </foreach>
     </insert>
 
+    <insert id="insertParticipantsWithNames" parameterType="com.demo.damulTalk.chat.domain.ChatRoomMember">
+        INSERT INTO chat_room_members (room_id, user_id, room_name)
+        VALUES
+            <foreach collection="participants" item="participants" separator=",">
+                (#{participant.roomId}, #{participant.userId}, #{participant.roomName})
+            </foreach>
+    </insert>
+
     <update id="updateRoomName">
-        UPDATE chat_rooms SET room_name = #{roomName}
-        WHERE room_id = #{roomId}
+        UPDATE chat_room_members SET room_name = #{roomName}
+        WHERE room_id = #{roomId} AND user_id = #{userId}
     </update>
 
     <update id="updateReadStatus">

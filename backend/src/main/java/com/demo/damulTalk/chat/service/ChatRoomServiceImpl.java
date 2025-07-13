@@ -3,6 +3,7 @@ package com.demo.damulTalk.chat.service;
 import com.demo.damulTalk.chat.MessageType;
 import com.demo.damulTalk.chat.domain.ChatMessage;
 import com.demo.damulTalk.chat.domain.ChatRoom;
+import com.demo.damulTalk.chat.domain.ChatRoomMember;
 import com.demo.damulTalk.chat.dto.*;
 import com.demo.damulTalk.chat.mapper.ChatRoomMapper;
 import com.demo.damulTalk.chat.repository.ChatMessageRepository;
@@ -48,9 +49,11 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         List<ChatRoom> rooms = chatRoomMapper.selectChatRoomsByUserId(userId);
 
         List<ChatRoomInfo> chatRoomInfos = rooms.stream().map(room -> {
+            String roomName = chatRoomMapper.selectRoomName(room.getRoomId(), userId);
+
             ChatRoomInfo info = ChatRoomInfo.builder()
                     .roomId(room.getRoomId())
-                    .roomName(room.getRoomName())
+                    .roomName(roomName)
                     .roomSize(room.getRoomSize())
                     .build();
 
@@ -88,12 +91,12 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         int userId = userUtil.getCurrentUserId();
         List<Integer> userIds = new ArrayList<>(chatRoomCreate.getUserIds());
 
-        if(!userIds.contains(userId)){
+        if (!userIds.contains(userId)) {
             userIds.add(userId);
         }
 
         Integer existingRoomId = chatRoomMapper.selectRoomIdByExactUserIds(userIds, userIds.size());
-        if(existingRoomId != null){
+        if (existingRoomId != null) {
             log.info("[ChatRoomService] 기존 채팅방 존재");
             return ChatRoomCreated.builder()
                     .roomId(existingRoomId)
@@ -101,36 +104,48 @@ public class ChatRoomServiceImpl implements ChatRoomService {
                     .build();
         }
 
-        String roomName = chatRoomCreate.getRoomName();
-        if(roomName == null || roomName.isBlank()) {
-            List<User> users = chatRoomMapper.selectUsersByIds(userIds);
+        List<User> users = chatRoomMapper.selectUsersByIds(userIds);
 
-            if(userIds.size() == 2) {
-                roomName = users.stream()
-                        .filter(user -> user.getUserId() != userId)
+        boolean isPrivate = userIds.size() == 2;
+        boolean isNameChanged = Boolean.TRUE.equals(chatRoomCreate.getIsNameChanged());
+
+        ChatRoom newRoom = ChatRoom.builder()
+                .roomType(isPrivate ? RoomType.PRIVATE : RoomType.GROUP)
+                .roomSize(userIds.size())
+                .isNameChanged(isNameChanged)
+                .build();
+
+        chatRoomMapper.insertChatRoom(newRoom);
+        int newRoomId = newRoom.getRoomId();
+
+        List<ChatRoomMember> participants = new ArrayList<>();
+
+        for (User user : users) {
+            String nameForThisUser;
+
+            if (isNameChanged) {
+                nameForThisUser = chatRoomCreate.getRoomName();
+            } else if (isPrivate) {
+                nameForThisUser = users.stream()
+                        .filter(u -> !u.getUserId().equals(user.getUserId()))
                         .map(User::getNickname)
                         .findFirst()
-                        .orElse("1:1 채팅"); // 예외 처리용
+                        .orElse("1:1 채팅");
             } else {
-                roomName = users.stream()
+                nameForThisUser = users.stream()
                         .map(User::getNickname)
                         .sorted()
                         .collect(Collectors.joining(", "));
             }
+
+            participants.add(ChatRoomMember.builder()
+                    .roomId(newRoomId)
+                    .userId(user.getUserId())
+                    .roomName(nameForThisUser)
+                    .build());
         }
 
-        ChatRoom newRoom = ChatRoom.builder()
-                .roomName(roomName)
-                .roomType(userIds.size() == 2 ? RoomType.PRIVATE : RoomType.GROUP)
-                .roomSize(userIds.size())
-                .isNameChanged(chatRoomCreate.getIsNameChanged())
-                .build();
-
-        chatRoomMapper.insertChatRoom(newRoom);
-
-        int newRoomId = newRoom.getRoomId();
-
-        chatRoomMapper.insertParticipants(newRoomId, userIds);
+        chatRoomMapper.insertParticipantsWithNames(participants);
 
         log.info("[ChatRoomService] 채팅방 생성 완료: {}", newRoomId);
         return ChatRoomCreated.builder()
@@ -138,6 +153,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
                 .isExisted(false)
                 .build();
     }
+
 
     @Override
     public SimpleRoomInfo getChatRoomInfo(Integer roomId) {
@@ -193,7 +209,9 @@ public class ChatRoomServiceImpl implements ChatRoomService {
                         .map(RoomMemberInfo::getNickname)
                         .sorted()
                         .collect(Collectors.joining(", "));
-                chatRoomMapper.updateRoomName(roomId, updatedName);
+                for (RoomMemberInfo member : remainedMembers) {
+                    chatRoomMapper.updateRoomName(roomId, member.getUserId(), updatedName);
+                }
             }
         }
 

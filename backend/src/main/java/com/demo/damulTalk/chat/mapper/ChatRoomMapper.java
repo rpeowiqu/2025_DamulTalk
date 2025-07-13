@@ -1,6 +1,7 @@
 package com.demo.damulTalk.chat.mapper;
 
 import com.demo.damulTalk.chat.domain.ChatRoom;
+import com.demo.damulTalk.chat.domain.ChatRoomMember;
 import com.demo.damulTalk.chat.dto.RoomMemberInfo;
 import com.demo.damulTalk.chat.dto.SimpleRoomInfo;
 import com.demo.damulTalk.user.domain.User;
@@ -35,8 +36,12 @@ public interface ChatRoomMapper {
 
     int deleteParticipant(@Param("roomId") Integer roomId, @Param("userId") Integer userId);
 
-    int updateRoomName(@Param("roomId") Integer roomId, @Param("roomName") String roomName);
+    int updateRoomName(@Param("roomId") Integer roomId, @Param("userId") Integer userId, @Param("roomName") String roomName);
 
     int updateReadStatus(@Param("userId") Integer userId, @Param("roomId") Integer roomId, @Param("lastReadAt") LocalDateTime lastReadAt);
+
+    int insertParticipantsWithNames(List<ChatRoomMember> participants);
+
+    String selectRoomName(@Param("roomId") Integer roomId, @Param("userId") Integer userId);
 
 }

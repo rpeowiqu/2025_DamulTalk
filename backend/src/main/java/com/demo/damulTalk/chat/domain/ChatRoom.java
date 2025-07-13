@@ -16,8 +16,6 @@ public class ChatRoom {
 
     private RoomType roomType;
 
-    private String roomName;
-
     private Integer roomSize;
 
     private LocalDateTime createdAt;
