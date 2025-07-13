@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
 
 import SideBarTab from "@/components/side-bar/side-bar-tab";
 import SideBarContent from "@/components/side-bar/side-bar-content";
