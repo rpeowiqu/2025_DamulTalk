@@ -1,5 +1,4 @@
 import { useContext, useEffect, useRef, type KeyboardEvent } from "react";
-import { useParams } from "react-router-dom";
 
 import Button from "@/components/common/button";
 import FileUploadButton from "@/components/common/file-upload-button";
@@ -9,23 +8,19 @@ import {
   FileUploadDispatchContext,
   FileUploadStateContext,
 } from "@/contexts/chat/file-upload-provider";
-import { WebSocketDispatchContext } from "@/contexts/chat/web-socket-provider";
-import type { WsMessageRequest } from "@/types/web-socket/type";
 import useCurrentUser from "@/hooks/auth/use-current-user";
-import useSendFile from "@/hooks/chat/use-send-file";
+import type { Message } from "@/types/chat/type";
 
 interface ChatInputProps {
-  triggerScroll: () => void;
+  sendMessage: (_message: Message, _file?: File) => void;
 }
 
-const ChatInput = ({ triggerScroll }: ChatInputProps) => {
+const ChatInput = ({ sendMessage }: ChatInputProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const uploadFile = useContext(FileUploadStateContext);
   const setUploadFile = useContext(FileUploadDispatchContext);
-  const { publishMessage } = useContext(WebSocketDispatchContext)!;
-  const { roomId } = useParams();
+
   const { data } = useCurrentUser();
-  const { mutateAsync: sendFile } = useSendFile();
 
   useEffect(() => {
     if (uploadFile) {
@@ -33,27 +28,47 @@ const ChatInput = ({ triggerScroll }: ChatInputProps) => {
     }
   }, [uploadFile]);
 
-  const sendMessage = async () => {
-    if (!data || !publishMessage) {
+  const handleSendMessage = async () => {
+    if (!data) {
       return;
     }
 
+    const clientId = new Date().toISOString();
+
     // 파일을 전송하는 경우
     if (uploadFile) {
-      await sendFile({
-        roomId: Number(roomId),
-        file: uploadFile.file,
-        clientId: "clientId",
-      });
+      sendMessage(
+        {
+          messageId: clientId,
+          senderId: data.userId,
+          profileImageUrl: "",
+          nickname: data.nickname,
+          messageType: uploadFile.file.type.startsWith("image/")
+            ? "IMAGE"
+            : "VIDEO",
+          messageStatus: "SENDING",
+          content: "",
+          fileUrl: uploadFile.objectUrl,
+          sendTime: clientId,
+          unReadCount: 0,
+          clientId,
+        },
+        uploadFile.file,
+      );
     }
     // 텍스트를 전송하는 경우
     else if (textareaRef.current && textareaRef.current.value) {
-      publishMessage<WsMessageRequest>("/pub/chats/messages", {
-        roomId: Number(roomId),
+      sendMessage({
+        messageId: clientId,
         senderId: data.userId,
+        profileImageUrl: "",
+        nickname: data.nickname,
         messageType: "TEXT",
+        messageStatus: "SENDING",
         content: textareaRef.current.value,
-        clientId: "clientId",
+        sendTime: clientId,
+        unReadCount: 0,
+        clientId,
       });
     }
 
@@ -61,18 +76,17 @@ const ChatInput = ({ triggerScroll }: ChatInputProps) => {
       textareaRef.current.value = "";
     }
 
-    triggerScroll();
     setUploadFile!(null);
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (!e.shiftKey && e.key === "Enter") {
       e.preventDefault();
-      sendMessage();
+      handleSendMessage();
     }
   };
 
-  const handleFileDelete = () => {
+  const handleDeleteFile = () => {
     if (uploadFile?.objectUrl) {
       URL.revokeObjectURL(uploadFile.objectUrl);
     }
@@ -88,7 +102,7 @@ const ChatInput = ({ triggerScroll }: ChatInputProps) => {
             <div className="absolute top-0 left-0">
               <ChatUploadFileItem
                 uploadFile={uploadFile}
-                onDelete={handleFileDelete}
+                onDelete={handleDeleteFile}
               />
             </div>
           )}
@@ -109,7 +123,7 @@ const ChatInput = ({ triggerScroll }: ChatInputProps) => {
             setUploadFile={setUploadFile!}>
             <MultiMediaIcon className="size-5" />
           </FileUploadButton>
-          <Button className="py-2 text-base" onClick={sendMessage}>
+          <Button className="py-2 text-base" onClick={handleSendMessage}>
             전송
           </Button>
         </div>

@@ -29,7 +29,7 @@ const ChatMessageList = ({
   const { mutate: readMessage } = useReadMessage();
 
   const unreadCountMap = useMemo(() => {
-    const result = new Map<number, number>();
+    const result = new Map<string, number>();
 
     data?.pages.forEach((page) =>
       page.data.forEach((message) => {
@@ -85,6 +85,7 @@ const ChatMessageList = ({
             key={item.messageId}
             message={{
               ...item,
+              messageStatus: "SENT",
               unReadCount: unreadCountMap.get(item.messageId) ?? 0,
             }}
           />

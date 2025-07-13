@@ -41,17 +41,25 @@ export interface ChatRoomMember {
 }
 
 export type MessageType = "TEXT" | "IMAGE" | "VIDEO";
+export type MessageStatus = "SENDING" | "SENT" | "FAILED";
 
 export interface Message {
-  messageId: number;
+  messageId: string;
   senderId: number;
   profileImageUrl: string;
   nickname: string;
+  messageStatus: MessageStatus;
   messageType: MessageType;
   content: string;
   fileUrl?: string;
   sendTime: string;
   unReadCount: number;
+  clientId?: string;
+}
+
+export interface MessageTransferHistory {
+  objectUrl?: string;
+  sendTime: string;
 }
 
 export type SystemMessageType = "DATE" | "EXIT";
@@ -66,12 +74,6 @@ export interface SystemMessage {
 export interface UploadFile {
   file: File;
   objectUrl?: string;
-}
-
-export interface optimisticMessage {
-  id: number;
-  objectUrl?: string;
-  createdAt: string;
 }
 
 // Request ==========================================================================================================================

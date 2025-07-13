@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -8,20 +8,74 @@ import FileUploadProvider from "@/contexts/chat/file-upload-provider";
 import useChatRoom from "@/hooks/chat/use-chat-room";
 import ChatRoomHeaderSkeleton from "@/components/chat/chat-room-header-skeleton";
 import ChatRoomContentSkeleton from "@/components/chat/chat-room-content-skeleton";
-import { WebSocketStateContext } from "@/contexts/chat/web-socket-provider";
-import type { WsResponse } from "@/types/web-socket/type";
-import type { ChatRoomPreviewsResponse, Message } from "@/types/chat/type";
+import {
+  WebSocketDispatchContext,
+  WebSocketStateContext,
+} from "@/contexts/chat/web-socket-provider";
+import type { WsMessageRequest, WsResponse } from "@/types/web-socket/type";
+import type {
+  ChatRoomPreviewsResponse,
+  Message,
+  MessageTransferHistory,
+} from "@/types/chat/type";
+import useCurrentUser from "@/hooks/auth/use-current-user";
+import useSendFile from "@/hooks/chat/use-send-file";
 
 const ChatPage = () => {
   const [messages, setMessages] = useState<Message[]>([]);
+  const temporaryMessageSet = useRef<Map<string, MessageTransferHistory>>(
+    new Map(),
+  );
+
   const { roomId } = useParams();
   const { data, isLoading } = useChatRoom(roomId ? Number(roomId) : 0);
+
   const queryClient = useQueryClient();
   const socket = useContext(WebSocketStateContext);
   const { client, isConnected } = socket ?? {};
+  const { publishMessage } = useContext(WebSocketDispatchContext)!;
+  const { mutate: sendFile } = useSendFile();
+
+  const { data: user } = useCurrentUser();
+
+  const sendMessage = async (message: Message, file?: File) => {
+    // 낙관적 업데이트로 즉시 상태에 추가하기
+    setMessages((prev) => [...prev, message]);
+
+    // 낙관적 업데이트에 추가한 메시지의 아이디와 보낸시각 저장하기
+    temporaryMessageSet.current.set(message.clientId!, {
+      objectUrl: message.fileUrl ?? undefined,
+      sendTime: message.sendTime,
+    });
+
+    if (file) {
+      // 파일 메시지일 경우 HTTP 통신으로 메시지 보내기
+      await sendFile({
+        roomId: Number(roomId),
+        file,
+        clientId: "clientId",
+      });
+    } else {
+      // 텍스트 메시지일 경우 웹소켓으로 메시지 보내기
+      publishMessage<WsMessageRequest>("/pub/chats/messages", {
+        roomId: Number(roomId),
+        senderId: message.senderId,
+        messageType: "TEXT",
+        content: message.content,
+        clientId: message.clientId!,
+      });
+    }
+  };
 
   useEffect(() => {
-    if (!data || !client || !client.connected || !isConnected || !roomId) {
+    if (
+      !data ||
+      !client ||
+      !client.connected ||
+      !isConnected ||
+      !roomId ||
+      !user
+    ) {
       return;
     }
 
@@ -31,8 +85,31 @@ const ChatPage = () => {
         case "CHAT_MESSAGE":
           {
             const casted = response as WsResponse<Message>;
-            // 수신한 메시지를 상태에 추가
-            setMessages((prev) => (prev ? [...prev, casted.data] : []));
+
+            // 내가 발신한 메시지를 수신한 경우
+            if (casted.data.senderId === user.userId) {
+              setMessages(
+                (prev) =>
+                  prev?.map((item) => {
+                    if (item.clientId === casted.data.clientId) {
+                      temporaryMessageSet.current.delete(casted.data.clientId!);
+                      return {
+                        ...item,
+                        messageId: casted.data.messageId,
+                        messageStatus: "SENT",
+                        sendTime: casted.data.sendTime,
+                        fileUrl: casted.data.fileUrl ?? "",
+                      };
+                    }
+                    return item;
+                  }) ?? [],
+              );
+            }
+            // 다른 사람이 발신한 메시지를 수신한 경우
+            else {
+              // 수신한 메시지를 상태에 추가
+              setMessages((prev) => (prev ? [...prev, casted.data] : []));
+            }
 
             // 사이드 바의 채팅방 목록 상태 갱신
             queryClient.setQueryData<ChatRoomPreviewsResponse>(
@@ -61,7 +138,7 @@ const ChatPage = () => {
       subscription?.unsubscribe();
       console.log(`/sub/chats/${roomId} 구독을 종료합니다.`);
     };
-  }, [data, client, isConnected]);
+  }, [data, client, isConnected, user]);
 
   return (
     <FileUploadProvider>
@@ -76,6 +153,7 @@ const ChatPage = () => {
             <ChatRoomHeader room={data} />
             <ChatRoomContent
               messages={messages}
+              sendMessage={sendMessage}
               lastReadAts={
                 data?.roomMembers.map((item) => item.lastReadAt) ?? []
               }

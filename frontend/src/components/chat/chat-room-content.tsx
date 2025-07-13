@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useMoveScroll } from "@/hooks/chat/use-move-scroll";
 import { type Message } from "@/types/chat/type";
@@ -7,15 +7,18 @@ import ChatInput from "@/components/chat/chat-input";
 import useModal from "@/hooks/common/use-modal";
 import ChatMessageFileModal from "@/components/chat/chat-message-file-modal";
 import { cn } from "@/utils/style";
+import useCurrentUser from "@/hooks/auth/use-current-user";
 
 interface ChatRoomContentProps {
   messages: Message[];
+  sendMessage: (_message: Message, _file?: File) => void;
   lastReadAts: string[];
   className?: string;
 }
 
 const ChatRoomContent = ({
   messages,
+  sendMessage,
   lastReadAts,
   className,
 }: ChatRoomContentProps) => {
@@ -24,6 +27,8 @@ const ChatRoomContent = ({
   const { isOpen, openModal, closeModal } = useModal({
     modalKey: "chat-message-detail",
   });
+
+  const { data } = useCurrentUser();
 
   const handleSelect = (message: Message) => {
     setSelectedMessage(message);
@@ -41,6 +46,16 @@ const ChatRoomContent = ({
     }
   };
 
+  useEffect(() => {
+    if (!data || messages.length === 0) {
+      return;
+    }
+
+    if (messages[messages.length - 1].senderId === data.userId) {
+      triggerScroll();
+    }
+  }, [messages.length, data?.userId]);
+
   return (
     <div className={cn("flex flex-col", className)}>
       <div className="min-h-0 flex-1 overflow-y-auto p-6">
@@ -51,7 +66,7 @@ const ChatRoomContent = ({
           onSelect={handleSelect}
         />
       </div>
-      <ChatInput triggerScroll={triggerScroll} />
+      <ChatInput sendMessage={sendMessage} />
       <ChatMessageFileModal
         open={isOpen}
         onOpenChange={handleOpenChange}
