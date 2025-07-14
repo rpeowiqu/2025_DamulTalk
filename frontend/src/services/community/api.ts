@@ -39,7 +39,7 @@ export const postAcceptFriendRequest = async (
 
 // 친구 추가 요청 취소/거절
 export const deleteFriendRequest = async (userId: number) => {
-  const response = await apiClient.delete(`friends/requests/${userId}`);
+  const response = await apiClient.delete(`friends/${userId}`);
   return response;
 };
 
