@@ -240,7 +240,8 @@ public class ChatRoomServiceImpl implements ChatRoomService {
                             .messageType(message.getMessageType())
                             .content(message.getContent())
                             .sendTime(message.getSendTime())
-                            .build())));
+                            .build())
+                    .build()));
         } catch (Exception e) {
             log.error("[ChatMessageService] 메시지 전송 실패", e);
             throw new RuntimeException("메시지 전송 실패");
