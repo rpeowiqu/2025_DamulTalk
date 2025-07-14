@@ -82,8 +82,24 @@ const SideBar = () => {
             }
             break;
           case "FRIEND_ACCEPT":
+            {
+              const casted = response as WsResponse<User>;
+              queryClient.setQueryData<FriendsResponse>(
+                ["friends", data.userId],
+                (prev) => (prev ? [...prev, casted.data] : []),
+              );
+            }
             break;
           case "FRIEND_DELETE":
+            {
+              const casted = response as WsResponse<{ userId: number }>;
+              queryClient.setQueryData<FriendsResponse>(
+                ["friends", data.userId],
+                (prev) =>
+                  prev?.filter((item) => item.userId !== casted.data.userId) ??
+                  [],
+              );
+            }
             break;
           case "ONLINE_STATUS":
             {
