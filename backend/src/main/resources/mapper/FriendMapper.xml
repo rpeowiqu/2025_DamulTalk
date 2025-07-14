@@ -72,7 +72,7 @@
                 ), 'NONE') AS status
     </select>
 
-    <select id="selectFriendInfoById" resultType="com.demo.damulTalk.friend.dto.FriendDto">
+    <select id="selectFriendInfoById" resultType="com.demo.damulTalk.user.dto.UserStatusDto">
         SELECT
             user_id AS userId,
             nickname,

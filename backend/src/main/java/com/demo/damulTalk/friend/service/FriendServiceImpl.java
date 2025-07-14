@@ -37,7 +37,7 @@ public class FriendServiceImpl implements FriendService {
 
         list.forEach(u -> {
             String redisKey = "user:online:" + u.getUserId();
-            boolean online = Boolean.TRUE.equals(redisTemplate.hasKey(redisKey));
+            boolean online = redisTemplate.hasKey(redisKey);
             u.setOnline(online);
         });
 
@@ -101,14 +101,14 @@ public class FriendServiceImpl implements FriendService {
             );
         }
 
-        CommonWrapperDto dto = CommonWrapperDto.<FriendIdDto>builder()
-                        .userId(friendId)
-                        .type(status.equals("PENDING") ? NotificationType.FRIEND_REQUEST_CANCEL : NotificationType.FRIEND_DELETE)
-                        .data(FriendIdDto.builder()
-                                .userId(userId)
-                                .build())
-                        .build();
         try {
+            CommonWrapperDto<FriendIdDto> dto = CommonWrapperDto.<FriendIdDto>builder()
+                    .userId(friendId)
+                    .type(status.equals("PENDING") ? NotificationType.FRIEND_REQUEST_CANCEL : NotificationType.FRIEND_DELETE)
+                    .data(FriendIdDto.builder()
+                            .userId(userId)
+                            .build())
+                    .build();
             redisTemplate.convertAndSend("notifications", objectMapper.writeValueAsString(dto));
         } catch (Exception e) {
             log.error("[FriendService] 친구삭제 전송 실패", e);
@@ -127,7 +127,7 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Override
-    public FriendDto addFriend(Integer targetId) {
+    public UserStatusDto addFriend(Integer targetId) {
         log.info("[FriendService] 친구 추가 시작 - targetId: {}", targetId);
 
         int userId = userUtil.getCurrentUserId();
@@ -140,12 +140,19 @@ public class FriendServiceImpl implements FriendService {
             );
         }
 
-        FriendDto friend = friendMapper.selectFriendInfoById(targetId);
+        UserStatusDto me = friendMapper.selectFriendInfoById(userId);
+        UserStatusDto friend = friendMapper.selectFriendInfoById(targetId);
+        String redisKey = "user:online:" + userId;
+        boolean online = redisTemplate.hasKey(redisKey);
+        me.setOnline(online);
+        redisKey = "user:online:" + targetId;
+        online = redisTemplate.hasKey(redisKey);
+        friend.setOnline(online);
         try {
-            redisTemplate.convertAndSend("notifications", objectMapper.writeValueAsString(CommonWrapperDto.<FriendDto>builder()
+            redisTemplate.convertAndSend("notifications", objectMapper.writeValueAsString(CommonWrapperDto.<UserStatusDto>builder()
                     .userId(targetId)
                     .type(NotificationType.FRIEND_ACCEPT)
-                    .data(friend)
+                    .data(me)
                     .build()));
         } catch (Exception e) {
             log.error("[FriendService] 친구수락 전송 실패", e);

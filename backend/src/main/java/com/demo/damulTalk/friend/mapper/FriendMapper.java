@@ -24,7 +24,7 @@ public interface FriendMapper {
 
     int updateFriend(@Param("targetId") Integer targetId, @Param("userId") Integer userId);
 
-    FriendDto selectFriendInfoById(Integer userId);
+    UserStatusDto selectFriendInfoById(Integer userId);
 
     String selectFriendStatus(Integer userId, Integer friendId);
 

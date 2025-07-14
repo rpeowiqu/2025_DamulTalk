@@ -36,7 +36,7 @@ public class WebSocketSubscribeListener {
         }
 
         if (!chatRoomPattern.matcher(destination).matches()) {
-            return; // 채팅방 구독이 아니면 무시
+            return;
         }
 
         Principal principal = accessor.getUser();

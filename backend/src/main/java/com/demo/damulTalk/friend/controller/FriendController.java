@@ -61,7 +61,7 @@ public class FriendController {
     public ResponseEntity<?> acceptFriendRequest(@RequestBody CommonIdDto common) {
         log.info("[FriendController] 친구 요청 수락 시작 - targetId: {}", common.getId());
 
-        FriendDto response = friendService.addFriend(common.getId());
+        UserStatusDto response = friendService.addFriend(common.getId());
         return ResponseEntity.ok(response);
     }
 

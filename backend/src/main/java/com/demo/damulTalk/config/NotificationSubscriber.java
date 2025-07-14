@@ -26,11 +26,9 @@ public class NotificationSubscriber implements MessageListener {
         try {
             String payload = new String(message.getBody(), StandardCharsets.UTF_8);
             CommonWrapperDto commonWrapperDto = objectMapper.readValue(payload, CommonWrapperDto.class);
-            log.info("@@@@@@@@@@@@@@@@@@@@@ userId: {}", commonWrapperDto.getUserId() );
 
             String topic = "/sub/notifications/" + commonWrapperDto.getUserId();
             messagingTemplate.convertAndSend(topic, commonWrapperDto);
-            log.info(">>> WebSocket 전송 완료: topic={}, payload={}", topic, objectMapper.writeValueAsString(commonWrapperDto));
         } catch(JsonProcessingException e) {
             log.error("[NotificationSubscriber] JSON 역직렬화 실패: {}", e.getMessage());
         }
