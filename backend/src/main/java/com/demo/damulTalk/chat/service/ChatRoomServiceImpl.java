@@ -182,7 +182,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         int userId = userUtil.getCurrentUserId();
         User currentUser = userMapper.selectUserByUserId(userId);
 
-        ChatRoom room = chatRoomMapper.selectRoomById(roomId);
+        ChatRoom room = chatRoomMapper.selectRoomById(roomId, userId);
         if(room == null){
             throw new BusinessException(
                     ErrorCode.CHAT_ROOM_NOTFOUND,

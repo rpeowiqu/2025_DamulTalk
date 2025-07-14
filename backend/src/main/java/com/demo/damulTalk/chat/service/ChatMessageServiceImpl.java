@@ -236,31 +236,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                 }
             }
 
-            // 나중에 지울 것
-            LocalDate nowDate = message.getSendTime().toLocalDate();
-            ChatMessage systemMessage = ChatMessage.builder()
-                    .messageId(UUID.randomUUID().toString())
-                    .roomId(messageRequest.getRoomId())
-                    .senderId(0)
-                    .messageType(MessageType.DATE)
-                    .content(nowDate.toString())
-                    .sendTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
-                    .build();
-
-            redisTemplate.opsForList().rightPush(redisKey, objectMapper.writeValueAsString(systemMessage));
-            chatMessageFlushService.tryFlush(redisKey);
-            redisTemplate.convertAndSend("chats", objectMapper.writeValueAsString(CommonWrapperDto.<ChatSystemMessage>builder()
-                    .roomId(messageRequest.getRoomId())
-                    .type(NotificationType.CHAT_SYSTEM_MESSAGE)
-                    .data(ChatSystemMessage.builder()
-                            .messageId(systemMessage.getMessageId())
-                            .senderId(systemMessage.getSenderId())
-                            .messageType(systemMessage.getMessageType())
-                            .content(systemMessage.getContent())
-                            .sendTime(systemMessage.getSendTime())
-                            .build())
-                    .build()));
-            // 여기까지
+            message.setSendTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
 
             redisTemplate.opsForList().rightPush(redisKey, objectMapper.writeValueAsString(message));
             chatMessageFlushService.tryFlush(redisKey);
