@@ -24,9 +24,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,28 +45,72 @@ public class ChatMessageServiceImpl implements ChatMessageService {
         log.info("[ChatMessageService] 채팅 내역 조회 시작 - roomId: {}, cursor: {}, size: {}", roomId, cursor, size);
 
         int userId = userUtil.getCurrentUserId();
-        if(cursor == null) {
+        if (cursor == null) {
             cursor = chatRoomMapper.selectLastReadTime(userId, roomId);
         }
 
-        log.info("@@@@@@@@@@@@@@@@@ cursor: {}", cursor);
+        final LocalDateTime finalCursor = cursor;
 
-        List<ChatMessage> newerMessages = chatMessageRepository.findByRoomIdAndSendTimeAfterOrderBySendTimeAsc(roomId, cursor);
+        List<ChatMessage> redisMessages = getAllMessagesFromRedis(roomId);
 
-        Pageable pageable = PageRequest.of(0, size + 1);
-        List<ChatMessage> olderMessages = chatMessageRepository.findByRoomIdAndSendTimeBeforeOrderBySendTimeAsc(roomId, cursor, pageable);
+        List<ChatMessage> redisOlder = redisMessages.stream()
+                .filter(msg -> msg.getSendTime().isBefore(finalCursor))
+                .sorted(Comparator.comparing(ChatMessage::getSendTime))
+                .limit(size)
+                .collect(Collectors.toList());
 
+
+        List<ChatMessage> redisNewer = redisMessages.stream()
+                .filter(msg -> msg.getSendTime().isAfter(finalCursor))
+                .collect(Collectors.toList());
+
+        int remainingSize = size - redisOlder.size();
+        List<ChatMessage> dbOlder = new ArrayList<>();
         boolean hasNext = false;
-        if (olderMessages.size() > size) {
-            hasNext = true;
-            olderMessages = olderMessages.subList(0, size);
+        if (remainingSize > 0) {
+            Pageable pageable = PageRequest.of(0, remainingSize + 1);
+            dbOlder = chatMessageRepository.findByRoomIdAndSendTimeBeforeOrderBySendTimeAsc(roomId, finalCursor, pageable);
+            if (dbOlder.size() > remainingSize) {
+                hasNext = true;
+                dbOlder = dbOlder.subList(0, remainingSize);
+            }
         }
 
-        List<ChatMessage> messages = new ArrayList<>();
-        messages.addAll(olderMessages);
-        messages.addAll(newerMessages);
+        List<ChatMessage> dbNewer = chatMessageRepository.findByRoomIdAndSendTimeAfterOrderBySendTimeAsc(roomId, finalCursor);
 
-        List<ChatMessageResponse> response = messages.stream()
+        Set<String> seenIds = new HashSet<>();
+        List<ChatMessage> finalOlder = new ArrayList<>();
+
+        for (ChatMessage msg : redisOlder) {
+            if (seenIds.add(msg.getMessageId())) {
+                finalOlder.add(msg);
+            }
+        }
+        for (ChatMessage msg : dbOlder) {
+            if (seenIds.add(msg.getMessageId())) {
+                finalOlder.add(msg);
+            }
+        }
+        finalOlder.sort(Comparator.comparing(ChatMessage::getSendTime));
+
+        List<ChatMessage> finalNewer = new ArrayList<>();
+        for (ChatMessage msg : redisNewer) {
+            if (seenIds.add(msg.getMessageId())) {
+                finalNewer.add(msg);
+            }
+        }
+        for (ChatMessage msg : dbNewer) {
+            if (seenIds.add(msg.getMessageId())) {
+                finalNewer.add(msg);
+            }
+        }
+        finalNewer.sort(Comparator.comparing(ChatMessage::getSendTime));
+
+        List<ChatMessage> resultMessages = new ArrayList<>();
+        resultMessages.addAll(finalOlder);
+        resultMessages.addAll(finalNewer);
+
+        List<ChatMessageResponse> response = resultMessages.stream()
                 .map(msg -> ChatMessageResponse.builder()
                         .messageId(msg.getMessageId())
                         .senderId(msg.getSenderId())
@@ -82,7 +124,9 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                         .build()
                 ).collect(Collectors.toList());
 
-        String nextCursor = hasNext ? response.get(response.size() - 1).getMessageId() : null;
+        String nextCursor = hasNext && !finalOlder.isEmpty()
+                ? finalOlder.get(finalOlder.size() - 1).getMessageId()
+                : null;
 
         CursorPageMetaDto<String> cursorPageMetaDto = CursorPageMetaDto.<String>builder()
                 .nextCursor(nextCursor)
@@ -264,5 +308,24 @@ public class ChatMessageServiceImpl implements ChatMessageService {
         return chatMessageRepository.findTopByRoomIdOrderBySendTimeDesc(roomId);
     }
 
+    private List<ChatMessage> getAllMessagesFromRedis(int roomId) {
+        String redisKey = "chat:room:" + roomId + ":messages";
+        Long size = redisTemplate.opsForList().size(redisKey);
+        if (size == null || size == 0) return Collections.emptyList();
+
+        List<String> jsonMessages = redisTemplate.opsForList().range(redisKey, 0, size - 1);
+        if (jsonMessages == null) return Collections.emptyList();
+
+        List<ChatMessage> messages = new ArrayList<>();
+        for (String json : jsonMessages) {
+            try {
+                ChatMessage msg = objectMapper.readValue(json, ChatMessage.class);
+                messages.add(msg);
+            } catch (Exception e) {
+                log.warn("[getAllMessagesFromRedis] 메시지 역직렬화 실패: {}", json, e);
+            }
+        }
+        return messages;
+    }
 
 }
