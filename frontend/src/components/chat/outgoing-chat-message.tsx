@@ -34,7 +34,7 @@ const OutgoingChatMessage = ({ message, onClick }: ChatMessageProps) => {
     <div className="flex items-end gap-2 self-end break-all whitespace-pre-wrap">
       {message.messageStatus === "SENDING" && <Spinner />}
 
-      <div className="flex shrink-0 flex-col text-[0.675rem]">
+      <div className="flex shrink-0 flex-col items-end text-[0.675rem]">
         {message.unReadCount > 0 && (
           <p className="text-damul-main-500">
             {message.unReadCount > 99 ? "99+" : message.unReadCount}
