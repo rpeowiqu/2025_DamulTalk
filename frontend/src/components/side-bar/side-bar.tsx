@@ -44,23 +44,39 @@ const SideBar = () => {
           case "CHAT_NOTI":
             {
               const casted = response as WsResponse<WsChatRoomPreviewResponse>;
+
+              // 새로 초대된 채팅방일 경우 채팅 목록을 다시 불러온다.
+              let isFetched = false;
+
               queryClient.setQueryData<ChatRoomPreviewsResponse>(
                 ["chat-room-previews"],
                 (prev) =>
-                  prev?.map((item) =>
-                    item.roomId === casted.data.roomId
-                      ? {
-                          ...item,
-                          lastMessage: casted.data.content,
-                          lastMessageTime: casted.data.sendTime,
-                          unReadMessageCount:
-                            item.roomId === roomIdRef.current
-                              ? 0
-                              : item.unReadMessageCount + 1,
+                  prev
+                    ? prev.map((item) => {
+                        if (item.roomId === casted.data.roomId) {
+                          isFetched = true;
+
+                          return {
+                            ...item,
+                            lastMessage: casted.data.content,
+                            lastMessageTime: casted.data.sendTime,
+                            unReadMessageCount:
+                              item.roomId === roomIdRef.current
+                                ? 0
+                                : item.unReadMessageCount + 1,
+                          };
                         }
-                      : item,
-                  ) ?? [],
+
+                        return item;
+                      })
+                    : [],
               );
+
+              if (!isFetched) {
+                queryClient.invalidateQueries({
+                  queryKey: ["chat-room-previews"],
+                });
+              }
             }
             break;
           case "FRIEND_REQUEST":
