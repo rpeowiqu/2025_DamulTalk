@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
 
         CursorPageMetaDto<String> meta = CursorPageMetaDto.<String>builder()
                 .nextCursor(nextCursor)
-                .hasNextCursor(hasNext)
+                .hasNext(hasNext)
                 .build();
 
         return ScrollResponse.<List<FriendDto>, String>builder()

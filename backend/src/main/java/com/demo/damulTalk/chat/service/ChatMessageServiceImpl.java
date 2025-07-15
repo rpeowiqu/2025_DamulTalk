@@ -130,7 +130,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 
         CursorPageMetaDto<String> cursorPageMetaDto = CursorPageMetaDto.<String>builder()
                 .nextCursor(nextCursor)
-                .hasNextCursor(hasNext)
+                .hasNext(hasNext)
                 .build();
 
         return ScrollResponse.<List<ChatMessageResponse>, String>builder()
