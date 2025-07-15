@@ -70,7 +70,7 @@
         FROM users
         WHERE nickname LIKE CONCAT('%', #{nickname}, '%')
         <if test="cursor != null">
-            AND nickname > #{cursor}
+            AND nickname >= #{cursor}
         </if>
           AND user_id != #{userId}
         ORDER BY nickname ASC
