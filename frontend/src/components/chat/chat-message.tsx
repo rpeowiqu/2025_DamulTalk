@@ -17,12 +17,13 @@ const ChatMessage = ({ message, onClick }: ChatMessageProps) => {
       return null;
     }
 
-    if (message.nickname === "SYSTEM") {
-      return <SystemChatMessage message={message} />;
-    } else if (message.senderId === data.userId) {
-      return <OutgoingChatMessage message={message} onClick={onClick} />;
-    } else {
-      return <IncomingChatMessage message={message} onClick={onClick} />;
+    switch (message.senderId) {
+      case 0: // 시스템 메시지
+        return <SystemChatMessage message={message} />;
+      case data.userId: // 발신 메시지
+        return <OutgoingChatMessage message={message} onClick={onClick} />;
+      default: // 수신 메시지
+        return <IncomingChatMessage message={message} onClick={onClick} />;
     }
   };
 
