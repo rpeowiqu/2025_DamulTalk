@@ -22,14 +22,14 @@ const ChatMessageFileModal = ({
           <img
             src={message.fileUrl}
             alt="첨부 이미지"
-            className="w-full object-cover"
+            className="max-h-120 object-cover"
           />
         );
       case "VIDEO":
         return (
           <video
             src={message.fileUrl}
-            className="w-full object-cover"
+            className="max-h-120 w-full object-cover"
             controls
           />
         );
@@ -43,7 +43,9 @@ const ChatMessageFileModal = ({
       title="메시지 첨부 파일"
       titleClassName="text-damul-main-300 border-b border-damul-main-500 pb-4"
       {...props}>
-      <div className="flex items-center justify-center">{renderContent()}</div>
+      <div className="mt-2 flex items-center justify-center">
+        {renderContent()}
+      </div>
     </Dialog>
   );
 };
