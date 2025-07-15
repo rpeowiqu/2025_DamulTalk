@@ -19,7 +19,7 @@ const ChatRoomHeader = ({ room }: ChatRoomHeaderProps) => {
           profileImageUrls={room.roomMembers
             .filter((item) => item.userId !== data?.userId)
             .slice(0, 4)
-            .map((item) => item.nickname)}
+            .map((item) => item.profileImageUrl)}
         />
         <div className="flex flex-col break-all">
           <h1 className="line-clamp-1 text-lg font-bold">{room.roomName}</h1>
