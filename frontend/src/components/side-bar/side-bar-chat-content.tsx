@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
+import { debounce } from "lodash-es";
 
 import {
   Accordion,
@@ -33,7 +34,12 @@ const SideBarChatContent = () => {
   const { data, isLoading } = useChatRoomPreviews();
   const [selectedFilter, setSelectedFilter] = useState("recent");
   const queryClient = useQueryClient();
+  const [keyword, setKeyword] = useState("");
   const navigate = useNavigate();
+
+  const handleChangeKeyword = debounce((keyword: string) => {
+    setKeyword(keyword);
+  }, 200);
 
   const handleSelect = (room: ChatRoomPreview) => {
     queryClient.setQueryData<ChatRoomPreviewsResponse>(
@@ -51,18 +57,24 @@ const SideBarChatContent = () => {
     navigate(`/chats/${room.roomId}`);
   };
 
-  const sortedChatrooms = data
-    ? [...data].sort((a, b) => {
-        switch (selectedFilter) {
-          case "recent":
-            return b.lastMessageTime.localeCompare(a.lastMessageTime);
-          case "unread":
-            return a.unReadMessageCount < b.unReadMessageCount ? 1 : -1;
-          default:
-            return 0;
-        }
-      })
-    : [];
+  const sortedChatrooms = useMemo(
+    () =>
+      data
+        ? data
+            .filter((item) => item.roomName.includes(keyword))
+            .sort((a, b) => {
+              switch (selectedFilter) {
+                case "recent":
+                  return b.lastMessageTime.localeCompare(a.lastMessageTime);
+                case "unread":
+                  return a.unReadMessageCount < b.unReadMessageCount ? 1 : -1;
+                default:
+                  return 0;
+              }
+            })
+        : [],
+    [data, selectedFilter, keyword],
+  );
 
   return (
     <>
@@ -85,7 +97,7 @@ const SideBarChatContent = () => {
             채팅 {sortedChatrooms.length ?? 0}건
           </AccordionTrigger>
           <AccordionContent className="flex flex-col gap-4">
-            <SearchBar onSearch={(keyword) => console.log(keyword)} />
+            <SearchBar onChangeKeyword={handleChangeKeyword} />
             <ChatRoomList
               isLoading={isLoading}
               chatRoomPreviews={sortedChatrooms ?? []}
