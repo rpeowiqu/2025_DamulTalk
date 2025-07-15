@@ -40,6 +40,19 @@ const SideBarFriendContent = ({ user }: SideBarFriendContentProps) => {
   const [selectedFilter, setSelectedFilter] = useState("nickname-ascending");
   const navigate = useNavigate();
 
+  const sortedFriends = friends
+    ? [...friends].sort((a, b) => {
+        switch (selectedFilter) {
+          case "nickname-ascending":
+            return a.nickname.localeCompare(b.nickname);
+          case "nickname-descending":
+            return b.nickname.localeCompare(a.nickname);
+          default:
+            return 0;
+        }
+      })
+    : [];
+
   return (
     <>
       <div className="flex justify-end gap-4 text-neutral-500">
@@ -70,12 +83,14 @@ const SideBarFriendContent = ({ user }: SideBarFriendContentProps) => {
         </AccordionItem>
 
         <AccordionItem value="friends" className="flex flex-col gap-4">
-          <AccordionTrigger>친구 {friends?.length ?? 0}명</AccordionTrigger>
+          <AccordionTrigger>
+            친구 {sortedFriends?.length ?? 0}명
+          </AccordionTrigger>
           <AccordionContent className="flex flex-col gap-4">
             <SearchBar onSearch={(keyword) => console.log(keyword)} />
             <FriendList
               isLoading={isLoadingFriends}
-              users={friends ?? []}
+              users={sortedFriends ?? []}
               visibleStatus={true}
               onSelect={(user) => navigate(`/profiles/${user.userId}`)}
             />
