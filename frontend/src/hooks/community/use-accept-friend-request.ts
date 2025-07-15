@@ -1,38 +1,57 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
-import { postAcceptFriendRequest } from "@/services/community/api";
+import { patchAcceptFriendRequest } from "@/services/community/api";
 import type {
   FriendRequestRequest,
   FriendRequestsResponse,
-  User,
+  FriendsResponse,
+  ProfileResponse,
 } from "@/types/community/type";
+import useCurrentUser from "@/hooks/auth/use-current-user";
 
 const useAcceptFriendRequest = (userId: number) => {
+  const { data: user } = useCurrentUser();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationKey: ["accept-friend-request", userId],
     mutationFn: (request: FriendRequestRequest) =>
-      postAcceptFriendRequest(request),
-    onSuccess: () => {
-      // 이전에 받은 친구 요청 리스트에 대한 데이터에서 현재 친구 요청을 제거한다.
+      patchAcceptFriendRequest(request),
+    onSuccess: (data) => {
+      // 친구 요청 목록에서 수락한 친구를 제거
       queryClient.setQueryData<FriendRequestsResponse>(
         ["friend-requests"],
-        (prev) => prev?.filter((user) => user.userId !== userId) ?? [],
+        (prev) => prev?.filter((item) => item.userId !== userId) ?? [],
       );
-      // 이 데이터는 더이상 유효하지 않기 때문에 새로운 친구 요청이 올 때 리패칭 하도록 무효화 해주어야 한다.
+
+      // 해당 친구를 친구 목록에 추가
+      queryClient.setQueryData<FriendsResponse>(
+        ["friends", user?.userId],
+        (prev) => (prev ? [...prev, data] : []),
+      );
+
+      // 내 프로필의 친구수를 1 증가
+      queryClient.setQueryData<ProfileResponse>(
+        ["profile", user?.userId],
+        (prev) =>
+          prev
+            ? {
+                ...prev,
+                friendCount: prev.friendCount + 1,
+              }
+            : prev,
+      );
+
+      // 수신한 유저의 프로필과 친구 목록을 무효화
       queryClient.invalidateQueries({
-        queryKey: ["friend-requests"],
+        queryKey: ["friends", userId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["profile", userId],
       });
 
-      // 친구 목록과 프로필 정보를 다시 불러온다.
-      const currentUser = queryClient.getQueryData<User>(["current-user"]);
-      queryClient.refetchQueries({
-        queryKey: ["friends", currentUser?.userId],
-      });
-      queryClient.refetchQueries({
-        queryKey: ["profile", currentUser?.userId],
-      });
+      toast.success("새로운 친구를 추가했어요");
     },
   });
 };

@@ -11,9 +11,7 @@ interface ProfileContentProps {
 
 const ProfileContent = ({ profile }: ProfileContentProps) => {
   const { userId } = useParams();
-  const { data, isLoading: isLoadingFriends } = useFriends(
-    userId ? Number(userId) : 0,
-  );
+  const { data, isLoading: isLoadingFriends } = useFriends(Number(userId));
   const navigate = useNavigate();
 
   return (

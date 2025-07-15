@@ -31,18 +31,18 @@ const buttonVariants = cva(
 interface FriendRequestButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
-  variant: FriendRequestType;
+  isFriend: FriendRequestType;
 }
 
 const FriendRequestButton = ({
-  variant,
+  isFriend,
   className,
   ...props
 }: FriendRequestButtonProps) => {
   const { userId } = useParams();
   const { optimisticState, toggleFriendRequest } = useToggleFriendRequest(
     Number(userId),
-    variant,
+    isFriend,
   );
 
   const renderContent = () => {

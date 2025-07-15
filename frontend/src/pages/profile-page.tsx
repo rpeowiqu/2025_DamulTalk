@@ -8,7 +8,7 @@ import ProfileContentSkeleton from "@/components/community/profile-content-skele
 
 const ProfilePage = () => {
   const { userId } = useParams();
-  const { data, isLoading } = useProfile(userId ? Number(userId) : 0);
+  const { data, isLoading, isRefetching } = useProfile(Number(userId));
 
   return (
     <div className="flex h-dvh flex-col gap-12 bg-white p-6">
@@ -19,7 +19,7 @@ const ProfilePage = () => {
         </>
       ) : data ? (
         <>
-          <ProfileHeader profile={data} />
+          <ProfileHeader profile={data} isRefetching={isRefetching} />
           <ProfileContent profile={data} />
         </>
       ) : null}

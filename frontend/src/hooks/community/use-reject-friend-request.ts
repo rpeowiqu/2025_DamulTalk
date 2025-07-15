@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 import { deleteFriendRequest } from "@/services/community/api";
 import type { FriendRequestsResponse } from "@/types/community/type";
@@ -14,9 +15,7 @@ const useRejectFriendRequest = (userId: number) => {
         ["friend-requests"],
         (prev) => prev?.filter((user) => user.userId !== userId) ?? [],
       );
-      queryClient.invalidateQueries({
-        queryKey: ["friend-requests"],
-      });
+      toast.success("친구 요청을 거절했어요");
     },
   });
 };

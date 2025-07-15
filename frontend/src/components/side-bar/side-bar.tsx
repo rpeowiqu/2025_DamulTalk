@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 import SideBarTab from "@/components/side-bar/side-bar-tab";
 import SideBarContent from "@/components/side-bar/side-bar-content";
@@ -12,6 +13,7 @@ import type {
   WsResponse,
 } from "@/types/web-socket/type";
 import type {
+  ProfileResponse,
   FriendRequestsResponse,
   FriendsResponse,
   User,
@@ -68,37 +70,95 @@ const SideBar = () => {
                 ["friend-requests"],
                 (prev) => (prev ? [...prev, casted.data] : []),
               );
+
+              toast.success(`${casted.data.nickname}님이 친구 요청을 보냈어요`);
             }
             break;
           case "FRIEND_REQUEST_CANCEL":
             {
               const casted = response as WsResponse<{ userId: number }>;
+
+              // 수신한 유저를 친구 요청 목록에서 제거
               queryClient.setQueryData<FriendRequestsResponse>(
                 ["friend-requests"],
                 (prev) =>
                   prev?.filter((item) => item.userId !== casted.data.userId) ??
                   [],
               );
+
+              console.log(casted.data.userId);
+              // 수신한 유저의 프로필 무효화
+              queryClient.invalidateQueries({
+                queryKey: ["profile", casted.data.userId],
+              });
             }
             break;
           case "FRIEND_ACCEPT":
             {
               const casted = response as WsResponse<User>;
+
+              // 수신한 유저를 친구 목록에 추가
               queryClient.setQueryData<FriendsResponse>(
                 ["friends", data.userId],
                 (prev) => (prev ? [...prev, casted.data] : []),
+              );
+
+              // 내 프로필의 친구수를 1 증가
+              queryClient.setQueryData<ProfileResponse>(
+                ["profile", data.userId],
+                (prev) =>
+                  prev
+                    ? {
+                        ...prev,
+                        friendCount: prev.friendCount + 1,
+                      }
+                    : prev,
+              );
+
+              // 수신한 유저의 프로필과 친구 목록을 무효화
+              queryClient.invalidateQueries({
+                queryKey: ["friends", casted.data.userId],
+              });
+              queryClient.invalidateQueries({
+                queryKey: ["profile", casted.data.userId],
+              });
+
+              toast.success(
+                `${casted.data.nickname}님이 친구 요청을 수락했어요`,
               );
             }
             break;
           case "FRIEND_DELETE":
             {
               const casted = response as WsResponse<{ userId: number }>;
+
+              // 수신한 유저를 친구 목록에서 제거
               queryClient.setQueryData<FriendsResponse>(
                 ["friends", data.userId],
                 (prev) =>
                   prev?.filter((item) => item.userId !== casted.data.userId) ??
                   [],
               );
+
+              // 내 프로필의 친구수를 1 감소
+              queryClient.setQueryData<ProfileResponse>(
+                ["profile", data.userId],
+                (prev) =>
+                  prev
+                    ? {
+                        ...prev,
+                        friendCount: prev.friendCount - 1,
+                      }
+                    : prev,
+              );
+
+              // 수신한 유저의 프로필과 친구 목록을 무효화
+              queryClient.invalidateQueries({
+                queryKey: ["friends", casted.data.userId],
+              });
+              queryClient.invalidateQueries({
+                queryKey: ["profile", casted.data.userId],
+              });
             }
             break;
           case "ONLINE_STATUS":

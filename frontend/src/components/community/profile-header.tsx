@@ -5,9 +5,10 @@ import FriendRequestButton from "@/components/community/friend-request-button";
 
 interface ProfileHeaderProps {
   profile: Profile;
+  isRefetching: boolean;
 }
 
-const ProfileHeader = ({ profile }: ProfileHeaderProps) => {
+const ProfileHeader = ({ profile, isRefetching }: ProfileHeaderProps) => {
   return (
     <div>
       <div className="h-54">
@@ -36,10 +37,13 @@ const ProfileHeader = ({ profile }: ProfileHeaderProps) => {
           </div>
         </div>
 
-        <FriendRequestButton
-          variant={profile.isFriend}
-          className="self-center"
-        />
+        {/* 리패칭 중에는 버튼이 언마운트되도록 만들어, 리패칭 후에도 isFriend 값이 같더라도 initState를 초기값으로 되돌릴 수 있도록 설계 */}
+        {!isRefetching && (
+          <FriendRequestButton
+            isFriend={profile.isFriend}
+            className="self-center"
+          />
+        )}
       </div>
     </div>
   );
