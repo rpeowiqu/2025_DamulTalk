@@ -88,6 +88,7 @@ const ChatMessageList = ({
               messageStatus: "SENT",
               unReadCount: unreadCountMap.get(item.messageId) ?? 0,
             }}
+            onClick={onSelect}
           />
         )),
       )}
