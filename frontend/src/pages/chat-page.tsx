@@ -74,7 +74,7 @@ const ChatPage = () => {
       await sendFile({
         roomId: Number(roomId),
         file,
-        clientId: "clientId",
+        clientId: message.clientId!,
       });
     } else {
       // 텍스트 메시지일 경우 웹소켓으로 메시지 보내기
