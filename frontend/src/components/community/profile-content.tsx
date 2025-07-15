@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { debounce } from "lodash-es";
 
 import SearchBar from "@/components/common/search-bar";
 import FriendList from "@/components/community/friend-list";
@@ -12,7 +14,16 @@ interface ProfileContentProps {
 const ProfileContent = ({ profile }: ProfileContentProps) => {
   const { userId } = useParams();
   const { data, isLoading: isLoadingFriends } = useFriends(Number(userId));
+  const [keyword, setKeyword] = useState("");
   const navigate = useNavigate();
+
+  const handleChangeKeyword = debounce((keyword: string) => {
+    setKeyword(keyword);
+  }, 200);
+
+  const filteredFriends = data
+    ? data.filter((item) => item.nickname.includes(keyword))
+    : [];
 
   return (
     <div className="flex min-h-0 flex-1 gap-4">
@@ -39,10 +50,10 @@ const ProfileContent = ({ profile }: ProfileContentProps) => {
 
       <div className="flex min-w-72 flex-col gap-4">
         <h1 className="text-xl font-bold">친구</h1>
-        <SearchBar onSearch={(keyword) => console.log(keyword)} />
+        <SearchBar onChangeKeyword={handleChangeKeyword} />
         <FriendList
           isLoading={isLoadingFriends}
-          users={data ?? []}
+          users={filteredFriends}
           visibleStatus={false}
           className="scroll-hidden min-h-0 flex-1 overflow-y-auto"
           onSelect={(user: User) => navigate(`/profiles/${user.userId}`)}
