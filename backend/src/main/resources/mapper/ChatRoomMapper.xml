@@ -129,6 +129,11 @@
         WHERE user_id = #{userId} AND room_id = #{roomId}
     </update>
 
+    <update id="updateRoomSize">
+        UPDATE chat_rooms SET room_size = #{roomSize}
+        WHERE room_id = #{roomId}
+    </update>
+
     <delete id="deleteParticipant">
         DELETE FROM chat_room_members
         WHERE room_id = #{roomId} AND user_id = #{userId}

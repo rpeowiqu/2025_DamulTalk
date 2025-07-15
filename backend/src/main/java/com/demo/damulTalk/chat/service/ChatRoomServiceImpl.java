@@ -236,6 +236,10 @@ public class ChatRoomServiceImpl implements ChatRoomService {
             }
         }
 
+        if(room.getRoomSize() > 0) {
+            chatRoomMapper.updateRoomSize(roomId, room.getRoomSize() - 1);
+        }
+
         try {
             String redisKey = "chat:room:" + roomId + ":messages";
 

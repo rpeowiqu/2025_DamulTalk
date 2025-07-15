@@ -44,4 +44,6 @@ public interface ChatRoomMapper {
 
     String selectRoomName(@Param("roomId") Integer roomId, @Param("userId") Integer userId);
 
+    int updateRoomSize(@Param("roomId") Integer roomId, @Param("roomSize") Integer roomSize);
+
 }
