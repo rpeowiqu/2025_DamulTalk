@@ -1,5 +1,6 @@
 package com.demo.damulTalk.chat.repository;
 
+import com.demo.damulTalk.chat.MessageType;
 import com.demo.damulTalk.chat.domain.ChatMessage;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -20,5 +21,8 @@ public interface ChatMessageRepository extends MongoRepository<ChatMessage, Stri
     List<ChatMessage> findByRoomIdOrderBySendTimeDesc(Integer roomId, Pageable pageable);
 
     List<ChatMessage> findByRoomIdAndSendTimeAfterOrderBySendTimeAsc(Integer roomId, LocalDateTime sendTime);
+
+    ChatMessage findTopByRoomIdAndSenderIdNotAndMessageTypeNotInOrderBySendTimeDesc(
+            Integer roomId, Integer senderId, List<MessageType> excludedTypes);
 
 }

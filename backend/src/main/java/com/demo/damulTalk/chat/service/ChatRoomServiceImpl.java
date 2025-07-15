@@ -21,10 +21,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -65,8 +62,31 @@ public class ChatRoomServiceImpl implements ChatRoomService {
                     .collect(Collectors.toList());
             info.setProfileImageUrls(profileImageUrls);
 
-            ChatMessage lastMsg = chatMessageRepository.findTopByRoomIdOrderBySendTimeDesc(room.getRoomId());
-            if(lastMsg != null){
+            List<ChatMessage> redisMessages = getAllMessagesFromRedis(room.getRoomId());
+            List<ChatMessage> filteredRedisMessages = redisMessages.stream()
+                    .filter(msg -> msg.getSenderId() != 0)
+                    .filter(msg -> msg.getMessageType() != MessageType.DATE && msg.getMessageType() != MessageType.EXIT)
+                    .collect(Collectors.toList());
+
+            List<MessageType> excludedTypes = List.of(MessageType.DATE, MessageType.EXIT);
+            ChatMessage dbMsg = chatMessageRepository
+                    .findTopByRoomIdAndSenderIdNotAndMessageTypeNotInOrderBySendTimeDesc(
+                            room.getRoomId(), 0, excludedTypes);
+
+            ChatMessage lastMsg = null;
+
+            if (!filteredRedisMessages.isEmpty()) {
+                filteredRedisMessages.sort(Comparator.comparing(ChatMessage::getSendTime).reversed());
+                lastMsg = filteredRedisMessages.get(0);
+            }
+
+            if (dbMsg != null) {
+                if (lastMsg == null || dbMsg.getSendTime().isAfter(lastMsg.getSendTime())) {
+                    lastMsg = dbMsg;
+                }
+            }
+
+            if (lastMsg != null) {
                 info.setLastMessage(lastMsg.getContent());
                 info.setLastMessageTime(lastMsg.getSendTime());
             }
@@ -246,6 +266,26 @@ public class ChatRoomServiceImpl implements ChatRoomService {
             log.error("[ChatMessageService] 메시지 전송 실패", e);
             throw new RuntimeException("메시지 전송 실패");
         }
+    }
+
+    private List<ChatMessage> getAllMessagesFromRedis(int roomId) {
+        String redisKey = "chat:room:" + roomId + ":messages";
+        Long size = redisTemplate.opsForList().size(redisKey);
+        if (size == null || size == 0) return Collections.emptyList();
+
+        List<String> jsonMessages = redisTemplate.opsForList().range(redisKey, 0, size - 1);
+        if (jsonMessages == null) return Collections.emptyList();
+
+        List<ChatMessage> messages = new ArrayList<>();
+        for (String json : jsonMessages) {
+            try {
+                ChatMessage msg = objectMapper.readValue(json, ChatMessage.class);
+                messages.add(msg);
+            } catch (Exception e) {
+                log.warn("[getAllMessagesFromRedis] 메시지 역직렬화 실패: {}", json, e);
+            }
+        }
+        return messages;
     }
 
 }
