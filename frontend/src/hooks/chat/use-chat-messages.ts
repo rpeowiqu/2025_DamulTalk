@@ -14,7 +14,7 @@ const useChatMessages = () => {
       const response = await getMessages({
         roomId: Number(roomId),
         cursor: typeof pageParam === "string" ? pageParam : undefined,
-        size: 50,
+        size: pageParam ? 50 : undefined,
       });
       if (response.status === 204) {
         return {

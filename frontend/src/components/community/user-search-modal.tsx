@@ -23,7 +23,7 @@ const UserSearchModal = ({
     const response = await getUserSearch({
       nickname: keyword,
       cursor: pageParam as string,
-      size: 10,
+      size: pageParam ? 10 : undefined,
     });
 
     if (response.status === 204) {
@@ -53,7 +53,7 @@ const UserSearchModal = ({
         infiniteQueryOptions={{
           queryKey: ["user-search", keyword],
           queryFn,
-          initialPageParam: "",
+          initialPageParam: null,
           getNextPageParam: (lastPage) =>
             lastPage.meta.hasNext ? lastPage.meta.nextCursor : null,
         }}
