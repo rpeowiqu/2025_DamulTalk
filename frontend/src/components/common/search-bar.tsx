@@ -9,7 +9,7 @@ import SearchIcon from "@/components/icon/search-icon";
 import { cn } from "@/utils/style";
 
 interface SearchBarProps extends InputHTMLAttributes<HTMLInputElement> {
-  onSearch: (_keyword: string) => void;
+  onSearch?: (_keyword: string) => void;
   onChangeKeyword?: (_keyword: string) => void;
 }
 
@@ -27,7 +27,7 @@ const SearchBar = ({
 
       if (inputRef.current) {
         const keyword = inputRef.current.value.trim();
-        onSearch(keyword);
+        onSearch?.(keyword);
         inputRef.current.value = "";
       }
     }
