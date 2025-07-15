@@ -38,7 +38,7 @@ const AutocompleteSearchBar = <T,>({
   renderSkeleton,
   ...props
 }: AutocompleteSearchBarProps<T>) => {
-  const [isFocused, setIsFocused] = useState(false);
+  const [isFocused, setIsFocused] = useState(true);
   const { targetRef, data, isLoading, isFetchingNextPage } = useInfiniteScroll({
     ...infiniteQueryOptions,
   });
@@ -62,6 +62,8 @@ const AutocompleteSearchBar = <T,>({
 
   const isEmpty = !data?.pages.some((page) => page.data.length > 0);
 
+  console.log(isFocused, isEmpty, isLoading, data?.pages.length);
+
   return (
     <div className="relative mt-2">
       <SearchBar
@@ -82,6 +84,7 @@ const AutocompleteSearchBar = <T,>({
             : data?.pages.map((page) =>
                 page.data.map((item) => renderItem(item, keyword)),
               )}
+
           {isFetchingNextPage ? null : <div ref={targetRef} />}
         </div>
       )}
