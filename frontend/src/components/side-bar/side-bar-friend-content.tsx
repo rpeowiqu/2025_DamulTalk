@@ -95,7 +95,9 @@ const SideBarFriendContent = ({ user }: SideBarFriendContentProps) => {
         </AccordionItem>
 
         <AccordionItem value="friends" className="flex flex-col gap-4">
-          <AccordionTrigger>친구 {friends?.length ?? 0}명</AccordionTrigger>
+          <AccordionTrigger>
+            친구 {sortedFriends.length ?? 0}명
+          </AccordionTrigger>
           <AccordionContent className="flex flex-col gap-4">
             <SearchBar onChangeKeyword={handleChangeKeyword} maxLength={12} />
             <FriendList
