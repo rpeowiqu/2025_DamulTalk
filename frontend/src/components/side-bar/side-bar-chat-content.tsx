@@ -51,6 +51,19 @@ const SideBarChatContent = () => {
     navigate(`/chats/${room.roomId}`);
   };
 
+  const sortedChatrooms = data
+    ? [...data].sort((a, b) => {
+        switch (selectedFilter) {
+          case "recent":
+            return b.lastMessageTime.localeCompare(a.lastMessageTime);
+          case "unread":
+            return a.unReadMessageCount < b.unReadMessageCount ? 1 : -1;
+          default:
+            return 0;
+        }
+      })
+    : [];
+
   return (
     <>
       <div className="flex justify-end gap-4 text-neutral-500">
@@ -68,12 +81,14 @@ const SideBarChatContent = () => {
         defaultValue={["chats"]}
         className="scroll-hidden flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto">
         <AccordionItem value="chats" className="flex flex-col gap-4">
-          <AccordionTrigger>채팅 {data?.length ?? 0}건</AccordionTrigger>
+          <AccordionTrigger>
+            채팅 {sortedChatrooms.length ?? 0}건
+          </AccordionTrigger>
           <AccordionContent className="flex flex-col gap-4">
             <SearchBar onSearch={(keyword) => console.log(keyword)} />
             <ChatRoomList
               isLoading={isLoading}
-              chatRoomPreviews={data ?? []}
+              chatRoomPreviews={sortedChatrooms ?? []}
               onSelect={handleSelect}
             />
           </AccordionContent>
