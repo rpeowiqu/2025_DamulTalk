@@ -286,6 +286,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                 }
             }
 
+            chatRoomMapper.updateReadStatus(currentUser.getUserId(), message.getRoomId(), LocalDateTime.now(ZoneId.of("Asia/Seoul")));
         } catch (Exception e) {
             log.error("[ChatMessageService] 메시지 전송 실패", e);
             throw new RuntimeException("메시지 전송 실패");
