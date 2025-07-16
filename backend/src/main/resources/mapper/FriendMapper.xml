@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.damulTalk.friend.mapper.FriendMapper">
+
+    <select id="selectFriends" resultType="com.demo.damulTalk.user.dto.UserStatusDto">
+        SELECT
+            u.user_id AS userId,
+            u.nickname,
+            u.profile_image_url AS profileImageUrl
+        FROM
+            users u
+                JOIN (
+                SELECT
+                    CASE
+                        WHEN first_user_id = #{userId} THEN second_user_id
+                        ELSE first_user_id
+                        END AS user_id
+                FROM friends
+                WHERE status = 'ACCEPTED'
+                  AND (first_user_id = #{userId} OR second_user_id = #{userId})
+            ) f ON u.user_id = f.user_id
+    </select>
+
+    <select id="selectFriendIds" resultType="int">
+        SELECT u.user_id
+        FROM users u
+            JOIN (
+                SELECT
+                    CASE
+                        WHEN first_user_id = #{userId} THEN second_user_id
+                        ELSE first_user_id
+                        END AS user_id
+                FROM friends
+                WHERE status = 'ACCEPTED'
+                  AND (first_user_id = #{userId} OR second_user_id = #{userId})
+            ) f ON u.user_id = f.user_id
+    </select>
+
+    <select id="selectFriendRequestsById" resultType="com.demo.damulTalk.friend.dto.FriendDto">
+        SELECT
+            u.user_id as userId,
+            u.nickname,
+            u.profile_image_url AS profileImageUrl
+        FROM users u
+            JOIN (
+                SELECT
+                    first_user_id AS user_id
+                FROM friends
+                WHERE status = 'PENDING'
+                  AND second_user_id = #{userId}
+            ) f ON u.user_id = f.user_id
+    </select>
+
+    <select id="selectFriendRelationShipCount">
+        SELECT COUNT(*)
+        FROM friends
+        WHERE (first_user_id = #{userId} AND second_user_id = #{targetId})
+          OR (first_user_id = #{targetId} AND second_user_id = #{userId})
+    </select>
+
+    <select id="selectFriendRelationShip" resultType="String">
+        SELECT
+            IFNULL((
+                SELECT status
+                FROM friends
+                WHERE (first_user_id = #{userId} AND second_user_id = #{friendId})
+                   OR (first_user_id = #{friendId} AND second_user_id = #{userId})
+                LIMIT 1
+                ), 'NONE') AS status
+    </select>
+
+    <select id="selectFriendInfoById" resultType="com.demo.damulTalk.user.dto.UserStatusDto">
+        SELECT
+            user_id AS userId,
+            nickname,
+            profile_image_url AS profileImageUrl
+        FROM users
+        WHERE user_id = #{userId}
+    </select>
+
+    <select id="selectFriendStatus" resultType="String">
+        SELECT status
+        FROM friends
+        WHERE (first_user_id = #{userId} AND second_user_id = #{friendId})
+          OR (first_user_id = #{friendId} AND second_user_id = #{userId})
+    </select>
+
+    <insert id="insertFollowRequest">
+        INSERT INTO friends (first_user_id, second_user_id)
+        VALUES(#{userId}, #{targetId})
+    </insert>
+
+    <update id="updateFriend">
+        UPDATE friends SET status = 'ACCEPTED'
+        WHERE (first_user_id = #{targetId} AND second_user_id = #{userId})
+          OR (first_user_id = #{userId} AND second_user_id = #{targetId})
+    </update>
+
+    <delete id="deleteFriendById">
+        DELETE FROM friends
+        WHERE ((first_user_id = #{userId} AND second_user_id = #{friendId})
+          OR (first_user_id = #{friendId} AND second_user_id = #{userId}))
+    </delete>
+
+</mapper>
