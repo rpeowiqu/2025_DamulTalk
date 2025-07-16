@@ -5,28 +5,31 @@ import com.demo.damulTalk.friend.dto.FriendDto;
 import com.demo.damulTalk.user.domain.User;
 import com.demo.damulTalk.user.dto.UserInfo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 @Mapper
 public interface UserMapper {
 
-    User findByUsername(String username);
+    User selectUserByUserId(@Param("userId") Integer userId);
 
-    User findByNickname(String nickname);
+    User selectUserByUsername(String username);
+
+    User selectUserByNickname(String nickname);
 
     int insertUser(User user);
 
-    int insertFollowRequest(Integer userId, Integer targetId);
+    int insertFollowRequest(@Param("userId") Integer userId, @Param("targetId") Integer targetId);
 
     FriendDto selectFollowInfoById(Integer userId);
 
-    UserInfo selectUserInfo(Integer userId, Integer targetId);
+    UserInfo selectUserInfo(@Param("userId") Integer userId, @Param("targetId") Integer targetId);
 
-    int updatePassword(String username, String password);
+    int updatePassword(@Param("username") String username, @Param("password") String password);
 
     LoginResponseDto selectMyInfo(Integer userId);
 
-    List<FriendDto> selectUsersByNickname(Integer userId, String nickname, String cursor, Integer size);
+    List<FriendDto> selectUsersByNickname(@Param("userId") Integer userId, @Param("nickname") String nickname, @Param("cursor") String cursor, @Param("size") Integer size);
 
 }

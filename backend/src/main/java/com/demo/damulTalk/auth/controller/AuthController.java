@@ -45,18 +45,24 @@ public class AuthController {
     @PostMapping("/duplicates/usernames")
     public ResponseEntity<?> checkDuplicatesUsername(@RequestBody ValidValue value) {
         log.info("[AuthController] 이메일 중복확인 시작");
-        authService.checkDuplicatesUsername(value);
+        boolean isDuplicated = authService.checkDuplicatesUsername(value);
+        if (isDuplicated) {
+            return ResponseEntity.ok().build();
+        }
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/duplicates/nicknames")
     public ResponseEntity<?> checkDuplicatesNickname(@RequestBody ValidValue value) {
         log.info("[AuthController] 닉네임 중복확인 시작");
-        authService.checkDuplicatesNickname(value);
+        boolean isDuplicated = authService.checkDuplicatesNickname(value);
+        if (isDuplicated) {
+            return ResponseEntity.ok().build();
+        }
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/password/reset-request")
+    @PostMapping("/password-reset/email")
     public ResponseEntity<?> resetPassword(@RequestBody EmailDto emailDto, HttpServletResponse response) {
         log.info("[AuthController] 비밀번호 변경 요청 시작");
 
@@ -64,7 +70,7 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/email-validation")
+    @PostMapping("/password-reset/code")
     public ResponseEntity<?> validateEmail(@RequestBody EmailCodeDto code, HttpServletRequest request) {
         log.info("[AuthController] 이메일 인증코드 검증 시작");
 
@@ -72,7 +78,7 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/password")
+    @PostMapping("/password-reset/new-password")
     public ResponseEntity<?> changePassword(@RequestBody PasswordDto passwordDto, HttpServletRequest request) {
         log.info("[AuthController] 비밀번호 변경 시작");
 

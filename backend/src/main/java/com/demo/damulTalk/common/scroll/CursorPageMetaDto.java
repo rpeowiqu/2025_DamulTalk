@@ -13,6 +13,6 @@ public class CursorPageMetaDto<T> {
 
     private T nextCursor;
 
-    private boolean hasNextCursor;
+    private boolean hasNext;
 
 }

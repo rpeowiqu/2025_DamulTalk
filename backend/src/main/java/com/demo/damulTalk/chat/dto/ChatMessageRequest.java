@@ -1,0 +1,23 @@
+package com.demo.damulTalk.chat.dto;
+
+import com.demo.damulTalk.chat.MessageType;
+import lombok.*;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class ChatMessageRequest {
+
+    private Integer roomId;
+
+    private Integer senderId;
+
+    private MessageType messageType;
+
+    private String content;
+
+    private String clientId;
+
+}

@@ -18,9 +18,9 @@ public class ChatMessage {
     @Id
     private String messageId;
 
-    private int roomId;
+    private Integer roomId;
 
-    private int senderId;
+    private Integer senderId;
 
     private String profileImageUrl;
 
@@ -34,6 +34,6 @@ public class ChatMessage {
 
     private LocalDateTime sendTime;
 
-    private int unReadCount;
+    private Integer unReadCount;
 
 }

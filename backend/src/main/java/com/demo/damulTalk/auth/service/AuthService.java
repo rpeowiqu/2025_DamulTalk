@@ -16,9 +16,9 @@ public interface AuthService {
 
     void logout(HttpServletRequest request, HttpServletResponse response);
 
-    void checkDuplicatesUsername(ValidValue value);
+    boolean checkDuplicatesUsername(ValidValue value);
 
-    void checkDuplicatesNickname(ValidValue value);
+    boolean checkDuplicatesNickname(ValidValue value);
 
     void changePassword(HttpServletRequest request, String password);
 

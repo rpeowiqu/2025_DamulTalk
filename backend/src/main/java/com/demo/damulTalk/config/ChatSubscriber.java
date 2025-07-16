@@ -1,7 +1,8 @@
 package com.demo.damulTalk.config;
 
-import com.demo.damulTalk.user.dto.ConnectionDto;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.demo.damulTalk.chat.dto.ChatMessageResponse;
+import com.demo.damulTalk.common.CommonWrapperDto;
+import com.demo.damulTalk.common.NotificationType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +16,7 @@ import java.nio.charset.StandardCharsets;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class UserStatusSubscriber implements MessageListener {
+public class ChatSubscriber implements MessageListener {
 
     private final SimpMessagingTemplate messagingTemplate;
     private final ObjectMapper objectMapper;
@@ -24,14 +25,12 @@ public class UserStatusSubscriber implements MessageListener {
     public void onMessage(Message message, byte[] pattern) {
         try {
             String payload = new String(message.getBody(), StandardCharsets.UTF_8);
-            ConnectionDto connection = objectMapper.readValue(payload, ConnectionDto.class);
+            CommonWrapperDto dto = objectMapper.readValue(payload, CommonWrapperDto.class);
 
-            String topic = "/sub/friends" + connection.getUserId();
-            messagingTemplate.convertAndSend(topic, connection);
-
-            log.info("Redis -> WebSocket: [{}] {}", topic, connection.isOnline());
-        } catch(JsonProcessingException e) {
-            log.error("[UserStatusSubscriber] JSON 역직렬화 실패: {}", e.getMessage());
+            String topic = "/sub/chats/" + dto.getRoomId();
+            messagingTemplate.convertAndSend(topic, dto);
+        } catch (Exception e) {
+            log.error("[ChatSubscriber] 메시지 수신 실패", e);
         }
     }
 

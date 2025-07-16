@@ -1,6 +1,5 @@
 package com.demo.damulTalk.auth.service;
 
-import com.demo.damulTalk.auth.dto.EmailCodeDto;
 import com.demo.damulTalk.exception.BusinessException;
 import com.demo.damulTalk.exception.ErrorCode;
 import com.demo.damulTalk.user.mapper.UserMapper;
@@ -39,7 +38,7 @@ public class EmailServiceImpl implements EmailService {
     public void sendPasswordResetCode(HttpServletResponse response, String email) {
         log.info("[EmailService] 인증코드 발송 시작: {}", email);
 
-        if (userMapper.findByUsername(email) == null) {
+        if (userMapper.selectUserByUsername(email) == null) {
             log.error("[EmailService] 존재하지 않는 이메일: {}", email);
             throw new BusinessException(ErrorCode.INVALID_USER, "가입되지 않은 이메일입니다.");
         }
@@ -102,7 +101,7 @@ public class EmailServiceImpl implements EmailService {
 
         Cookie tokenCookie = cookieUtil.getCookie(request, "temporary_token");
         if (tokenCookie == null) {
-            throw new BusinessException(ErrorCode.INVALID_TOKEN, "임시 토큰이 존재하지 않습니다.");
+            throw new BusinessException(ErrorCode.INVALID_TEMPORARY_TOKEN, "임시 토큰이 존재하지 않습니다.");
         }
 
         String email = jwtService.extractUsername(tokenCookie.getValue());

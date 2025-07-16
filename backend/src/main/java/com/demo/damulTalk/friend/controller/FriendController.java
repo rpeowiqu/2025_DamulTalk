@@ -1,8 +1,6 @@
 package com.demo.damulTalk.friend.controller;
 
 import com.demo.damulTalk.common.CommonIdDto;
-import com.demo.damulTalk.common.scroll.CursorPageMetaDto;
-import com.demo.damulTalk.common.scroll.ScrollResponse;
 import com.demo.damulTalk.friend.dto.FriendDto;
 import com.demo.damulTalk.friend.service.FriendService;
 import com.demo.damulTalk.user.dto.UserStatusDto;
@@ -47,14 +45,6 @@ public class FriendController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/requests/{targetId}")
-    public ResponseEntity<?> deleteFriendRequest(@PathVariable Integer targetId) {
-        log.info("[FriendController] 친구 요청 거절 시작");
-
-        friendService.deleteFriendRequest(targetId);
-        return ResponseEntity.ok().build();
-    }
-
     @GetMapping("/requests")
     public ResponseEntity<?> getFriendRequests() {
         log.info("[FriendController] 친구 요청 목록 조회 시작");
@@ -67,11 +57,11 @@ public class FriendController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/requests/{targetId}")
-    public ResponseEntity<?> acceptFriendRequest(@PathVariable Integer targetId) {
-        log.info("[FriendController] 친구 요청 수락 시작 - targetId: {}", targetId);
+    @PatchMapping("/requests")
+    public ResponseEntity<?> acceptFriendRequest(@RequestBody CommonIdDto common) {
+        log.info("[FriendController] 친구 요청 수락 시작 - targetId: {}", common.getId());
 
-        FriendDto response = friendService.addFriend(targetId);
+        UserStatusDto response = friendService.addFriend(common.getId());
         return ResponseEntity.ok(response);
     }
 

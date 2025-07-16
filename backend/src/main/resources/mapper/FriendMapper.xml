@@ -47,13 +47,10 @@
         FROM users u
             JOIN (
                 SELECT
-                    CASE
-                        WHEN first_user_id = #{userId} THEN second_user_id
-                        ELSE first_user_id
-                        END AS user_id
+                    first_user_id AS user_id
                 FROM friends
                 WHERE status = 'PENDING'
-                  AND (first_user_id = #{userId} OR second_user_id = #{userId})
+                  AND second_user_id = #{userId}
             ) f ON u.user_id = f.user_id
     </select>
 
@@ -64,7 +61,18 @@
           OR (first_user_id = #{targetId} AND second_user_id = #{userId})
     </select>
 
-    <select id="selectFriendInfoById" resultType="com.demo.damulTalk.friend.dto.FriendDto">
+    <select id="selectFriendRelationShip" resultType="String">
+        SELECT
+            IFNULL((
+                SELECT status
+                FROM friends
+                WHERE (first_user_id = #{userId} AND second_user_id = #{friendId})
+                   OR (first_user_id = #{friendId} AND second_user_id = #{userId})
+                LIMIT 1
+                ), 'NONE') AS status
+    </select>
+
+    <select id="selectFriendInfoById" resultType="com.demo.damulTalk.user.dto.UserStatusDto">
         SELECT
             user_id AS userId,
             nickname,
@@ -73,13 +81,20 @@
         WHERE user_id = #{userId}
     </select>
 
+    <select id="selectFriendStatus" resultType="String">
+        SELECT status
+        FROM friends
+        WHERE (first_user_id = #{userId} AND second_user_id = #{friendId})
+          OR (first_user_id = #{friendId} AND second_user_id = #{userId})
+    </select>
+
     <insert id="insertFollowRequest">
         INSERT INTO friends (first_user_id, second_user_id)
         VALUES(#{userId}, #{targetId})
     </insert>
 
     <update id="updateFriend">
-        UPDATE friends SET status = 'PENDING'
+        UPDATE friends SET status = 'ACCEPTED'
         WHERE (first_user_id = #{targetId} AND second_user_id = #{userId})
           OR (first_user_id = #{userId} AND second_user_id = #{targetId})
     </update>
@@ -87,15 +102,7 @@
     <delete id="deleteFriendById">
         DELETE FROM friends
         WHERE ((first_user_id = #{userId} AND second_user_id = #{friendId})
-          OR (first_user_id = #{frinedId} AND second_user_id = #{userId}))
-          AND status = 'ACCEPTED'
-    </delete>
-
-    <delete id="deleteFriendRequestById">
-        DELETE FROM friends
-        WHERE ((first_user_id = #{userId} AND second_user_id = #{friendId})
           OR (first_user_id = #{friendId} AND second_user_id = #{userId}))
-          AND status = 'PENDING'
     </delete>
 
 </mapper>

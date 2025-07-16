@@ -42,7 +42,13 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers(
                             "/ws/**",
-                            "/api/v1/**"
+//                            "/api/v1/**"
+                            "/api/v1/auth/signup",
+                            "/api/v1/auth/login",
+                            "/api/v1/auth/refresh",
+                            "/api/v1/duplicates/usernames",
+                            "/api/v1/duplicates/nicknames",
+                            "/api/v1/auth/test-login"
                             ).permitAll()
                             .anyRequest().authenticated();
                     log.info("보안 필터 구성 완료");
@@ -68,10 +74,11 @@ public class SecurityConfig {
                             log.info("[SecurityConfig] CORS 설정 생성 - 요청 URI: {}", request.getRequestURI());
 
                             CorsConfiguration configuration = new CorsConfiguration();
-                            configuration.setAllowedOriginPatterns(List.of(frontendUrl));
-                            configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH"));
+                            configuration.setAllowedOrigins(List.of(frontendUrl));
+//                            configuration.setAllowedOriginPatterns(List.of(frontendUrl));
+                            configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
                             configuration.setAllowCredentials(true);
-                            configuration.addAllowedHeader("*");
+//                            configuration.addAllowedHeader("*");
                             configuration.setExposedHeaders(Arrays.asList(
                                     "Authorization",
                                     "Set-Cookie",

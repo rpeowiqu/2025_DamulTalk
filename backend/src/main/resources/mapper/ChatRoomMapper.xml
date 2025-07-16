@@ -8,23 +8,135 @@
     <select id="selectChatRoomsByUserId" parameterType="int" resultType="com.demo.damulTalk.chat.domain.ChatRoom">
         SELECT cr.*
         FROM chat_rooms cr
-                 JOIN chat_participants cp ON cr.room_id = cp.room_id
-        WHERE cp.user_id = #{userId}
+                 JOIN chat_room_members crm ON cr.room_id = crm.room_id
+        WHERE crm.user_id = #{userId}
     </select>
 
     <select id="selectParticipants" resultType="com.demo.damulTalk.user.domain.User">
         SELECT u.*
         FROM users u
-                 JOIN chat_participants cp ON u.user_id = cp.user_id
-        WHERE cp.room_id = #{roomId}
-          AND u.user_id != #{excludeUserId}
+                 JOIN chat_room_members crm ON u.user_id = crm.user_id
+        WHERE crm.room_id = #{roomId}
+          AND u.user_id != #{userId}
     </select>
 
     <select id="selectLastReadTime" resultType="java.time.LocalDateTime">
-        SELECT last_read_time
-        FROM chat_read
+        SELECT last_read_at
+        FROM chat_room_members
         WHERE room_id = #{roomId}
           AND user_id = #{userId}
     </select>
+
+    <select id="selectRoomIdByExactUserIds" resultType="int">
+        SELECT crm.room_id
+        FROM chat_room_members crm
+        WHERE crm.user_id IN
+        <foreach item="userId" collection="userIds" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+        GROUP BY crm.room_id
+        HAVING COUNT(*) = #{size}
+          AND COUNT(*) = (
+              SELECT COUNT(*)
+              FROM chat_room_members sub
+              WHERE sub.room_id = crm.room_id
+          )
+        LIMIT 1
+    </select>
+
+
+    <select id="selectRoomInfo">
+        SELECT
+            crm.room_name AS roomName,
+            cr.room_size AS roomSize
+        FROM chat_rooms cr
+        JOIN chat_room_members crm
+          ON cr.room_id = crm.room_id
+        WHERE cr.room_id = #{roomId} AND crm.user_id = #{userId}
+    </select>
+
+    <select id="selectRoomMembers" resultType="com.demo.damulTalk.chat.dto.RoomMemberInfo">
+        SELECT
+            u.user_id AS userId,
+            u.nickname,
+            u.profile_image_url AS profileImageUrl,
+            crm.last_read_at AS lastReadAt
+        FROM chat_room_members crm
+        JOIN users u ON crm.user_id = u.user_id
+        WHERE crm.room_id = #{roomId}
+        ORDER BY u.nickname
+    </select>
+
+    <select id="selectUsersByIds" resultType="com.demo.damulTalk.user.domain.User">
+        SELECT * FROM users
+        WHERE user_id IN
+        <foreach collection="userIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="selectRoomById" resultType="com.demo.damulTalk.chat.domain.ChatRoom">
+        SELECT
+            cr.room_id AS roomId,
+            cr.room_type AS roomType,
+            crm.room_name AS roomName,
+            cr.room_size AS roomSize,
+            cr.created_at AS createdAt
+        FROM chat_rooms cr
+        JOIN chat_room_members crm
+          ON cr.room_id = crm.room_id
+        WHERE cr.room_id = #{roomId}
+          AND crm.user_id = #{userId}
+    </select>
+
+    <select id="selectRoomName">
+        SELECT
+            room_name
+        FROM chat_room_members
+        WHERE room_id = #{roomId}
+          AND user_id = #{userId}
+    </select>
+
+    <insert id="insertChatRoom" parameterType="com.demo.damulTalk.chat.domain.ChatRoom"
+            useGeneratedKeys="true" keyProperty="roomId">
+        INSERT INTO chat_rooms (room_type, room_size, name_changed)
+        VALUES (#{roomType}, #{roomSize}, #{isNameChanged})
+    </insert>
+
+    <insert id="insertParticipants">
+        INSERT INTO chat_room_members (room_id, user_id)
+        VALUES
+            <foreach collection="userIds" item="userId" separator=",">
+                (#{roomId}, #{userId})
+            </foreach>
+    </insert>
+
+    <insert id="insertParticipantsWithNames" parameterType="com.demo.damulTalk.chat.domain.ChatRoomMember">
+        INSERT INTO chat_room_members (room_id, user_id, room_name)
+        VALUES
+            <foreach collection="participants" item="participant" separator=",">
+                (#{participant.roomId}, #{participant.userId}, #{participant.roomName})
+            </foreach>
+    </insert>
+
+    <update id="updateRoomName">
+        UPDATE chat_room_members SET room_name = #{roomName}
+        WHERE room_id = #{roomId} AND user_id = #{userId}
+    </update>
+
+    <update id="updateReadStatus">
+        UPDATE chat_room_members SET last_read_at = #{lastReadAt}
+        WHERE user_id = #{userId} AND room_id = #{roomId}
+    </update>
+
+    <update id="updateRoomSize">
+        UPDATE chat_rooms SET room_size = #{roomSize}
+        WHERE room_id = #{roomId}
+    </update>
+
+    <delete id="deleteParticipant">
+        DELETE FROM chat_room_members
+        WHERE room_id = #{roomId} AND user_id = #{userId}
+    </delete>
 
 </mapper>

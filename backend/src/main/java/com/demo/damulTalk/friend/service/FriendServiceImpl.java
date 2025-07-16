@@ -1,16 +1,19 @@
 package com.demo.damulTalk.friend.service;
 
+import com.demo.damulTalk.common.CommonWrapperDto;
+import com.demo.damulTalk.common.NotificationType;
 import com.demo.damulTalk.exception.BusinessException;
 import com.demo.damulTalk.exception.ErrorCode;
 import com.demo.damulTalk.friend.dto.FriendDto;
+import com.demo.damulTalk.friend.dto.FriendIdDto;
 import com.demo.damulTalk.friend.mapper.FriendMapper;
 import com.demo.damulTalk.user.dto.UserStatusDto;
 import com.demo.damulTalk.user.mapper.UserMapper;
 import com.demo.damulTalk.util.UserUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,20 +26,18 @@ public class FriendServiceImpl implements FriendService {
     private final UserMapper userMapper;
     private final FriendMapper friendMapper;
     private final UserUtil userUtil;
-    private final SimpMessagingTemplate messagingTemplate;
     private final RedisTemplate<String, String> redisTemplate;
+    private final ObjectMapper objectMapper;
 
     @Override
     public List<UserStatusDto> getFriendList(Integer userId) {
         log.info("[UserService] 친구목록 조회 시작");
 
-        // 친구 목록 불러오기 (nickname 가나다순 정렬 등은 쿼리에서 처리)
         List<UserStatusDto> list = friendMapper.selectFriends(userId);
 
-        // Redis에서 온라인 상태 확인
         list.forEach(u -> {
             String redisKey = "user:online:" + u.getUserId();
-            boolean online = Boolean.TRUE.equals(redisTemplate.hasKey(redisKey));
+            boolean online = redisTemplate.hasKey(redisKey);
             u.setOnline(online);
         });
 
@@ -69,12 +70,19 @@ public class FriendServiceImpl implements FriendService {
         String redisKey = "user:online:" + targetId;
         boolean isOnline = redisTemplate.hasKey(redisKey);
 
-        if(isOnline) {
-            String destination = "/sub/follow" + targetId;
-            messagingTemplate.convertAndSend(destination, response);
-            log.info("[FriendService] 실시간 알림 전송: {}", destination);
-        } else {
-            log.info("[FriendService] 타겟 유저 오프라인");
+        try {
+            if (isOnline) {
+                redisTemplate.convertAndSend("notifications", objectMapper.writeValueAsString(CommonWrapperDto.<FriendDto>builder()
+                        .userId(targetId)
+                        .type(NotificationType.FRIEND_REQUEST)
+                        .data(response)
+                        .build()));
+            } else {
+                log.info("[FriendService] 타겟 유저 오프라인");
+            }
+        } catch (Exception e) {
+            log.error("[FriendService] 친구요청 전송 실패", e);
+            throw new RuntimeException("친구요청 전송 실패");
         }
     }
 
@@ -83,6 +91,7 @@ public class FriendServiceImpl implements FriendService {
         log.info("[FriendService] 친구 삭제 시작 - friendId: {}", friendId);
 
         int userId = userUtil.getCurrentUserId();
+        String status = friendMapper.selectFriendStatus(userId, friendId);
 
         int delete = friendMapper.deleteFriendById(userId, friendId);
         if(delete < 1) {
@@ -91,20 +100,19 @@ public class FriendServiceImpl implements FriendService {
                     "해당 친구는 존재하지 않습니다."
             );
         }
-    }
 
-    @Override
-    public void deleteFriendRequest(Integer friendId) {
-        log.info("[FriendService] 친구 요청 거절 시작 - friendId: {}", friendId);
-
-        int userId = userUtil.getCurrentUserId();
-
-        int delete = friendMapper.deleteFriendRequestById(userId, friendId);
-        if(delete < 1) {
-            throw new BusinessException(
-                    ErrorCode.INVALID_USER,
-                    "해당 요청은 존재하지 않습니다."
-            );
+        try {
+            CommonWrapperDto<FriendIdDto> dto = CommonWrapperDto.<FriendIdDto>builder()
+                    .userId(friendId)
+                    .type(status.equals("PENDING") ? NotificationType.FRIEND_REQUEST_CANCEL : NotificationType.FRIEND_DELETE)
+                    .data(FriendIdDto.builder()
+                            .userId(userId)
+                            .build())
+                    .build();
+            redisTemplate.convertAndSend("notifications", objectMapper.writeValueAsString(dto));
+        } catch (Exception e) {
+            log.error("[FriendService] 친구삭제 전송 실패", e);
+            throw new RuntimeException("친구삭제 전송 실패");
         }
     }
 
@@ -119,7 +127,7 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Override
-    public FriendDto addFriend(Integer targetId) {
+    public UserStatusDto addFriend(Integer targetId) {
         log.info("[FriendService] 친구 추가 시작 - targetId: {}", targetId);
 
         int userId = userUtil.getCurrentUserId();
@@ -132,7 +140,25 @@ public class FriendServiceImpl implements FriendService {
             );
         }
 
-        FriendDto friend = friendMapper.selectFriendInfoById(targetId);
+        UserStatusDto me = friendMapper.selectFriendInfoById(userId);
+        UserStatusDto friend = friendMapper.selectFriendInfoById(targetId);
+        String redisKey = "user:online:" + userId;
+        boolean online = redisTemplate.hasKey(redisKey);
+        me.setOnline(online);
+        redisKey = "user:online:" + targetId;
+        online = redisTemplate.hasKey(redisKey);
+        friend.setOnline(online);
+        try {
+            redisTemplate.convertAndSend("notifications", objectMapper.writeValueAsString(CommonWrapperDto.<UserStatusDto>builder()
+                    .userId(targetId)
+                    .type(NotificationType.FRIEND_ACCEPT)
+                    .data(me)
+                    .build()));
+        } catch (Exception e) {
+            log.error("[FriendService] 친구수락 전송 실패", e);
+            throw new RuntimeException("친구수락 전송 실패");
+        }
+
         return friend;
     }
 

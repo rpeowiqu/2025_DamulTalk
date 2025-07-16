@@ -1,6 +1,7 @@
 package com.demo.damulTalk.config;
 
-import com.demo.damulTalk.common.websocket.WebSocketAuthInterceptor;
+import com.demo.damulTalk.common.websocket.CustomChannelInterceptor;
+import com.demo.damulTalk.common.websocket.CustomHandshakeInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -14,7 +15,8 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @RequiredArgsConstructor
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-    private final WebSocketAuthInterceptor webSocketAuthInterceptor;
+    private final CustomHandshakeInterceptor customHandshakeInterceptor;
+    private final CustomChannelInterceptor customChannelInterceptor;
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
@@ -26,12 +28,14 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
                 .setAllowedOriginPatterns("*")
-                .withSockJS();
+                .addInterceptors(customHandshakeInterceptor)
+                .withSockJS()
+                .setInterceptors(customHandshakeInterceptor);
     }
 
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.interceptors(webSocketAuthInterceptor);
+        registration.interceptors(customChannelInterceptor);
     }
 
 }

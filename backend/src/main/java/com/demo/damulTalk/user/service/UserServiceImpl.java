@@ -3,6 +3,8 @@ package com.demo.damulTalk.user.service;
 import com.demo.damulTalk.common.scroll.CursorPageMetaDto;
 import com.demo.damulTalk.common.scroll.ScrollResponse;
 import com.demo.damulTalk.friend.dto.FriendDto;
+import com.demo.damulTalk.friend.mapper.FriendMapper;
+import com.demo.damulTalk.user.dto.FriendshipStatus;
 import com.demo.damulTalk.user.dto.UserInfo;
 import com.demo.damulTalk.user.mapper.UserMapper;
 import com.demo.damulTalk.util.UserUtil;
@@ -19,6 +21,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
     private final UserUtil userUtil;
+    private final FriendMapper friendMapper;
 
     @Override
     public UserInfo getUserInfo(Integer id) {
@@ -31,7 +34,17 @@ public class UserServiceImpl implements UserService {
 
         UserInfo info = userMapper.selectUserInfo(userId, id);
         if(id == userId)
-            info.setIsFriend(null);
+            info.setIsFriend(FriendshipStatus.ME);
+        else {
+            String relationship = friendMapper.selectFriendRelationShip(userId, id);
+
+            if(relationship.equals("PENDING"))
+                info.setIsFriend(FriendshipStatus.PENDING);
+            else if(relationship.equals("ACCEPTED"))
+                info.setIsFriend(FriendshipStatus.ACCEPTED);
+            else
+                info.setIsFriend(FriendshipStatus.NONE);
+        }
 
         return info;
     }
@@ -53,7 +66,7 @@ public class UserServiceImpl implements UserService {
 
         CursorPageMetaDto<String> meta = CursorPageMetaDto.<String>builder()
                 .nextCursor(nextCursor)
-                .hasNextCursor(hasNext)
+                .hasNext(hasNext)
                 .build();
 
         return ScrollResponse.<List<FriendDto>, String>builder()

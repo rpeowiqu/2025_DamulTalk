@@ -3,6 +3,8 @@ package com.demo.damulTalk.auth.service;
 import com.demo.damulTalk.auth.dto.LoginRequestDto;
 import com.demo.damulTalk.auth.dto.LoginResponseDto;
 import com.demo.damulTalk.auth.dto.ValidValue;
+import com.demo.damulTalk.common.CommonWrapperDto;
+import com.demo.damulTalk.common.NotificationType;
 import com.demo.damulTalk.exception.BusinessException;
 import com.demo.damulTalk.exception.ErrorCode;
 import com.demo.damulTalk.friend.mapper.FriendMapper;
@@ -14,6 +16,8 @@ import com.demo.damulTalk.user.mapper.UserMapper;
 import com.demo.damulTalk.user.service.CustomUserDetailsService;
 import com.demo.damulTalk.util.CookieUtil;
 import com.demo.damulTalk.util.UserUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -46,6 +50,7 @@ public class AuthServiceImpl implements AuthService {
     private final RedisTemplate<String, String> redisTemplate;
     private final SimpMessagingTemplate messagingTemplate;
     private final UserUtil userUtil;
+    private final ObjectMapper objectMapper;
 
     @Override
     public void signup(SignupRequest request) {
@@ -67,12 +72,14 @@ public class AuthServiceImpl implements AuthService {
     public LoginResponseDto login(LoginRequestDto loginRequest, HttpServletResponse response) {
         log.info("[AuthService] 로그인 시작 - username: {}", loginRequest.getUsername());
 
-        User user = userMapper.findByUsername(loginRequest.getUsername());
+        User user = userMapper.selectUserByUsername(loginRequest.getUsername());
+        log.info("[AuthService] loginPassword: {}", passwordEncoder.encode(loginRequest.getPassword()));
+        log.info("[AuthService] savedPassword: {}", user.getPassword());
         if(user == null) {
             log.info("[AuthService] 존재하지 않는 유저입니다.");
             throw new BusinessException(
                     ErrorCode.INVALID_USER,
-                    "존재하지 않는 유저입니다."
+                    "ID 혹은 패스워드가 일치하지 않습니다."
             );
         }
 
@@ -80,7 +87,7 @@ public class AuthServiceImpl implements AuthService {
             log.info("[AuthService] 비밀번호가 틀립니다.");
             throw new BusinessException(
                     ErrorCode.INCORRECT_PASSWORD,
-                    "비밀번호가 틀립니다."
+                    "ID 혹은 패스워드가 일치하지 않습니다."
             );
         }
 
@@ -116,40 +123,41 @@ public class AuthServiceImpl implements AuthService {
 
         friendIds.stream()
                 .filter(friendId -> redisTemplate.hasKey("user:online:" + friendId))
-                .forEach(friendId -> messagingTemplate.convertAndSend("/sub/friends/" + friendId, connectionDto));
+                .forEach(friendId -> {
+                    try {
+                        redisTemplate.convertAndSend("notifications", objectMapper.writeValueAsString(CommonWrapperDto.<ConnectionDto>builder()
+                                .userId(friendId)
+                                .type(NotificationType.ONLINE_STATUS)
+                                .data(connectionDto)
+                                .build()));
+                    } catch (JsonProcessingException e) {
+                        log.error("[WebSocketEventListener] 직렬화 실패");
+                    }
+                });
     }
 
     @Override
-    public void checkDuplicatesUsername(ValidValue value) {
+    public boolean checkDuplicatesUsername(ValidValue value) {
         log.info("[AuthService] username 중복확인 시작");
 
-        User user = userMapper.findByUsername(value.getValue());
-        if (user != null) {
-            throw new BusinessException(
-                    ErrorCode.EXISTING_USER,
-                    "이미 존재하는 유저입니다."
-            );
-        }
+        User user = userMapper.selectUserByUsername(value.getValue());
+        return user != null;
     }
 
     @Override
-    public void checkDuplicatesNickname(ValidValue value) {
+    public boolean checkDuplicatesNickname(ValidValue value) {
         log.info("[AuthService] nickname 중복확인 시작");
 
-        User user = userMapper.findByNickname(value.getValue());
-        if (user != null) {
-            throw new BusinessException(
-                    ErrorCode.EXISTING_USER,
-                    "이미 존재하는 유저입니다."
-            );
-        }
+        User user = userMapper.selectUserByNickname(value.getValue());
+        return user != null;
     }
 
     @Override
     public void changePassword(HttpServletRequest request, String password) {
         log.info("[AuthService] 비밀번호 변경 시작");
 
-        String email = cookieUtil.getCookie(request, "temporary_token").getValue();
+        String token = cookieUtil.getCookie(request, "temporary_token").getValue();
+        String email = jwtService.extractUsername(token);
         userMapper.updatePassword(email, passwordEncoder.encode(password));
     }
 
@@ -211,7 +219,7 @@ public class AuthServiceImpl implements AuthService {
     private void validateSignupForm(SignupRequest request) {
         log.info("[AuthService] 회원가입 요청 validation 시작");
 
-        User existingUserByUsername = userMapper.findByUsername(request.getUsername());
+        User existingUserByUsername = userMapper.selectUserByUsername(request.getUsername());
         if (existingUserByUsername != null) {
             log.info("[UserService] 이미 존재하는 username - {}", request.getUsername());
             throw new BusinessException(
@@ -228,7 +236,7 @@ public class AuthServiceImpl implements AuthService {
             );
         }
 
-        User existingUserByNickname = userMapper.findByNickname(request.getNickname());
+        User existingUserByNickname = userMapper.selectUserByNickname(request.getNickname());
         if (existingUserByNickname != null) {
             log.info("[AuthService] 이미 존재하는 닉네임 - {}", request.getNickname());
             throw new BusinessException(
@@ -242,7 +250,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void issueTestTokens(String username, HttpServletResponse response) {
-        User user = userMapper.findByUsername(username);
+        User user = userMapper.selectUserByUsername(username);
         if (user == null)
             throw new BusinessException(ErrorCode.INVALID_USER, "테스트 유저가 존재하지 않습니다.");
 
