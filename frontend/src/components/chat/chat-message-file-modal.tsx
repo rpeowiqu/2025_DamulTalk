@@ -27,11 +27,7 @@ const ChatMessageFileModal = ({
         );
       case "VIDEO":
         return (
-          <video
-            src={message.fileUrl}
-            className="max-h-120 w-full object-cover"
-            controls
-          />
+          <video src={message.fileUrl} className="max-h-120 w-full" controls />
         );
     }
   };
