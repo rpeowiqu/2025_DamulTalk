@@ -187,7 +187,7 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-      - name: Deploy Backend Image
+      - name: Deploy Backend Image via docker-compose
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           EC2_HOST: ${{ secrets.EC2_HOST }}
@@ -196,12 +196,11 @@ jobs:
         run: |
           echo "$SSH_PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
+
+          ssh -o StrictHostKeyChecking=no -i private_key.pem $EC2_USER@$EC2_HOST << 'EOF'
+            cd /home/$EC2_USER/damulTalk
           
-          ssh -i private_key.pem $EC2_USER@EC2_HOST << EOF
             docker login -u $DOCKERHUB_USERNAME
-          
-            docker pull $DOCKERHUB_USERNAME/damulTalk-backend:latest
-            docker stop damulTalk-backend || true
-            docker rm damulTalk-backend || true
-            docker run -d --name damulTalk-backend -p 8080:8080 $DOCKERHUB_USERNAME/damulTalk-backend:latest
+            docker compose pull backend
+            docker compose up -d backend
           EOF
