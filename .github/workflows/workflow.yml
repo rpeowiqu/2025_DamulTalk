@@ -89,7 +89,8 @@ jobs:
 
   frontend-build:
 #    needs: frontend-test
-    if: github.event_name == 'push' && needs.frontend-test.result == 'success'
+    if: github.event_name == 'push'
+#    if: github.event_name == 'push' && needs.frontend-test.result == 'success'
 
     runs-on: ubuntu-24.04
     steps:
@@ -119,7 +120,8 @@ jobs:
 
   backend-build:
 #    needs: backend-test
-    if: github.event_name == 'push' && needs.backend-test.result == 'success'
+    if: github.event_name == 'push'
+#    if: github.event_name == 'push' && needs.backend-test.result == 'success'
     runs-on: ubuntu-24.04
 
     steps:
