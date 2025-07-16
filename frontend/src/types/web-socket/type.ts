@@ -42,6 +42,7 @@ export interface WsMessageRequest {
 }
 
 export interface WsReadRequest {
+  roomId: number;
   userId: number;
   lastReadAt: string;
 }
