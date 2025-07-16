@@ -68,6 +68,7 @@ public class UserServiceImpl implements UserService {
                 .nextCursor(nextCursor)
                 .hasNext(hasNext)
                 .build();
+        log.info("[UserService] 검색 결과 조회 성공");
 
         return ScrollResponse.<List<FriendDto>, String>builder()
                 .data(results)

@@ -84,7 +84,7 @@ public class FileServiceImpl implements FileService {
                     .nickname(currentUser.getNickname())
                     .profileImageUrl(currentUser.getProfileImageUrl())
                     .messageType(type == ContentType.IMAGE ? MessageType.IMAGE : MessageType.VIDEO)
-                    .content("")
+                    .content(type == ContentType.IMAGE ? "이미지를 보냈습니다." : "동영상을 보냈습니다.")
                     .fileUrl(fileUrl)
                     .sendTime(LocalDateTime.now())
                     .unReadCount(0)
@@ -133,7 +133,7 @@ public class FileServiceImpl implements FileService {
                     .profileImageUrl(message.getProfileImageUrl())
                     .nickname(message.getNickname())
                     .messageType(message.getMessageType())
-                    .content("")
+                    .content(type == ContentType.IMAGE ? "이미지를 보냈습니다." : "동영상을 보냈습니다.")
                     .fileUrl(fileUrl)
                     .sendTime(message.getSendTime())
                     .unReadCount(0)
@@ -162,7 +162,7 @@ public class FileServiceImpl implements FileService {
                             .profileImageUrl(message.getProfileImageUrl())
                             .nickname(message.getNickname())
                             .messageType(message.getMessageType())
-                            .content("")
+                            .content(type == ContentType.IMAGE ? "이미지를 보냈습니다." : "동영상을 보냈습니다.")
                             .sendTime(message.getSendTime())
                             .build();
 
