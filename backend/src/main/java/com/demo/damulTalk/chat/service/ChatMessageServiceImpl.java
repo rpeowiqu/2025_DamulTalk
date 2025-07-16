@@ -206,35 +206,35 @@ public class ChatMessageServiceImpl implements ChatMessageService {
             String redisKey = "chat:room:" + message.getRoomId() + ":messages";
 
             ChatMessage lastMessage = findLastMessage(message.getRoomId());
-            if(lastMessage != null) {
-                LocalDate lastDate = lastMessage.getSendTime().toLocalDate();
-                LocalDate nowDate = message.getSendTime().toLocalDate();
+            LocalDate lastDate = null;
+            if(lastMessage != null)
+                lastDate = lastMessage.getSendTime().toLocalDate();
+            LocalDate nowDate = message.getSendTime().toLocalDate();
 
-                if(!lastDate.equals(nowDate)) {
-                    ChatMessage systemMessage = ChatMessage.builder()
-                            .messageId(UUID.randomUUID().toString())
-                            .roomId(messageRequest.getRoomId())
-                            .senderId(0)
-                            .messageType(MessageType.DATE)
-                            .content(nowDate.toString())
-                            .sendTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
-                            .build();
+//            if(lastDate == null || !lastDate.equals(nowDate)) {
+                ChatMessage systemMessage = ChatMessage.builder()
+                        .messageId(UUID.randomUUID().toString())
+                        .roomId(messageRequest.getRoomId())
+                        .senderId(0)
+                        .messageType(MessageType.DATE)
+                        .content(nowDate.toString())
+                        .sendTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                        .build();
 
-                    redisTemplate.opsForList().rightPush(redisKey, objectMapper.writeValueAsString(systemMessage));
-                    chatMessageFlushService.tryFlush(redisKey);
-                    redisTemplate.convertAndSend("chats", objectMapper.writeValueAsString(CommonWrapperDto.<ChatSystemMessage>builder()
-                            .roomId(messageRequest.getRoomId())
-                            .type(NotificationType.CHAT_SYSTEM_MESSAGE)
-                            .data(ChatSystemMessage.builder()
-                                    .messageId(systemMessage.getMessageId())
-                                    .senderId(systemMessage.getSenderId())
-                                    .messageType(systemMessage.getMessageType())
-                                    .content(systemMessage.getContent())
-                                    .sendTime(systemMessage.getSendTime())
-                                    .build())
-                            .build()));
-                }
-            }
+                redisTemplate.opsForList().rightPush(redisKey, objectMapper.writeValueAsString(systemMessage));
+                chatMessageFlushService.tryFlush(redisKey);
+                redisTemplate.convertAndSend("chats", objectMapper.writeValueAsString(CommonWrapperDto.<ChatSystemMessage>builder()
+                        .roomId(messageRequest.getRoomId())
+                        .type(NotificationType.CHAT_SYSTEM_MESSAGE)
+                        .data(ChatSystemMessage.builder()
+                                .messageId(systemMessage.getMessageId())
+                                .senderId(systemMessage.getSenderId())
+                                .messageType(systemMessage.getMessageType())
+                                .content(systemMessage.getContent())
+                                .sendTime(systemMessage.getSendTime())
+                                .build())
+                        .build()));
+//            }
 
             message.setSendTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
 
