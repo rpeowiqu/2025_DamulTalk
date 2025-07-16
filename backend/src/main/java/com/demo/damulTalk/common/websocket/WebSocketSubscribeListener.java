@@ -59,14 +59,8 @@ public class WebSocketSubscribeListener {
     @EventListener
     public void handleSessionUnsubscribeEvent(SessionUnsubscribeEvent event) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
-        Principal principal = accessor.getUser();
+        int userId = Integer.parseInt(Objects.requireNonNull(accessor.getFirstNativeHeader("userId")));
 
-        if (principal == null || !(principal instanceof CustomUserDetails details)) {
-            log.warn("[UnsubscribeListener] 사용자 인증 정보가 없습니다.");
-            return;
-        }
-
-        int userId = details.getUserId();
         String subscriptionId = accessor.getSubscriptionId();
 
         if (subscriptionId == null) {
