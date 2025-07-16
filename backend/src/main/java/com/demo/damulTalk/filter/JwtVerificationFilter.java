@@ -45,6 +45,9 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
             "/api/v1/auth/refresh",
             "/api/v1/auth/duplicates/usernames",
             "/api/v1/auth/duplicates/nicknames",
+            "/api/v1/auth/password-reset/email",
+            "/api/v1/auth/password-reset/code",
+            "/api/v1/auth/password-reset/new-password",
             "/api/v1/auth/test-login"
     );
 
