@@ -112,7 +112,6 @@ public class EmailServiceImpl implements EmailService {
             throw new BusinessException(ErrorCode.INVALID_CODE, "올바른 인증코드가 아닙니다.");
         }
 
-        redisTemplate.delete(redisKey);
         log.info("[EmailService] 인증코드 검증 성공 - 이메일: {}", email);
     }
 
