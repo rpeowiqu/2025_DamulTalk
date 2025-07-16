@@ -11,6 +11,7 @@ import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 import org.springframework.web.socket.messaging.SessionUnsubscribeEvent;
 
 import java.security.Principal;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,17 +40,11 @@ public class WebSocketSubscribeListener {
             return;
         }
 
-        Principal principal = accessor.getUser();
-
-        if (principal == null || !(principal instanceof CustomUserDetails details)) {
-            log.warn("[SubscribeListener] 사용자 인증 정보가 없습니다.");
-            return;
-        }
+        int userId = Integer.parseInt(Objects.requireNonNull(accessor.getFirstNativeHeader("userId")));
 
         Matcher matcher = chatRoomPattern.matcher(destination);
         if (matcher.matches()) {
             String roomId = matcher.group(1);
-            int userId = details.getUserId();
 
             String roomKey = "chat:room:" + roomId + ":user:" + userId;
             redisTemplate.opsForValue().set(roomKey, "true");
