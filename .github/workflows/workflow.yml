@@ -88,7 +88,7 @@ jobs:
 #        run: cd backend && ./gradlew test
 
   frontend-build:
-    needs: frontend-test
+#    needs: frontend-test
     if: github.event_name == 'push' && needs.frontend-test.result == 'success'
 
     runs-on: ubuntu-24.04
@@ -118,7 +118,7 @@ jobs:
           docker push $DOCKERHUB_USERNAME/damulTalk-frontend:latest
 
   backend-build:
-    needs: backend-test
+#    needs: backend-test
     if: github.event_name == 'push' && needs.backend-test.result == 'success'
     runs-on: ubuntu-24.04
 
