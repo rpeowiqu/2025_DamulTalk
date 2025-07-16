@@ -114,9 +114,9 @@ jobs:
           DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
         run: |
           cd frontend
-          docker build -t $DOCKERHUB_USERNAME/damulTalk-frontend:latest .
+          docker build -t $DOCKERHUB_USERNAME/damultalk-frontend:latest .
           echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin
-          docker push $DOCKERHUB_USERNAME/damulTalk-frontend:latest
+          docker push $DOCKERHUB_USERNAME/damultalk-frontend:latest
 
   backend-build:
 #    needs: backend-test
@@ -154,9 +154,9 @@ jobs:
           DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
         run: |
           cd backend
-          docker build -t $DOCKERHUB_USERNAME/damulTalk-backend:latest .
+          docker build -t $DOCKERHUB_USERNAME/damultalk-backend:latest .
           echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin
-          docker push $DOCKERHUB_USERNAME/damulTalk-backend:latest
+          docker push $DOCKERHUB_USERNAME/damultalk-backend:latest
 
 #  frontend-deploy:
 #    needs: frontend-build
@@ -177,10 +177,10 @@ jobs:
 #          ssh -i private_key.pem $EC2_USER@EC2_HOST << EOF
 #            docker login -u $DOCKERHUB_USERNAME
           
-#            docker pull $DOCKERHUB_USERNAME/damulTalk-frontend:latest
-#            docker stop damulTalk-frontend || true
-#            docker rm damulTalk-frontend || true
-#            docker run -d --name damulTalk-frontend -p 3000:3000 $DOCKERHUB_USERNAME/damulTalk-frontend:latest
+#            docker pull $DOCKERHUB_USERNAME/damultalk-frontend:latest
+#            docker stop damultalk-frontend || true
+#            docker rm damultalk-frontend || true
+#            docker run -d --name damultalk-frontend -p 3000:3000 $DOCKERHUB_USERNAME/damultalk-frontend:latest
 #          EOF
 
   backend-deploy:
