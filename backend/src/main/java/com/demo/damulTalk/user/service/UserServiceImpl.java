@@ -2,6 +2,7 @@ package com.demo.damulTalk.user.service;
 
 import com.demo.damulTalk.common.scroll.CursorPageMetaDto;
 import com.demo.damulTalk.common.scroll.ScrollResponse;
+import com.demo.damulTalk.friend.domain.Friend;
 import com.demo.damulTalk.friend.dto.FriendDto;
 import com.demo.damulTalk.friend.mapper.FriendMapper;
 import com.demo.damulTalk.user.dto.FriendshipStatus;
@@ -36,11 +37,13 @@ public class UserServiceImpl implements UserService {
         if(id == userId)
             info.setIsFriend(FriendshipStatus.ME);
         else {
-            String relationship = friendMapper.selectFriendRelationShip(userId, id);
+            Friend relationship = friendMapper.selectFriendRelationShipById(userId, id);
 
-            if(relationship.equals("PENDING"))
-                info.setIsFriend(FriendshipStatus.PENDING);
-            else if(relationship.equals("ACCEPTED"))
+            if(relationship.getStatus().equals("PENDING") && relationship.getFirstUserId().equals(userId))
+                info.setIsFriend(FriendshipStatus.PENDING_REQUEST);
+            else if(relationship.getStatus().equals("PENDING") && relationship.getFirstUserId().equals(id))
+                info.setIsFriend(FriendshipStatus.PENDING_RESPONSE);
+            else if(relationship.getStatus().equals("ACCEPTED"))
                 info.setIsFriend(FriendshipStatus.ACCEPTED);
             else
                 info.setIsFriend(FriendshipStatus.NONE);
