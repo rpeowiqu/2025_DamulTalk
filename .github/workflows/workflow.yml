@@ -89,7 +89,7 @@ jobs:
 
   frontend-build:
 #    needs: frontend-test
-    if: github.event_name == 'push'
+    if: needs.detect-changes.outputs.frontend == 'true' && github.event_name == 'push'
 #    if: github.event_name == 'push' && needs.frontend-test.result == 'success'
 
     runs-on: ubuntu-24.04
@@ -146,7 +146,7 @@ jobs:
         run: chmod +x backend/gradlew
 
       - name: Build Backend
-        run: cd backend && ./gradlew clean build
+        run: cd backend && ./gradlew clean build -x test
 
       - name: Docker Build & Push Backend Image
         env:
