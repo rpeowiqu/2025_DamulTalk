@@ -62,8 +62,6 @@ const AutocompleteSearchBar = <T,>({
 
   const isEmpty = !data?.pages.some((page) => page.data.length > 0);
 
-  console.log(isFocused, isEmpty, isLoading, data?.pages.length);
-
   return (
     <div className="relative mt-2">
       <SearchBar

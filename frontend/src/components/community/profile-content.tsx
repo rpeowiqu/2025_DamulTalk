@@ -48,7 +48,7 @@ const ProfileContent = ({ profile }: ProfileContentProps) => {
 
       <div className="h-full w-0.5 bg-neutral-50"></div>
 
-      <div className="flex min-w-72 flex-col gap-4">
+      <div className="flex w-72 flex-col gap-4">
         <h1 className="text-xl font-bold">친구</h1>
         <SearchBar onChangeKeyword={handleChangeKeyword} />
         <FriendList
