@@ -1,86 +1,97 @@
-import { cva, type VariantProps } from "class-variance-authority";
 import { type ButtonHTMLAttributes } from "react";
 import { useParams } from "react-router-dom";
 import {
+  CheckIcon,
   UserRoundCogIcon,
   UserRoundMinus,
   UserRoundPlusIcon,
+  XIcon,
 } from "lucide-react";
 
-import { cn } from "@/utils/style";
-import useToggleFriendRequest from "@/hooks/community/use-toggle-friend-request";
+import useHandleFriendRequest from "@/hooks/community/use-handle-friend-request";
 import type { FriendRequestType } from "@/types/community/type";
-
-const buttonVariants = cva(
-  "flex gap-3 items-center justify-center cursor-pointer rounded-lg px-5 py-2 text-lg font-bold text-white transition-color duration-300 disabled:bg-neutral-200",
-  {
-    variants: {
-      variant: {
-        ACCEPTED: "bg-red-400 hover:bg-red-500",
-        PENDING: "bg-neutral-300 hover:bg-neutral-400",
-        ME: "",
-        NONE: "bg-damul-main-300 hover:bg-damul-main-400",
-      },
-    },
-    defaultVariants: {
-      variant: "ACCEPTED",
-    },
-  },
-);
+import Button from "@/components/common/button";
 
 interface FriendRequestButtonProps
-  extends ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+  extends ButtonHTMLAttributes<HTMLButtonElement> {
   isFriend: FriendRequestType;
 }
 
 const FriendRequestButton = ({
   isFriend,
-  className,
   ...props
 }: FriendRequestButtonProps) => {
   const { userId } = useParams();
-  const { optimisticState, toggleFriendRequest } = useToggleFriendRequest(
-    Number(userId),
-    isFriend,
-  );
+  const {
+    optimisticState,
+    requestFriend,
+    deleteFriend,
+    acceptFriend,
+    rejectFriend,
+  } = useHandleFriendRequest(Number(userId), isFriend);
 
   const renderContent = () => {
     switch (optimisticState) {
       case "ACCEPTED":
         return (
-          <>
+          <Button
+            className="flex items-center justify-center gap-2 self-center bg-red-400 py-2 hover:bg-red-500"
+            {...props}
+            onClick={deleteFriend}>
             <UserRoundMinus />
             <p>친구 삭제</p>
-          </>
+          </Button>
         );
-      case "PENDING":
+      case "PENDING_REQUEST":
         return (
-          <>
+          <Button
+            className="flex items-center justify-center gap-2 bg-neutral-300 py-2 hover:bg-neutral-400"
+            {...props}
+            onClick={deleteFriend}>
             <UserRoundCogIcon />
             <p>친구 추가 요청함</p>
-          </>
+          </Button>
         );
-      case "ME":
-        return null;
+      case "PENDING_RESPONSE":
+        return (
+          <div className="flex items-center gap-4">
+            <p className="text-neutral-500">
+              이 유저는 회원님께 친구 추가 요청을 했어요
+            </p>
+
+            <Button
+              className="bg-damul-main-300 hover:bg-damul-main-400 flex items-center justify-center gap-2 py-2"
+              {...props}
+              onClick={acceptFriend}>
+              <CheckIcon />
+              <p>수락</p>
+            </Button>
+
+            <Button
+              className="flex items-center justify-center gap-2 bg-red-400 py-2 hover:bg-red-500"
+              {...props}
+              onClick={rejectFriend}>
+              <XIcon />
+              <p>거절</p>
+            </Button>
+          </div>
+        );
       case "NONE":
         return (
-          <>
+          <Button
+            className="bg-damul-main-300 hover:bg-damul-main-400 flex items-center justify-center gap-2 py-2"
+            {...props}
+            onClick={requestFriend}>
             <UserRoundPlusIcon />
             <p>친구 추가</p>
-          </>
+          </Button>
         );
+      default:
+        return null;
     }
   };
 
-  return (
-    <button
-      className={cn(buttonVariants({ variant: optimisticState }), className)}
-      {...props}
-      onClick={toggleFriendRequest}>
-      {renderContent()}
-    </button>
-  );
+  return renderContent();
 };
 
 export default FriendRequestButton;

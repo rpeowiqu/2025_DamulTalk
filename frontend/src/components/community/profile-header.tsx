@@ -40,11 +40,12 @@ const ProfileHeader = ({ profile, isRefetching }: ProfileHeaderProps) => {
         {/* 리패칭 중에는 버튼이 언마운트되도록 만들어, 리패칭 후에도 isFriend 값이 같더라도 initState를 초기값으로 되돌릴 수 있도록 설계 */}
         {/* key 값을 추가하여 다른 유저의 프로필 조회 시 강제로 리마운트 되도록 설계 */}
         {!isRefetching && (
-          <FriendRequestButton
-            key={profile.nickname}
-            isFriend={profile.isFriend}
-            className="self-center"
-          />
+          <div className="self-center">
+            <FriendRequestButton
+              key={profile.nickname}
+              isFriend={profile.isFriend}
+            />
+          </div>
         )}
       </div>
     </div>

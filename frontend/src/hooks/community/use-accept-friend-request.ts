@@ -43,7 +43,7 @@ const useAcceptFriendRequest = (userId: number) => {
             : prev,
       );
 
-      // 수신한 유저의 프로필과 친구 목록을 무효화
+      // 해당 친구의 프로필과 친구 목록을 무효화
       queryClient.invalidateQueries({
         queryKey: ["friends", userId],
       });

@@ -87,6 +87,11 @@ const SideBar = () => {
                 (prev) => (prev ? [...prev, casted.data] : []),
               );
 
+              // 수신한 유저의 프로필 무효화
+              queryClient.invalidateQueries({
+                queryKey: ["profile", casted.data.userId],
+              });
+
               toast.success(`${casted.data.nickname}님이 친구 요청을 보냈어요`);
             }
             break;
@@ -102,7 +107,6 @@ const SideBar = () => {
                   [],
               );
 
-              console.log(casted.data.userId);
               // 수신한 유저의 프로필 무효화
               queryClient.invalidateQueries({
                 queryKey: ["profile", casted.data.userId],
