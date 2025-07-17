@@ -61,7 +61,7 @@ const Input = ({
   }, []);
 
   return (
-    <div className="focus-within:ring-damul-main-300 flex gap-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 ring-inset focus-within:ring-2">
+    <div className="focus-within:ring-damul-main-300 flex items-center gap-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 ring-inset focus-within:ring-2">
       <input
         ref={inputRef}
         type={type === "password" ? (showPassword ? "text" : "password") : type}
