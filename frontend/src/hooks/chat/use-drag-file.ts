@@ -8,6 +8,7 @@ import {
 import { toast } from "sonner";
 
 import type { UploadFile } from "@/types/chat/type";
+import { MAX_FILE_UPLOAD_SIZE } from "@/utils/file";
 
 interface UseFileDragOptions {
   uploadFile: UploadFile | null;
@@ -53,8 +54,14 @@ const useDragFile = ({ uploadFile, setUploadFile }: UseFileDragOptions) => {
 
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       const [file] = e.dataTransfer.files;
+
       if (!file.type.startsWith("image/") && !file.type.startsWith("video/")) {
         toast.error("이미지와 동영상 파일만 업로드할 수 있어요");
+        return;
+      }
+
+      if (file.size >= MAX_FILE_UPLOAD_SIZE) {
+        toast.error("파일 크기가 20MB보다 커요");
         return;
       }
 
