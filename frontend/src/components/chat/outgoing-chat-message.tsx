@@ -1,7 +1,7 @@
 import { PlayCircleIcon } from "lucide-react";
 
 import type { ChatMessageProps } from "@/components/chat/chat-message";
-import { getFormattedTime } from "@/utils/time";
+import { getFormattedDate } from "@/utils/time";
 import Spinner from "@/components/common/spinner";
 
 const OutgoingChatMessage = ({ message, onClick }: ChatMessageProps) => {
@@ -43,7 +43,7 @@ const OutgoingChatMessage = ({ message, onClick }: ChatMessageProps) => {
         {/* 전송 중인 메시지는 날짜를 표시하지 않는다. */}
         {message.messageStatus !== "SENDING" && (
           <p className="text-neutral-500">
-            {getFormattedTime(message.sendTime)}
+            {getFormattedDate(message.sendTime)}
           </p>
         )}
       </div>

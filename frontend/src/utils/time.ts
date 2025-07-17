@@ -1,4 +1,4 @@
-export const getFormattedTime = (date: string) => {
+export const getFormattedDate = (date: string) => {
   const now = new Date(date);
   const hours = now.getHours();
   const minutes = now.getMinutes();

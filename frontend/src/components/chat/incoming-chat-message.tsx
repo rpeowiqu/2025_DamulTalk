@@ -3,7 +3,7 @@ import { PlayCircleIcon } from "lucide-react";
 
 import type { ChatMessageProps } from "@/components/chat/chat-message";
 import UserPortrait from "@/components/community/user-portrait";
-import { getFormattedTime } from "@/utils/time";
+import { getFormattedDate } from "@/utils/time";
 
 const IncomingChatMessage = ({ message, onClick }: ChatMessageProps) => {
   const renderContent = () => {
@@ -55,7 +55,7 @@ const IncomingChatMessage = ({ message, onClick }: ChatMessageProps) => {
               </p>
             )}
             <p className="text-neutral-500">
-              {getFormattedTime(message.sendTime)}
+              {getFormattedDate(message.sendTime)}
             </p>
           </div>
         </div>
