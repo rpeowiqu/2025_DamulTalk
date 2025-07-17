@@ -39,14 +39,16 @@ public class UserServiceImpl implements UserService {
         else {
             Friend relationship = friendMapper.selectFriendRelationShipById(userId, id);
 
-            if(relationship.getStatus().equals("PENDING") && relationship.getFirstUserId().equals(userId))
-                info.setIsFriend(FriendshipStatus.PENDING_REQUEST);
-            else if(relationship.getStatus().equals("PENDING") && relationship.getFirstUserId().equals(id))
-                info.setIsFriend(FriendshipStatus.PENDING_RESPONSE);
-            else if(relationship.getStatus().equals("ACCEPTED"))
-                info.setIsFriend(FriendshipStatus.ACCEPTED);
-            else
+            if(relationship != null) {
+                if (relationship.getStatus().equals("PENDING") && relationship.getFirstUserId().equals(userId))
+                    info.setIsFriend(FriendshipStatus.PENDING_REQUEST);
+                else if (relationship.getStatus().equals("PENDING") && relationship.getFirstUserId().equals(id))
+                    info.setIsFriend(FriendshipStatus.PENDING_RESPONSE);
+                else if (relationship.getStatus().equals("ACCEPTED"))
+                    info.setIsFriend(FriendshipStatus.ACCEPTED);
+            } else {
                 info.setIsFriend(FriendshipStatus.NONE);
+            }
         }
 
         return info;
