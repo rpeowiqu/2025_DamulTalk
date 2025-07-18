@@ -1,10 +1,9 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import SideBarTab from "@/components/side-bar/side-bar-tab";
 import SideBarContent from "@/components/side-bar/side-bar-content";
-import { type SideBarTabType } from "@/types/side-bar/type";
 import { WebSocketStateContext } from "@/contexts/chat/web-socket-provider";
 import useCurrentUser from "@/hooks/auth/use-current-user";
 import type {
@@ -20,10 +19,9 @@ import type {
 } from "@/types/community/type";
 import type { ChatRoomPreviewsResponse } from "@/types/chat/type";
 import useRoomId from "@/hooks/chat/use-room-id";
+import useSideBarTabStore from "@/store/side-bar-tab-store";
 
 const SideBar = () => {
-  const [currentTab, setCurrentTab] = useState<SideBarTabType>("FRIEND");
-
   const { data } = useCurrentUser();
   const roomIdRef = useRoomId();
 
@@ -39,6 +37,10 @@ const SideBar = () => {
     const subscription = client.subscribe(
       `/sub/notifications/${data.userId}`,
       (message) => {
+        // 새로고침시 초기화 문제와 subscription에서 클로저 문제가 발생하기 때문에 Zustand를 사용하여 전역 상태로 관리!
+        const { currentTab, setTabNotifications } =
+          useSideBarTabStore.getState();
+
         const response = JSON.parse(message.body) as WsResponse<unknown>;
         switch (response.type) {
           case "CHAT_NOTI":
@@ -77,6 +79,10 @@ const SideBar = () => {
                   queryKey: ["chat-room-previews"],
                 });
               }
+
+              if (currentTab !== "CHAT") {
+                setTabNotifications("CHAT", true);
+              }
             }
             break;
           case "FRIEND_REQUEST":
@@ -93,6 +99,9 @@ const SideBar = () => {
               });
 
               toast.success(`${casted.data.nickname}님이 친구 요청을 보냈어요`);
+              if (currentTab !== "FRIEND") {
+                setTabNotifications("FRIEND", true);
+              }
             }
             break;
           case "FRIEND_REQUEST_CANCEL":
@@ -146,6 +155,9 @@ const SideBar = () => {
               toast.success(
                 `${casted.data.nickname}님이 친구 요청을 수락했어요`,
               );
+              if (currentTab !== "FRIEND") {
+                setTabNotifications("FRIEND", true);
+              }
             }
             break;
           case "FRIEND_DELETE":
@@ -213,8 +225,8 @@ const SideBar = () => {
 
   return (
     <aside className="sticky top-0 flex h-dvh border-r border-neutral-200">
-      <SideBarTab currentTab={currentTab} setCurrentTab={setCurrentTab} />
-      <SideBarContent currentTab={currentTab} />
+      <SideBarTab />
+      <SideBarContent />
     </aside>
   );
 };
