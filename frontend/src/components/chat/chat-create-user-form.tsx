@@ -1,4 +1,5 @@
-import type { FormEvent } from "react";
+import { useState, type FormEvent } from "react";
+import { debounce } from "lodash-es";
 
 import type { User } from "@/types/community/type";
 import type { ChatCreateFormProps } from "@/components/chat/chat-create-form";
@@ -18,6 +19,15 @@ const ChatCreateUserForm = ({
 }: ChatCreateFormProps) => {
   const { data: currentUser } = useCurrentUser();
   const { data: friends, isLoading } = useFriends(currentUser?.userId ?? 0);
+  const [keyword, setKeyword] = useState("");
+
+  const handleChangeKeyword = debounce((keyword: string) => {
+    setKeyword(keyword);
+  }, 200);
+
+  const filteredFriends = friends
+    ? friends.filter((item) => item.nickname.includes(keyword))
+    : [];
 
   const getDefaultRoomName = (users: User[]): string => {
     const maxDisplay = 4;
@@ -92,10 +102,10 @@ const ChatCreateUserForm = ({
           </Carousel>
         </div>
       )}
-      <SearchBar onSearch={(keyword) => console.log(keyword)} />
+      <SearchBar onChangeKeyword={handleChangeKeyword} />
       <FriendList
         isLoading={isLoading}
-        users={friends ?? []}
+        users={filteredFriends}
         visibleStatus={false}
         className="scroll-hidden min-h-0 flex-1 overflow-y-auto"
         selectedUsers={chatCreateInfo.selectedUsers}
