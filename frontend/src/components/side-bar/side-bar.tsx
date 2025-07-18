@@ -39,7 +39,7 @@ const SideBar = () => {
     const subscription = client.subscribe(
       `/sub/notifications/${data.userId}`,
       (message) => {
-        const response = JSON.parse(message.body) as WsResponse<any>;
+        const response = JSON.parse(message.body) as WsResponse<unknown>;
         switch (response.type) {
           case "CHAT_NOTI":
             {

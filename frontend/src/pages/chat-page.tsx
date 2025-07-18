@@ -46,14 +46,19 @@ const ChatPage = () => {
 
   const readMessage = useMemo(
     () =>
+      // 1초동안 연속으로 오는 읽음 처리에 대해 마지막 요청만 처리
       debounce(() => {
+        if (!user || !user.userId) {
+          return;
+        }
+
         publishMessage<WsReadRequest>("/pub/chats/read", {
           roomId: Number(roomId),
-          userId: user?.userId ?? 0,
+          userId: user.userId,
           lastReadAt: new Date().toISOString(),
         });
       }, 1_000),
-    [],
+    [publishMessage],
   );
 
   const sendMessage = async (message: Message, file?: File) => {
@@ -63,6 +68,23 @@ const ChatPage = () => {
 
     // 낙관적 업데이트로 즉시 상태에 추가하기
     setMessages((prev) => [...prev, message]);
+
+    // 우선은 내 읽음 시각을 현재 시간으로 갱신하여 바로 읽음 처리가 되도록 처리
+    // queryClient.setQueryData<ChatRoom>(["chat-room", Number(roomId)], (prev) =>
+    //   prev
+    //     ? {
+    //         ...prev,
+    //         roomMembers: prev.roomMembers.map((item) =>
+    //           item.userId === user?.userId
+    //             ? {
+    //                 ...item,
+    //                 lastReadAt: message.sendTime, // 현재 시간보다 9시간이 느림
+    //               }
+    //             : item,
+    //         ),
+    //       }
+    //     : prev,
+    // );
 
     // 낙관적 업데이트에 추가한 메시지의 아이디와 보낸시각 저장하기
     temporaryMessageSet.current.set(message.clientId!, {
@@ -97,7 +119,7 @@ const ChatPage = () => {
     const subscription = client.subscribe(
       `/sub/chats/${roomId}`,
       (message) => {
-        const response = JSON.parse(message.body) as WsResponse<any>;
+        const response = JSON.parse(message.body) as WsResponse<unknown>;
         switch (response.type) {
           case "CHAT_MESSAGE":
             {
@@ -109,9 +131,19 @@ const ChatPage = () => {
                   (prev) =>
                     prev?.map((item) => {
                       if (item.clientId === casted.data.clientId) {
+                        // 만약 임시 메시지가 이미지나 동영상이었을 경우 임시 URL을 정리하여 메모리 누수 방지
+                        const tempMessage = temporaryMessageSet.current.get(
+                          String(casted.data.clientId),
+                        );
+                        if (tempMessage?.objectUrl) {
+                          URL.revokeObjectURL(tempMessage.objectUrl);
+                        }
+
+                        // 해당 임시 메시지 제거
                         temporaryMessageSet.current.delete(
                           casted.data.clientId!,
                         );
+
                         return {
                           ...item,
                           messageId: casted.data.messageId,
@@ -157,7 +189,7 @@ const ChatPage = () => {
             {
               const casted = response as WsResponse<WsChatRoomReadResponse>;
               queryClient.setQueryData<ChatRoom>(
-                ["chat-room", roomId],
+                ["chat-room", Number(roomId)],
                 (prev) =>
                   prev
                     ? {

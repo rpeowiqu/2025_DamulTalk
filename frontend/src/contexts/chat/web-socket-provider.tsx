@@ -20,7 +20,12 @@ const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
 
   const publishMessage = <T,>(dest: string, body: T) => {
     if (!socket.client || !socket.client.connected) {
-      console.error("웹소켓에 연결되어 있지 않아 패킷을 전송할 수 없습니다.");
+      console.error(
+        `웹소켓에 연결되어 있지 않아 패킷을 전송할 수 없습니다.\n
+        socket.client: ${socket.client}, socket.client.connected: ${socket.client?.connected}\n
+        dest: ${dest}\n
+        body: ${JSON.stringify(body)}\n`,
+      );
       return;
     }
 
@@ -66,10 +71,10 @@ const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
       });
 
       client.activate();
-      setSocket((prev) => ({
-        ...prev,
+      setSocket({
         client,
-      }));
+        isConnected: false,
+      });
     };
 
     connectSocket();
