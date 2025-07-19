@@ -12,8 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
 import java.util.List;
 
 @RestController
@@ -62,14 +60,12 @@ public class ChatController {
     @GetMapping("/{roomId}/messages")
     public ResponseEntity<?> getChatMessages(
             @PathVariable("roomId") Integer roomId,
-            @RequestParam(required = false) OffsetDateTime cursor,
+            @RequestParam(required = false) LocalDateTime cursor,
             @RequestParam(defaultValue = "50") Integer size) {
         log.info("[ChatController] 채팅 메시지 조회 시작 - roomId: {}", roomId);
 
-        LocalDateTime cursorTime = (cursor == null) ? null :
-                cursor.atZoneSameInstant(ZoneId.of("Asia/Seoul")).toLocalDateTime();
         ScrollResponse<List<ChatMessageResponse>, String> response = chatMessageService.getChatMessages(roomId,
-                cursorTime, size);
+                cursor, size);
         if(response.getData().isEmpty()) {
             return ResponseEntity.noContent().build();
         }
