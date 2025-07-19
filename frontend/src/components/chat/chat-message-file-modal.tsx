@@ -37,11 +37,9 @@ const ChatMessageFileModal = ({
       open={open}
       onOpenChange={onOpenChange}
       title="메시지 첨부 파일"
-      titleClassName="text-damul-main-300 border-b border-damul-main-500 pb-4"
+      titleClassName="text-damul-main-300 border-b border-damul-main-500 pb-4 mb-2"
       {...props}>
-      <div className="mt-2 flex items-center justify-center">
-        {renderContent()}
-      </div>
+      <div className="flex items-center justify-center">{renderContent()}</div>
     </Dialog>
   );
 };

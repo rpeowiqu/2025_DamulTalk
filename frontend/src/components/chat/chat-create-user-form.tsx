@@ -83,7 +83,7 @@ const ChatCreateUserForm = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex h-full flex-col gap-4 pt-2">
+    <form onSubmit={handleSubmit} className="flex h-full flex-col gap-4">
       {chatCreateInfo.selectedUsers.length > 0 && (
         <div className="flex flex-col gap-2">
           <p className="text-end font-bold">

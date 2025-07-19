@@ -45,7 +45,7 @@ const UserSearchModal = ({
       open={open}
       onOpenChange={onOpenChange}
       title="유저 찾기"
-      titleClassName="text-damul-main-300 border-b border-damul-main-500 pb-4"
+      titleClassName="text-damul-main-300 border-b border-damul-main-500 pb-4 mb-2"
       {...props}>
       <AutocompleteSearchBar<User>
         keyword={keyword}

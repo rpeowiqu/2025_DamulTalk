@@ -63,7 +63,7 @@ const AutocompleteSearchBar = <T,>({
   const isEmpty = !data?.pages.some((page) => page.data.length > 0);
 
   return (
-    <div className="relative mt-2">
+    <div className="relative">
       <SearchBar
         {...props}
         onSearch={handleSearch}
