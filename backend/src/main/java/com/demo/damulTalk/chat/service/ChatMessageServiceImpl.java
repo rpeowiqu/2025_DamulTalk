@@ -125,7 +125,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                 ).collect(Collectors.toList());
 
         String nextCursor = hasNext && !finalOlder.isEmpty()
-                ? finalOlder.get(finalOlder.size() - 1).getMessageId()
+                ? finalOlder.get(finalOlder.size() - 1).getSendTime().toString()
                 : null;
 
         CursorPageMetaDto<String> cursorPageMetaDto = CursorPageMetaDto.<String>builder()
