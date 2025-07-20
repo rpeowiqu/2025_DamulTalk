@@ -18,6 +18,7 @@ import type {
   WsMessageRequest,
   WsReadRequest,
   WsResponse,
+  WsSystemMessageResponse,
 } from "@/types/web-socket/type";
 import type {
   ChatRoom,
@@ -182,6 +183,55 @@ const ChatPage = () => {
                       : item,
                   ) ?? [],
               );
+            }
+            break;
+          case "CHAT_SYSTEM_MESSAGE":
+            {
+              const casted = response as WsResponse<WsSystemMessageResponse>;
+              // 수신한 메시지를 상태에 추가
+              setMessages((prev) =>
+                prev
+                  ? [
+                      ...prev,
+                      {
+                        ...casted.data,
+                        messageStatus: "SENT",
+                        messageType: "TEXT",
+                        unReadCount: 0,
+                      },
+                    ]
+                  : [],
+              );
+
+              switch (casted.data.messageType) {
+                case "EXIT":
+                  // 채팅방 헤더에서 나간 사람을 제외하고 인원수 갱신
+                  queryClient.setQueryData<ChatRoom>(
+                    ["chat-room", Number(roomId)],
+                    (prev) =>
+                      prev
+                        ? {
+                            ...prev,
+                            roomSize: prev.roomSize - 1,
+                          }
+                        : prev,
+                  );
+
+                  // 사이드 바의 채팅방 목록 상태 갱신
+                  queryClient.setQueryData<ChatRoomPreviewsResponse>(
+                    ["chat-room-previews"],
+                    (prev) =>
+                      prev?.map((item) =>
+                        item.roomId === Number(roomId)
+                          ? {
+                              ...item,
+                              roomSize: item.roomSize - 1,
+                            }
+                          : item,
+                      ) ?? [],
+                  );
+                  break;
+              }
             }
             break;
           case "READ_TIME":
