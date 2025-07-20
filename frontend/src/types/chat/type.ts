@@ -25,12 +25,7 @@ export interface ChatRoomPreview {
 export interface ChatRoom {
   roomName: string;
   roomSize: number;
-  roomMembers: {
-    userId: number;
-    nickname: string;
-    profileImageUrl: string;
-    lastReadAt: string;
-  }[];
+  roomMembers: ChatRoomMember[];
 }
 
 export interface ChatRoomMember {

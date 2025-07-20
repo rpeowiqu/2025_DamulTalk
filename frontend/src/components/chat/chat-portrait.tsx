@@ -1,7 +1,7 @@
 import UserPortrait from "@/components/community/user-portrait";
 
 interface ChatPortraitProps {
-  profileImageUrls: string[];
+  profileImageUrls: (string | null)[];
   unreadMessageNum?: number;
 }
 
