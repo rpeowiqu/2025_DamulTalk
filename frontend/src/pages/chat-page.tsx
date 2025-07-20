@@ -29,19 +29,18 @@ import useCurrentUser from "@/hooks/auth/use-current-user";
 import useSendFile from "@/hooks/chat/use-send-file";
 
 const ChatPage = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const temporaryMessageSet = useRef<Map<string, MessageTransferHistory>>(
-    new Map(),
-  );
-
   const { roomId } = useParams();
-  const { data, isLoading } = useChatRoom(Number(roomId));
+  const { data: chatRoom, isLoading } = useChatRoom(Number(roomId));
   const { data: user } = useCurrentUser();
+
+  const [messages, setMessages] = useState<Message[]>([]);
+  const tempMessageMap = useRef<Map<string, MessageTransferHistory>>(new Map());
 
   const queryClient = useQueryClient();
   const socket = useContext(WebSocketStateContext);
   const { client, isConnected } = socket ?? {};
   const { publishMessage } = useContext(WebSocketDispatchContext)!;
+
   const { mutate: sendFile } = useSendFile();
 
   const readMessage = useMemo(
@@ -58,7 +57,7 @@ const ChatPage = () => {
           lastReadAt: new Date().toISOString(),
         });
       }, 1_000),
-    [publishMessage],
+    [user, publishMessage],
   );
 
   const sendMessage = async (message: Message, file?: File) => {
@@ -69,25 +68,8 @@ const ChatPage = () => {
     // 낙관적 업데이트로 즉시 상태에 추가하기
     setMessages((prev) => [...prev, message]);
 
-    // 우선은 내 읽음 시각을 현재 시간으로 갱신하여 바로 읽음 처리가 되도록 처리
-    // queryClient.setQueryData<ChatRoom>(["chat-room", Number(roomId)], (prev) =>
-    //   prev
-    //     ? {
-    //         ...prev,
-    //         roomMembers: prev.roomMembers.map((item) =>
-    //           item.userId === user?.userId
-    //             ? {
-    //                 ...item,
-    //                 lastReadAt: message.sendTime, // 현재 시간보다 9시간이 느림
-    //               }
-    //             : item,
-    //         ),
-    //       }
-    //     : prev,
-    // );
-
     // 낙관적 업데이트에 추가한 메시지의 아이디와 보낸시각 저장하기
-    temporaryMessageSet.current.set(message.clientId!, {
+    tempMessageMap.current.set(message.clientId!, {
       objectUrl: message.fileUrl ?? undefined,
       sendTime: message.sendTime,
     });
@@ -132,7 +114,7 @@ const ChatPage = () => {
                     prev?.map((item) => {
                       if (item.clientId === casted.data.clientId) {
                         // 만약 임시 메시지가 이미지나 동영상이었을 경우 임시 URL을 정리하여 메모리 누수 방지
-                        const tempMessage = temporaryMessageSet.current.get(
+                        const tempMessage = tempMessageMap.current.get(
                           String(casted.data.clientId),
                         );
                         if (tempMessage?.objectUrl) {
@@ -140,9 +122,7 @@ const ChatPage = () => {
                         }
 
                         // 해당 임시 메시지 제거
-                        temporaryMessageSet.current.delete(
-                          casted.data.clientId!,
-                        );
+                        tempMessageMap.current.delete(casted.data.clientId!);
 
                         return {
                           ...item,
@@ -162,6 +142,28 @@ const ChatPage = () => {
                 setMessages((prev) => (prev ? [...prev, casted.data] : []));
               }
 
+              // 내 읽음 시각을 갱신
+              queryClient.setQueryData<ChatRoom>(
+                ["chat-room", Number(roomId)],
+                (prev) =>
+                  prev
+                    ? {
+                        ...prev,
+                        roomMembers: prev.roomMembers.map((item) =>
+                          item.userId === user?.userId
+                            ? {
+                                ...item,
+                                lastReadAt: casted.data.sendTime,
+                              }
+                            : item,
+                        ),
+                      }
+                    : prev,
+              );
+
+              // 웹 소켓으로 현재 시각까지 읽었음을 알림
+              readMessage();
+
               // 사이드 바의 채팅방 목록 상태 갱신
               queryClient.setQueryData<ChatRoomPreviewsResponse>(
                 ["chat-room-previews"],
@@ -180,9 +182,6 @@ const ChatPage = () => {
                       : item,
                   ) ?? [],
               );
-
-              // 웹 소켓으로 현재 시각까지 읽었음을 알림
-              readMessage();
             }
             break;
           case "READ_TIME":
@@ -221,23 +220,25 @@ const ChatPage = () => {
     };
   }, [roomId, client, isConnected, user]);
 
+  if (isLoading) {
+    return (
+      <div className="h-dvh">
+        <ChatRoomHeaderSkeleton />
+        <ChatRoomContentSkeleton />
+      </div>
+    );
+  }
+
   return (
     <FileUploadProvider>
       <div className="flex h-full flex-col bg-neutral-50">
-        {isLoading ? (
+        {chatRoom ? (
           <>
-            <ChatRoomHeaderSkeleton />
-            <ChatRoomContentSkeleton />
-          </>
-        ) : data ? (
-          <>
-            <ChatRoomHeader room={data} />
+            <ChatRoomHeader room={chatRoom} />
             <ChatRoomContent
+              room={chatRoom}
               messages={messages}
               sendMessage={sendMessage}
-              lastReadAts={
-                data?.roomMembers.map((item) => item.lastReadAt) ?? []
-              }
               className="min-h-0 flex-1"
             />
           </>

@@ -9,7 +9,7 @@ const useChatMessages = () => {
   const { roomId } = useParams();
 
   return useInfiniteScroll({
-    queryKey: ["chat-messages", roomId],
+    queryKey: ["chat-messages", Number(roomId)],
     queryFn: async ({ pageParam }) => {
       const response = await getMessages({
         roomId: Number(roomId),
@@ -32,7 +32,9 @@ const useChatMessages = () => {
     initialPageParam: null,
     getNextPageParam: (lastPage) =>
       lastPage.meta.hasNext ? lastPage.meta.nextCursor : null,
+    gcTime: 0,
     enabled: !!roomId,
+    fetchDelay: 300,
   });
 };
 

@@ -5,7 +5,7 @@ import type { ChatMessageProps } from "@/components/chat/chat-message";
 import UserPortrait from "@/components/community/user-portrait";
 import { getFormattedDate } from "@/utils/time";
 
-const IncomingChatMessage = ({ message, onClick }: ChatMessageProps) => {
+const IncomingChatMessage = ({ ref, message, onClick }: ChatMessageProps) => {
   const renderContent = () => {
     switch (message.messageType) {
       case "TEXT":
@@ -32,7 +32,7 @@ const IncomingChatMessage = ({ message, onClick }: ChatMessageProps) => {
   };
 
   return (
-    <div className="flex w-full gap-3">
+    <div ref={ref} className="flex w-full gap-3">
       <Link to={`/profiles/${message.senderId}`}>
         <UserPortrait
           profileImageUrl={message.profileImageUrl}

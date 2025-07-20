@@ -4,7 +4,7 @@ import type { ChatMessageProps } from "@/components/chat/chat-message";
 import { getFormattedDate } from "@/utils/time";
 import Spinner from "@/components/common/spinner";
 
-const OutgoingChatMessage = ({ message, onClick }: ChatMessageProps) => {
+const OutgoingChatMessage = ({ ref, message, onClick }: ChatMessageProps) => {
   const renderContent = () => {
     switch (message.messageType) {
       case "TEXT":
@@ -31,7 +31,9 @@ const OutgoingChatMessage = ({ message, onClick }: ChatMessageProps) => {
   };
 
   return (
-    <div className="flex items-end gap-2 self-end break-all whitespace-pre-wrap">
+    <div
+      ref={ref}
+      className="flex items-end gap-2 self-end break-all whitespace-pre-wrap">
       {message.messageStatus === "SENDING" && <Spinner />}
 
       <div className="flex shrink-0 flex-col items-end text-[0.675rem]">
