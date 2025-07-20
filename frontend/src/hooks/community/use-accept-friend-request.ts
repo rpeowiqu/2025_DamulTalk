@@ -1,22 +1,57 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
-import { postAcceptFriendRequest } from "@/services/community/api";
-import type { FriendRequestsResponse } from "@/types/community/type";
+import { patchAcceptFriendRequest } from "@/services/community/api";
+import type {
+  FriendRequestRequest,
+  FriendRequestsResponse,
+  FriendsResponse,
+  ProfileResponse,
+} from "@/types/community/type";
+import useCurrentUser from "@/hooks/auth/use-current-user";
 
 const useAcceptFriendRequest = (userId: number) => {
+  const { data: user } = useCurrentUser();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationKey: ["accept-friend-request", userId],
-    mutationFn: (userId: number) => postAcceptFriendRequest(userId),
-    onSuccess: () => {
+    mutationFn: (request: FriendRequestRequest) =>
+      patchAcceptFriendRequest(request),
+    onSuccess: (data) => {
+      // 친구 요청 목록에서 수락한 친구를 제거
       queryClient.setQueryData<FriendRequestsResponse>(
         ["friend-requests"],
-        (prev) => prev?.filter((user) => user.userId !== userId) ?? [],
+        (prev) => prev?.filter((item) => item.userId !== userId) ?? [],
       );
+
+      // 해당 친구를 친구 목록에 추가
+      queryClient.setQueryData<FriendsResponse>(
+        ["friends", user?.userId],
+        (prev) => (prev ? [...prev, data] : []),
+      );
+
+      // 내 프로필의 친구수를 1 증가
+      queryClient.setQueryData<ProfileResponse>(
+        ["profile", user?.userId],
+        (prev) =>
+          prev
+            ? {
+                ...prev,
+                friendCount: prev.friendCount + 1,
+              }
+            : prev,
+      );
+
+      // 해당 친구의 프로필과 친구 목록을 무효화
       queryClient.invalidateQueries({
-        queryKey: ["friend-requests"],
+        queryKey: ["friends", userId],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["profile", userId],
+      });
+
+      toast.success("새로운 친구를 추가했어요");
     },
   });
 };

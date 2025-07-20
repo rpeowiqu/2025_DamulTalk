@@ -1,13 +1,13 @@
 import type { ButtonHTMLAttributes } from "react";
 
-import type { ChatRoomInfo } from "@/types/chat/type";
+import type { ChatRoom } from "@/types/chat/type";
 import UserIcon from "@/components/icon/user-icon";
 import ChatRoomMemberModal from "@/components/chat/chat-room-member-modal";
 import useModal from "@/hooks/common/use-modal";
 
 interface ChatRoomHeadCountButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement> {
-  room: ChatRoomInfo;
+  room: ChatRoom;
 }
 
 const ChatRoomHeadCountButton = ({
@@ -43,7 +43,7 @@ const ChatRoomHeadCountButton = ({
       <ChatRoomMemberModal
         open={isOpen}
         onOpenChange={handleOpenChange}
-        members={room.members}
+        members={room.roomMembers}
       />
     </>
   );

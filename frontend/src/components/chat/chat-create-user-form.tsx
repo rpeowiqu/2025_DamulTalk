@@ -1,4 +1,5 @@
-import type { FormEvent } from "react";
+import { useState, type FormEvent } from "react";
+import { debounce } from "lodash-es";
 
 import type { User } from "@/types/community/type";
 import type { ChatCreateFormProps } from "@/components/chat/chat-create-form";
@@ -7,14 +8,28 @@ import Button from "@/components/common/button";
 import ChatCreateUserItem from "@/components/chat/chat-create-user-item";
 import SearchBar from "@/components/common/search-bar";
 import FriendList from "@/components/community/friend-list";
-import UserDummyData from "@/mocks/friends.json";
+import useFriends from "@/hooks/community/use-friends";
+import useCurrentUser from "@/hooks/auth/use-current-user";
 
 const ChatCreateUserForm = ({
   chatCreateInfo,
   setChatCreateInfo,
+  isDefaultName,
   onNext,
 }: ChatCreateFormProps) => {
-  const getDefaultTitle = (users: User[]): string => {
+  const { data: currentUser } = useCurrentUser();
+  const { data: friends, isLoading } = useFriends(currentUser?.userId ?? 0);
+  const [keyword, setKeyword] = useState("");
+
+  const handleChangeKeyword = debounce((keyword: string) => {
+    setKeyword(keyword);
+  }, 200);
+
+  const filteredFriends = friends
+    ? friends.filter((item) => item.nickname.includes(keyword))
+    : [];
+
+  const getDefaultRoomName = (users: User[]): string => {
     const maxDisplay = 4;
     const nicknames = users.map((item) => item.nickname);
     nicknames.sort();
@@ -30,13 +45,14 @@ const ChatCreateUserForm = ({
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // 선택한 유저의 닉네임을 기반으로 title 값 설정
-    const defaultTitle = getDefaultTitle(chatCreateInfo.selectedUsers);
+    // 선택한 유저의 닉네임을 기반으로 roomName 값 설정
+    const defaultRoomName = getDefaultRoomName(chatCreateInfo.selectedUsers);
     setChatCreateInfo((prev) => ({
       ...prev,
-      title: defaultTitle,
+      roomName: defaultRoomName,
     }));
 
+    isDefaultName.current = false;
     onNext?.();
   };
 
@@ -67,7 +83,7 @@ const ChatCreateUserForm = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex h-full flex-col gap-4 pt-2">
+    <form onSubmit={handleSubmit} className="flex h-full flex-col gap-4">
       {chatCreateInfo.selectedUsers.length > 0 && (
         <div className="flex flex-col gap-2">
           <p className="text-end font-bold">
@@ -86,10 +102,10 @@ const ChatCreateUserForm = ({
           </Carousel>
         </div>
       )}
-      <SearchBar onSearch={(keyword) => console.log(keyword)} />
+      <SearchBar onChangeKeyword={handleChangeKeyword} />
       <FriendList
-        isLoading={false}
-        users={UserDummyData}
+        isLoading={isLoading}
+        users={filteredFriends}
         visibleStatus={false}
         className="scroll-hidden min-h-0 flex-1 overflow-y-auto"
         selectedUsers={chatCreateInfo.selectedUsers}

@@ -1,37 +1,33 @@
 import Dialog, { type DialogProps } from "@/components/common/dialog";
-import type { ChatMessageInfo } from "@/types/chat/type";
+import type { Message } from "@/types/chat/type";
 
 interface ChatMessageFileModalProps extends DialogProps {
-  messageInfo: ChatMessageInfo | null;
+  message: Message | null;
 }
 
 const ChatMessageFileModal = ({
   open,
   onOpenChange,
-  messageInfo,
+  message,
   ...props
 }: ChatMessageFileModalProps) => {
   const renderContent = () => {
-    if (!messageInfo) {
+    if (!message) {
       return null;
     }
 
-    switch (messageInfo.messageType) {
+    switch (message.messageType) {
       case "IMAGE":
         return (
           <img
-            src={messageInfo.fileUrl}
+            src={message.fileUrl}
             alt="첨부 이미지"
-            className="w-full object-cover"
+            className="max-h-120 object-cover"
           />
         );
       case "VIDEO":
         return (
-          <video
-            src={messageInfo.fileUrl}
-            className="w-full object-cover"
-            controls
-          />
+          <video src={message.fileUrl} className="max-h-120 w-full" controls />
         );
     }
   };
@@ -41,7 +37,7 @@ const ChatMessageFileModal = ({
       open={open}
       onOpenChange={onOpenChange}
       title="메시지 첨부 파일"
-      titleClassName="text-damul-main-300 border-b border-damul-main-500 pb-4"
+      titleClassName="text-damul-main-300 border-b border-damul-main-500 pb-4 mb-2"
       {...props}>
       <div className="flex items-center justify-center">{renderContent()}</div>
     </Dialog>

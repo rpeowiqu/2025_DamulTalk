@@ -26,7 +26,7 @@ const ChatRoomMemberModal = ({
       open={open}
       onOpenChange={onOpenChange}
       title="채팅방 멤버"
-      titleClassName="text-damul-main-300 border-b border-damul-main-500 pb-4"
+      titleClassName="text-damul-main-300 border-b border-damul-main-500 pb-4 mb-2"
       {...props}>
       <div className="flex flex-col gap-4">
         <SearchBar onSearch={(keyword) => console.log(keyword)} />

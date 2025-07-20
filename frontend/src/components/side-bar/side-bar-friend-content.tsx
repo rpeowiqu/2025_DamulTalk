@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { debounce } from "lodash-es";
 
 import {
   Accordion,
@@ -38,7 +39,31 @@ const SideBarFriendContent = ({ user }: SideBarFriendContentProps) => {
     user?.userId ?? 0,
   );
   const [selectedFilter, setSelectedFilter] = useState("nickname-ascending");
+  const [keyword, setKeyword] = useState("");
   const navigate = useNavigate();
+
+  const handleChangeKeyword = debounce((keyword: string) => {
+    setKeyword(keyword);
+  }, 200);
+
+  const sortedFriends = useMemo(
+    () =>
+      friends
+        ? friends
+            .filter((item) => item.nickname.includes(keyword))
+            .sort((a, b) => {
+              switch (selectedFilter) {
+                case "nickname-ascending":
+                  return a.nickname.localeCompare(b.nickname);
+                case "nickname-descending":
+                  return b.nickname.localeCompare(a.nickname);
+                default:
+                  return 0;
+              }
+            })
+        : [],
+    [friends, keyword, selectedFilter],
+  );
 
   return (
     <>
@@ -64,20 +89,22 @@ const SideBarFriendContent = ({ user }: SideBarFriendContentProps) => {
             <FriendRequestList
               isLoading={isLoadingFriendRequests}
               users={friendRequests ?? []}
-              onSelect={(user) => navigate(`/profile/${user.userId}`)}
+              onSelect={(user) => navigate(`/profiles/${user.userId}`)}
             />
           </AccordionContent>
         </AccordionItem>
 
         <AccordionItem value="friends" className="flex flex-col gap-4">
-          <AccordionTrigger>친구 {friends?.length ?? 0}명</AccordionTrigger>
+          <AccordionTrigger>
+            친구 {sortedFriends.length ?? 0}명
+          </AccordionTrigger>
           <AccordionContent className="flex flex-col gap-4">
-            <SearchBar onSearch={(keyword) => console.log(keyword)} />
+            <SearchBar onChangeKeyword={handleChangeKeyword} maxLength={12} />
             <FriendList
               isLoading={isLoadingFriends}
-              users={friends ?? []}
+              users={sortedFriends ?? []}
               visibleStatus={true}
-              onSelect={(user) => navigate(`/profile/${user.userId}`)}
+              onSelect={(user) => navigate(`/profiles/${user.userId}`)}
             />
           </AccordionContent>
         </AccordionItem>

@@ -7,7 +7,12 @@ export interface User {
   online?: boolean;
 }
 
-export type FriendRequestType = "ACCEPTED" | "PENDING" | "ME" | "NONE";
+export type FriendRequestType =
+  | "ACCEPTED"
+  | "PENDING_REQUEST"
+  | "PENDING_RESPONSE"
+  | "ME"
+  | "NONE";
 
 export interface Profile {
   nickname: string;

@@ -5,7 +5,7 @@ import type { DamulError } from "@/types/common/type";
 
 let refreshPromise: Promise<string> | null = null;
 
-const reissueAccessToken = async () => {
+export const reissueAccessToken = async () => {
   if (refreshPromise) {
     return refreshPromise;
   }

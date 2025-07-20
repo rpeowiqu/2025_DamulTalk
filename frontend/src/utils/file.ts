@@ -1,3 +1,5 @@
+export const MAX_FILE_UPLOAD_SIZE = 20_971_520; // 20MB
+
 export const formatFileSize = (bytes: number): string => {
   if (bytes === 0) {
     return "0 B";

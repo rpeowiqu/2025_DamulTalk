@@ -5,15 +5,12 @@ import SettingButton from "@/components/community/setting-button";
 import SideBarFriendContent from "@/components/side-bar/side-bar-friend-content";
 import SideBarChatContent from "@/components/side-bar/side-bar-chat-content";
 import LogoutButton from "@/components/auth/logout-button";
-import type { SideBarTabType } from "@/types/side-bar/type";
 import useCurrentUser from "@/hooks/auth/use-current-user";
 import UserItemSkeleton from "@/components/community/user-item-skeleton";
+import useSideBarTabStore from "@/store/side-bar-tab-store";
 
-interface SideBarContentProps {
-  currentTab: SideBarTabType;
-}
-
-const SideBarContent = ({ currentTab }: SideBarContentProps) => {
+const SideBarContent = () => {
+  const currentTab = useSideBarTabStore((state) => state.currentTab);
   const { data, isLoading } = useCurrentUser();
   const navigate = useNavigate();
 

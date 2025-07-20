@@ -1,9 +1,10 @@
 import apiClient from "@/utils/http-common";
-import {
-  type FriendDeleteRequest,
-  type UserSearchRequest,
-  type ProfileResponse,
-  type FriendRequestRequest,
+import type {
+  FriendDeleteRequest,
+  UserSearchRequest,
+  ProfileResponse,
+  FriendRequestRequest,
+  User,
 } from "@/types/community/type";
 import { getQueryString } from "@/utils/url";
 
@@ -28,16 +29,20 @@ export const postFriendRequest = async (request: FriendRequestRequest) => {
 };
 
 // 친구 추가 요청 수락
-export const postAcceptFriendRequest = async (userId: number) => {
-  const response = await apiClient.post(`friends/requests/${userId}`);
-  return response;
+export const patchAcceptFriendRequest = async (
+  request: FriendRequestRequest,
+) => {
+  const data = await apiClient
+    .patch("friends/requests", {
+      json: request,
+    })
+    .json<User>();
+  return data;
 };
 
 // 친구 추가 요청 취소/거절
-export const deleteFriendRequest = async (request: FriendRequestRequest) => {
-  const response = await apiClient.delete("friends/requests", {
-    json: request,
-  });
+export const deleteFriendRequest = async (userId: number) => {
+  const response = await apiClient.delete(`friends/${userId}`);
   return response;
 };
 

@@ -7,6 +7,7 @@ import Button from "@/components/common/button";
 const ChatCreateTitleForm = ({
   chatCreateInfo,
   setChatCreateInfo,
+  isDefaultName,
   onPrev,
   onNext,
 }: ChatCreateFormProps) => {
@@ -18,8 +19,9 @@ const ChatCreateTitleForm = ({
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setChatCreateInfo((prev) => ({
       ...prev,
-      title: e.target.value,
+      roomName: e.target.value,
     }));
+    isDefaultName.current = true;
   };
 
   return (
@@ -34,7 +36,7 @@ const ChatCreateTitleForm = ({
         </h1>
         <Input
           placeholder="채팅방 이름을 입력해 주세요"
-          value={chatCreateInfo.title}
+          value={chatCreateInfo.roomName}
           onChange={handleChange}
           maxLength={64}
         />
@@ -44,7 +46,9 @@ const ChatCreateTitleForm = ({
         <Button type="button" className="w-full" onClick={onPrev}>
           이전
         </Button>
-        <Button className="w-full" disabled={chatCreateInfo.title.length === 0}>
+        <Button
+          className="w-full"
+          disabled={chatCreateInfo.roomName.length === 0}>
           만들기
         </Button>
       </div>

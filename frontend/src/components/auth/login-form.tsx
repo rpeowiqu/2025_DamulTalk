@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useEffect, useRef, type FormEvent } from "react";
+import type { FormEvent } from "react";
 
 import Button from "@/components/common/button";
 import Input from "@/components/common/input";
@@ -7,7 +7,6 @@ import CheckBox from "@/components/common/check-box";
 import useLogin from "@/hooks/auth/use-login";
 
 const LoginForm = () => {
-  const inputRef = useRef<HTMLInputElement>(null);
   const { message, mutate: login } = useLogin();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -29,17 +28,6 @@ const LoginForm = () => {
     }
   };
 
-  useEffect(() => {
-    if (!inputRef.current) {
-      return;
-    }
-
-    const savedEmail = localStorage.getItem("saved-email");
-    if (savedEmail) {
-      inputRef.current.value = savedEmail;
-    }
-  }, []);
-
   return (
     <form
       onSubmit={handleSubmit}
@@ -50,10 +38,10 @@ const LoginForm = () => {
             이메일
           </label>
           <Input
-            ref={inputRef}
             id="email"
             name="email"
             type="email"
+            prefillEmail
             placeholder="이메일을 입력해 주세요"
             autoFocus
             autoCapitalize="off"

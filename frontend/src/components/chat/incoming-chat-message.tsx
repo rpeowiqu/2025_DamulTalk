@@ -1,9 +1,11 @@
+import { Link } from "react-router-dom";
 import { PlayCircleIcon } from "lucide-react";
 
 import type { ChatMessageProps } from "@/components/chat/chat-message";
 import UserPortrait from "@/components/community/user-portrait";
+import { getFormattedDate } from "@/utils/time";
 
-const IncomingChatMessage = ({ message, onClick }: ChatMessageProps) => {
+const IncomingChatMessage = ({ ref, message, onClick }: ChatMessageProps) => {
   const renderContent = () => {
     switch (message.messageType) {
       case "TEXT":
@@ -30,23 +32,31 @@ const IncomingChatMessage = ({ message, onClick }: ChatMessageProps) => {
   };
 
   return (
-    <div className="flex w-full gap-3">
-      <UserPortrait
-        profileImageUrl={message.profileImageUrl}
-        className="shrink-0"
-      />
+    <div ref={ref} className="flex w-full gap-3">
+      <Link to={`/profiles/${message.senderId}`}>
+        <UserPortrait
+          profileImageUrl={message.profileImageUrl}
+          className="shrink-0"
+        />
+      </Link>
       <div className="flex flex-col gap-2">
-        <p className="font-bold">{message.nickname}</p>
+        <Link to={`/profiles/${message.senderId}`} className="w-fit font-bold">
+          {message.nickname}
+        </Link>
         <div className="flex items-end gap-1 break-all whitespace-pre-wrap">
           <div className="flex max-w-96 flex-col gap-2 rounded-xl bg-white p-3">
             {renderContent()}
           </div>
 
           <div className="flex shrink-0 flex-col text-[0.675rem]">
-            <p className="text-damul-main-500">
-              {message.unReadCount > 99 ? "99+" : message.unReadCount}
+            {message.unReadCount > 0 && (
+              <p className="text-damul-main-500">
+                {message.unReadCount > 99 ? "99+" : message.unReadCount}
+              </p>
+            )}
+            <p className="text-neutral-500">
+              {getFormattedDate(message.sendTime)}
             </p>
-            <p className="text-neutral-500">{message.sentTime}</p>
           </div>
         </div>
       </div>

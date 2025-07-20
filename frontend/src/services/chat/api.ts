@@ -1,0 +1,77 @@
+import type {
+  ChatRoomResponse,
+  CreateChatRoomRequest,
+  MessagesRequest,
+  ReadMessageRequest,
+  SearchMessageRequest,
+  SearchMessageResponse,
+  SendFileRequest,
+} from "@/types/chat/type";
+import apiClient from "@/utils/http-common";
+import { getQueryString } from "@/utils/url";
+
+// 채팅 목록 조회
+export const getChatRoomPreviews = async () => {
+  const response = await apiClient.get("chats");
+  return response;
+};
+
+// 새 채팅방 만들기
+export const postCreateChatRoom = async (request: CreateChatRoomRequest) => {
+  const response = await apiClient.post("chats", {
+    json: request,
+  });
+  return response;
+};
+
+// 채팅방 정보 불러오기
+export const getChatRoom = async (roomId: number) => {
+  const data = await apiClient.get(`chats/${roomId}`).json<ChatRoomResponse>();
+  return data;
+};
+
+// 채팅 내역 불러오기
+export const getMessages = async (request: MessagesRequest) => {
+  const { roomId, ...queryParams } = request;
+  const queryString = getQueryString(queryParams);
+  const response = await apiClient.get(
+    `chats/${roomId}/messages?${queryString}`,
+  );
+  return response;
+};
+
+// 채팅방 나가기
+export const deleteExitChatRoom = async (roomId: number) => {
+  const response = await apiClient.delete(`chats/${roomId}`);
+  return response;
+};
+
+// 키워드 검색
+export const getSearchMessage = async (request: SearchMessageRequest) => {
+  const { roomId, ...queryParams } = request;
+  const queryString = getQueryString(queryParams);
+  const data = await apiClient
+    .get(`chats/${roomId}/search?${queryString}`)
+    .json<SearchMessageResponse>();
+  return data;
+};
+
+// 메시지 읽음 처리
+export const postReadMessage = async (request: ReadMessageRequest) => {
+  const response = await apiClient.post(`chats/${request.roomId}/read`, {
+    json: { lastReadAt: request.lastReadAt },
+  });
+  return response;
+};
+
+// 이미지 혹은 동영상 전송
+export const postSendFile = async (request: SendFileRequest) => {
+  const formData = new FormData();
+  formData.append("clientId", request.clientId);
+  formData.append("file", request.file);
+
+  const response = await apiClient.post(`files/upload/${request.roomId}`, {
+    body: formData,
+  });
+  return response;
+};

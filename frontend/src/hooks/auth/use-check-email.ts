@@ -8,12 +8,7 @@ import {
 } from "@/services/auth/api";
 import type { CheckValueRequest } from "@/types/auth/type";
 
-interface UseCheckEmailOptions {
-  email: string;
-  onSuccess?: () => void;
-}
-
-const useCheckEmail = ({ email, onSuccess }: UseCheckEmailOptions) => {
+const useCheckEmail = (email: string) => {
   const [messageType, setMessageType] = useState<"valid" | "invalid">("valid");
   const [message, setMessage] = useState("");
 
@@ -39,7 +34,6 @@ const useCheckEmail = ({ email, onSuccess }: UseCheckEmailOptions) => {
   const response = useMutation({
     mutationKey: ["receive-code", email],
     mutationFn: (email: string) => postReceiveCode({ email }),
-    onSuccess,
     onError: () => {
       toast.error("인증코드를 보내지 못했어요");
     },

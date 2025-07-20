@@ -30,7 +30,7 @@ const PasswordResetEmailForm = ({
     messageType,
     message,
     mutate: receiveCode,
-  } = useCheckEmail({ email: formData.email, onSuccess: onNext });
+  } = useCheckEmail(formData.email);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -93,7 +93,10 @@ const PasswordResetEmailForm = ({
         <Button className="w-full" type="button" onClick={onPrev}>
           로그인 화면
         </Button>
-        <Button className="w-full" disabled={messageType === "invalid"}>
+        <Button
+          className="w-full"
+          disabled={messageType === "invalid"}
+          onClick={onNext}>
           다음
         </Button>
       </div>

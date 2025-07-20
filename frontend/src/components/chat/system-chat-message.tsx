@@ -1,8 +1,10 @@
 import type { ChatMessageProps } from "@/components/chat/chat-message";
 
-const SystemChatMessage = ({ message }: ChatMessageProps) => {
+const SystemChatMessage = ({ ref, message }: ChatMessageProps) => {
   return (
-    <div className="border-b border-neutral-300 py-2 text-center text-neutral-500">
+    <div
+      ref={ref}
+      className="border-b border-neutral-300 py-2 text-center text-neutral-500">
       {message.content}
     </div>
   );

@@ -1,5 +1,7 @@
 import {
+  useEffect,
   useMemo,
+  useState,
   type ChangeEvent,
   type Dispatch,
   type FormEvent,
@@ -12,6 +14,7 @@ import Button from "@/components/common/button";
 import type { PasswordResetInfo } from "@/types/auth/type";
 import { cn } from "@/utils/style";
 import useCheckCode from "@/hooks/auth/use-check-code";
+import { getFormattedTime } from "@/utils/time";
 
 interface PasswordResetCodeFormmProps {
   formData: PasswordResetInfo;
@@ -26,6 +29,7 @@ const PasswordResetCodeForm = ({
   onPrev,
   onNext,
 }: PasswordResetCodeFormmProps) => {
+  const [remainingTime, setRemainingTime] = useState(300);
   const { messageType, message } = useCheckCode(formData.email, formData.code);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -47,6 +51,21 @@ const PasswordResetCodeForm = ({
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     updateFormData(e.target.value);
   };
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setRemainingTime((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+
+        return prev - 1;
+      });
+    }, 1_000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   return (
     <form
@@ -75,13 +94,21 @@ const PasswordResetCodeForm = ({
             onChange={handleChange}
           />
 
-          <p
-            className={cn(
-              "text-sm",
-              messageType === "valid" ? "text-damul-main-300" : "text-red-400",
-            )}>
-            {message}
-          </p>
+          <div className="flex items-center justify-between">
+            <p
+              className={cn(
+                "text-sm",
+                messageType === "valid"
+                  ? "text-damul-main-300"
+                  : "text-red-400",
+              )}>
+              {message}
+            </p>
+
+            <p className="mr-1 text-sm text-neutral-500">
+              {getFormattedTime(remainingTime)}
+            </p>
+          </div>
         </div>
       </div>
 

@@ -1,17 +1,17 @@
 import UserPortrait from "@/components/community/user-portrait";
 
 interface ChatPortraitProps {
-  profileImages: string[];
+  profileImageUrls: (string | null)[];
   unreadMessageNum?: number;
 }
 
 const ChatPortrait = ({
-  profileImages,
+  profileImageUrls,
   unreadMessageNum,
 }: ChatPortraitProps) => {
   return (
     <div className="relative flex size-12 shrink-0 flex-wrap items-center justify-center">
-      {profileImages.length === 1 ? (
+      {profileImageUrls.length === 1 ? (
         <UserPortrait />
       ) : (
         [0, 1].map((row) =>
@@ -19,8 +19,12 @@ const ChatPortrait = ({
             const index = 2 * row + col;
 
             return (
-              profileImages.length - 1 >= index && (
-                <UserPortrait key={index} className="size-6" />
+              index <= profileImageUrls.length - 1 && (
+                <UserPortrait
+                  key={index}
+                  profileImageUrl={profileImageUrls[index]}
+                  className="size-6"
+                />
               )
             );
           }),

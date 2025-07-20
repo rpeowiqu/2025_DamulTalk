@@ -1,4 +1,5 @@
 import type { User } from "@/types/community/type";
+import type { InfiniteScrollType } from "@/types/common/type";
 
 export enum ChatCreateStep {
   SELECT_USER,
@@ -7,15 +8,24 @@ export enum ChatCreateStep {
 }
 
 export interface ChatCreateInfo {
-  title: string;
+  roomName: string;
   selectedUsers: User[];
 }
 
-export interface ChatRoomInfo {
+export interface ChatRoomPreview {
+  roomId: number;
   roomName: string;
   roomSize: number;
-  profileImages: string[];
-  members: ChatRoomMember[];
+  profileImageUrls: string[];
+  lastMessage: string;
+  lastMessageTime: string;
+  unReadMessageCount: number;
+}
+
+export interface ChatRoom {
+  roomName: string;
+  roomSize: number;
+  roomMembers: ChatRoomMember[];
 }
 
 export interface ChatRoomMember {
@@ -26,17 +36,34 @@ export interface ChatRoomMember {
 }
 
 export type MessageType = "TEXT" | "IMAGE" | "VIDEO";
+export type MessageStatus = "SENDING" | "SENT" | "FAILED";
 
-export interface ChatMessageInfo {
-  messageId: number;
+export interface Message {
+  messageId: string;
   senderId: number;
   profileImageUrl: string;
   nickname: string;
+  messageStatus: MessageStatus;
   messageType: MessageType;
   content: string;
   fileUrl?: string;
-  sentTime: string;
+  sendTime: string;
   unReadCount: number;
+  clientId?: string;
+}
+
+export interface MessageTransferHistory {
+  objectUrl?: string;
+  sendTime: string;
+}
+
+export type SystemMessageType = "DATE" | "EXIT";
+
+export interface SystemMessage {
+  type: SystemMessageType;
+  messageId: number;
+  content: string;
+  leftUserId?: number;
 }
 
 export interface UploadFile {
@@ -44,8 +71,47 @@ export interface UploadFile {
   objectUrl?: string;
 }
 
-export interface OptChatMessageInfo {
-  id: number;
-  objectUrl?: string;
-  createdAt: string;
+// Request ==========================================================================================================================
+export interface CreateChatRoomRequest {
+  roomName?: string;
+  userIds: number[];
+  isNameChanged: boolean;
+}
+
+export interface ReadMessageRequest {
+  roomId: number;
+  lastReadAt: string;
+}
+
+export interface MessagesRequest {
+  roomId: number;
+  cursor?: string;
+  size?: number;
+}
+
+export interface SearchMessageRequest {
+  roomId: number;
+  keyword: string;
+  size?: number; // 50 ~ 100
+}
+
+export interface SendFileRequest {
+  roomId: number;
+  file: File;
+  clientId: string;
+}
+
+// Response ==========================================================================================================================
+export type ChatRoomPreviewsResponse = ChatRoomPreview[];
+
+export type ChatRoomResponse = ChatRoom;
+
+export type MessagesResponse = InfiniteScrollType<Message>;
+
+export interface SearchMessageResponse {
+  results: {
+    messageId: number;
+    sendTime: string;
+    content: string;
+  }[];
 }
