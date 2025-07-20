@@ -85,7 +85,7 @@ const ChatMessageList = ({
 
     // 값을 찾기 못한 경우 마지막 메시지 아이디를 반환한다.
     return data.pages[0].data[data.pages[0].data.length - 1].messageId;
-  }, [data?.pages[0].data?.[0].messageId, user]);
+  }, [data?.pages[0].data?.[0]?.messageId, user]);
 
   useEffect(() => {
     if (!roomId || !data) {
