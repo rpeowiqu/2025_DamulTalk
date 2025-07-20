@@ -41,8 +41,8 @@ export type MessageStatus = "SENDING" | "SENT" | "FAILED";
 export interface Message {
   messageId: string;
   senderId: number;
-  profileImageUrl: string;
-  nickname: string;
+  profileImageUrl?: string;
+  nickname?: string;
   messageStatus: MessageStatus;
   messageType: MessageType;
   content: string;

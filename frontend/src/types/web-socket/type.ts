@@ -61,3 +61,13 @@ export interface WsChatRoomReadResponse {
   userId: number;
   lastReadAt: string;
 }
+
+export type SystemMessageType = "DATE" | "EXIT";
+
+export interface WsSystemMessageResponse {
+  messageId: string;
+  senderId: number;
+  sendTime: string;
+  content: string;
+  messageType: SystemMessageType;
+}
