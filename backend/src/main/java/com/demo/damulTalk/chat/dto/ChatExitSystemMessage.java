@@ -6,7 +6,6 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class ChatExitSystemMessage extends ChatSystemMessage {
 
     private Integer userId;
