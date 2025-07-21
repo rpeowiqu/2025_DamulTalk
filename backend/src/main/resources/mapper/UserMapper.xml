@@ -96,10 +96,10 @@
     <update id="updateProfile" parameterType="com.demo.damulTalk.user.dto.UserInfo">
         UPDATE users
         SET
-            nickname = #{nickname},
-            status_message = #{statusMessage},
-            profile_image_url = #{profileImageUrl},
-            background_image_url = #{backgroundImageUrl}
+            nickname = #{userInfo.nickname},
+            status_message = #{userInfo.statusMessage},
+            profile_image_url = #{userInfo.profileImageUrl},
+            background_image_url = #{userInfo.backgroundImageUrl}
         WHERE user_id = #{userId}
     </update>
 
