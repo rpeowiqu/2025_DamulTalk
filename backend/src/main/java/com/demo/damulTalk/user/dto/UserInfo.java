@@ -14,6 +14,8 @@ public class UserInfo {
 
     private String profileImageUrl;
 
+    private String backgroundImageUrl;
+
     private String statusMessage;
 
     private int friendCount;

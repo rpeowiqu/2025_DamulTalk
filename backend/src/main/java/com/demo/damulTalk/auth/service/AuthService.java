@@ -18,7 +18,7 @@ public interface AuthService {
 
     boolean checkDuplicatesUsername(ValidValue value);
 
-    boolean checkDuplicatesNickname(ValidValue value);
+    boolean checkDuplicatesNickname(ValidValue value, String token);
 
     void changePassword(HttpServletRequest request, String password);
 

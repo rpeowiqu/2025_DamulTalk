@@ -125,7 +125,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                 ).collect(Collectors.toList());
 
         String nextCursor = hasNext && !finalOlder.isEmpty()
-                ? finalOlder.get(finalOlder.size() - 1).getMessageId()
+                ? finalOlder.get(0).getSendTime().toString()
                 : null;
 
         CursorPageMetaDto<String> cursorPageMetaDto = CursorPageMetaDto.<String>builder()
@@ -206,35 +206,35 @@ public class ChatMessageServiceImpl implements ChatMessageService {
             String redisKey = "chat:room:" + message.getRoomId() + ":messages";
 
             ChatMessage lastMessage = findLastMessage(message.getRoomId());
-            if(lastMessage != null) {
-                LocalDate lastDate = lastMessage.getSendTime().toLocalDate();
-                LocalDate nowDate = message.getSendTime().toLocalDate();
+            LocalDate lastDate = null;
+            if(lastMessage != null)
+                lastDate = lastMessage.getSendTime().toLocalDate();
+            LocalDate nowDate = message.getSendTime().toLocalDate();
 
-                if(!lastDate.equals(nowDate)) {
-                    ChatMessage systemMessage = ChatMessage.builder()
-                            .messageId(UUID.randomUUID().toString())
-                            .roomId(messageRequest.getRoomId())
-                            .senderId(0)
-                            .messageType(MessageType.DATE)
-                            .content(nowDate.toString())
-                            .sendTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
-                            .build();
+//            if(lastDate == null || !lastDate.equals(nowDate)) {
+                ChatMessage systemMessage = ChatMessage.builder()
+                        .messageId(UUID.randomUUID().toString())
+                        .roomId(messageRequest.getRoomId())
+                        .senderId(0)
+                        .messageType(MessageType.DATE)
+                        .content(nowDate.toString())
+                        .sendTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                        .build();
 
-                    redisTemplate.opsForList().rightPush(redisKey, objectMapper.writeValueAsString(systemMessage));
-                    chatMessageFlushService.tryFlush(redisKey);
-                    redisTemplate.convertAndSend("chats", objectMapper.writeValueAsString(CommonWrapperDto.<ChatSystemMessage>builder()
-                            .roomId(messageRequest.getRoomId())
-                            .type(NotificationType.CHAT_SYSTEM_MESSAGE)
-                            .data(ChatSystemMessage.builder()
-                                    .messageId(systemMessage.getMessageId())
-                                    .senderId(systemMessage.getSenderId())
-                                    .messageType(systemMessage.getMessageType())
-                                    .content(systemMessage.getContent())
-                                    .sendTime(systemMessage.getSendTime())
-                                    .build())
-                            .build()));
-                }
-            }
+                redisTemplate.opsForList().rightPush(redisKey, objectMapper.writeValueAsString(systemMessage));
+                chatMessageFlushService.tryFlush(redisKey);
+                redisTemplate.convertAndSend("chats", objectMapper.writeValueAsString(CommonWrapperDto.<ChatSystemMessage>builder()
+                        .roomId(messageRequest.getRoomId())
+                        .type(NotificationType.CHAT_SYSTEM_MESSAGE)
+                        .data(ChatSystemMessage.builder()
+                                .messageId(systemMessage.getMessageId())
+                                .senderId(systemMessage.getSenderId())
+                                .messageType(systemMessage.getMessageType())
+                                .content(systemMessage.getContent())
+                                .sendTime(systemMessage.getSendTime())
+                                .build())
+                        .build()));
+//            }
 
             message.setSendTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
 
@@ -286,6 +286,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                 }
             }
 
+            chatRoomMapper.updateReadStatus(currentUser.getUserId(), message.getRoomId(), LocalDateTime.now(ZoneId.of("Asia/Seoul")));
         } catch (Exception e) {
             log.error("[ChatMessageService] 메시지 전송 실패", e);
             throw new RuntimeException("메시지 전송 실패");

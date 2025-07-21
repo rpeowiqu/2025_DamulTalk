@@ -53,9 +53,11 @@ public class AuthController {
     }
 
     @PostMapping("/duplicates/nicknames")
-    public ResponseEntity<?> checkDuplicatesNickname(@RequestBody ValidValue value) {
+    public ResponseEntity<?> checkDuplicatesNickname(@RequestBody ValidValue value, HttpServletRequest request) {
         log.info("[AuthController] 닉네임 중복확인 시작");
-        boolean isDuplicated = authService.checkDuplicatesNickname(value);
+        String token = request.getHeader("Authorization").substring(7);
+        boolean isDuplicated = authService.checkDuplicatesNickname(value, token);
+
         if (isDuplicated) {
             return ResponseEntity.ok().build();
         }

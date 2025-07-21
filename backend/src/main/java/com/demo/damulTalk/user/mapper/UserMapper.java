@@ -32,4 +32,6 @@ public interface UserMapper {
 
     List<FriendDto> selectUsersByNickname(@Param("userId") Integer userId, @Param("nickname") String nickname, @Param("cursor") String cursor, @Param("size") Integer size);
 
+    int updateProfile(@Param("userInfo") UserInfo userInfo, @Param("userId") Integer userId);
+
 }

@@ -12,14 +12,14 @@ import java.time.LocalDateTime;
 @Builder
 public class ChatSystemMessage {
 
-    private String messageId;
+    String messageId;
 
-    private Integer senderId;
+    Integer senderId;
 
-    private String content;
+    String content;
 
-    private MessageType messageType;
+    MessageType messageType;
 
-    private LocalDateTime sendTime;
+    LocalDateTime sendTime;
 
 }

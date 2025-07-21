@@ -1,6 +1,7 @@
 package com.demo.damulTalk.friend.mapper;
 
 import com.demo.damulTalk.friend.dto.FriendDto;
+import com.demo.damulTalk.friend.domain.Friend;
 import com.demo.damulTalk.user.dto.UserStatusDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -27,5 +28,7 @@ public interface FriendMapper {
     UserStatusDto selectFriendInfoById(Integer userId);
 
     String selectFriendStatus(Integer userId, Integer friendId);
+
+    Friend selectFriendRelationShipById(Integer userId, Integer friendId);
 
 }

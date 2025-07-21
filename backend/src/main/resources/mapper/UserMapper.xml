@@ -93,4 +93,14 @@
         WHERE username = #{username}
     </update>
 
+    <update id="updateProfile" parameterType="com.demo.damulTalk.user.dto.UserInfo">
+        UPDATE users
+        SET
+            nickname = #{nickname},
+            status_message = #{statusMessage},
+            profile_image_url = #{profileImageUrl},
+            background_image_url = #{backgroundImageUrl}
+        WHERE user_id = #{userId}
+    </update>
+
 </mapper>
