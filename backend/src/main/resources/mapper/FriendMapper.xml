@@ -88,6 +88,13 @@
           OR (first_user_id = #{friendId} AND second_user_id = #{userId})
     </select>
 
+    <select id="selectFriendRelationShipById" resultType="com.demo.damulTalk.friend.domain.Friend">
+        SELECT *
+        FROM friends
+        WHERE (first_user_id = #{userId} AND second_user_id = #{friendId})
+           OR (first_user_id = #{friendId} AND second_user_id = #{userId})
+    </select>
+
     <insert id="insertFollowRequest">
         INSERT INTO friends (first_user_id, second_user_id)
         VALUES(#{userId}, #{targetId})

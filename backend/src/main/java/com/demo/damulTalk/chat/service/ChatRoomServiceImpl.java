@@ -233,42 +233,42 @@ public class ChatRoomServiceImpl implements ChatRoomService {
                 for (RoomMemberInfo member : remainedMembers) {
                     chatRoomMapper.updateRoomName(roomId, member.getUserId(), updatedName);
                 }
+
+                try {
+                    String redisKey = "chat:room:" + roomId + ":messages";
+
+                    ChatMessage message = ChatMessage.builder()
+                            .messageId(UUID.randomUUID().toString())
+                            .roomId(roomId)
+                            .senderId(0)
+                            .messageType(MessageType.EXIT)
+                            .content(currentUser.getNickname() + "님이 나갔습니다.")
+                            .sendTime(LocalDateTime.now())
+                            .build();
+
+                    redisTemplate.opsForList().rightPush(redisKey, objectMapper.writeValueAsString(message));
+                    chatMessageFlushService.tryFlush(redisKey);
+
+                    redisTemplate.convertAndSend("chats", objectMapper.writeValueAsString(CommonWrapperDto.<ChatSystemMessage>builder()
+                            .roomId(roomId)
+                            .type(NotificationType.CHAT_SYSTEM_MESSAGE)
+                            .data(ChatExitSystemMessage.of(ChatSystemMessage.builder()
+                                    .messageId(message.getMessageId())
+                                    .senderId(0)
+                                    .messageType(message.getMessageType())
+                                    .content(message.getContent())
+                                    .sendTime(message.getSendTime())
+                                    .build(), userId))
+                            .build()));
+                } catch (Exception e) {
+                    log.error("[ChatMessageService] 메시지 전송 실패", e);
+                    throw new RuntimeException("메시지 전송 실패");
+                }
             }
         }
 
         if(room.getRoomSize() > 0) {
             chatRoomMapper.updateRoomSize(roomId, room.getRoomSize() - 1);
-        }
-
-        try {
-            String redisKey = "chat:room:" + roomId + ":messages";
-
-            ChatMessage message = ChatMessage.builder()
-                    .messageId(UUID.randomUUID().toString())
-                    .roomId(roomId)
-                    .senderId(0)
-                    .messageType(MessageType.EXIT)
-                    .content(currentUser.getNickname() + "님이 나갔습니다.")
-                    .sendTime(LocalDateTime.now())
-                    .build();
-
-            redisTemplate.opsForList().rightPush(redisKey, objectMapper.writeValueAsString(message));
-            chatMessageFlushService.tryFlush(redisKey);
-
-            redisTemplate.convertAndSend("chats", objectMapper.writeValueAsString(CommonWrapperDto.<ChatSystemMessage>builder()
-                    .roomId(roomId)
-                    .type(NotificationType.CHAT_SYSTEM_MESSAGE)
-                    .data(ChatSystemMessage.builder()
-                            .messageId(message.getMessageId())
-                            .senderId(0)
-                            .messageType(message.getMessageType())
-                            .content(message.getContent())
-                            .sendTime(message.getSendTime())
-                            .build())
-                    .build()));
-        } catch (Exception e) {
-            log.error("[ChatMessageService] 메시지 전송 실패", e);
-            throw new RuntimeException("메시지 전송 실패");
         }
     }
 

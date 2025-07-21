@@ -5,6 +5,8 @@ public enum FriendshipStatus {
     NONE,
     ME,
     PENDING,
+    PENDING_REQUEST,
+    PENDING_RESPONSE,
     ACCEPTED;
 
 }
