@@ -69,7 +69,7 @@ public class ChatController {
         if(response.getData().isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-
+        //
         return ResponseEntity.ok(response);
     }
 
