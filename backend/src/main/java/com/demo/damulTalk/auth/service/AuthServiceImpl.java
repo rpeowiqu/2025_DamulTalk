@@ -152,7 +152,7 @@ public class AuthServiceImpl implements AuthService {
 
         if(token != null) {
             int userId = jwtService.getUserIdFromToken(token);
-            if(user.getUserId() == userId) {
+            if(user != null && user.getUserId() == userId) {
                 return false;
             }
         }
