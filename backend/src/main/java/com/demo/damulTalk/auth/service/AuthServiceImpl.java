@@ -145,10 +145,18 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public boolean checkDuplicatesNickname(ValidValue value) {
+    public boolean checkDuplicatesNickname(ValidValue value, String token) {
         log.info("[AuthService] nickname 중복확인 시작");
 
         User user = userMapper.selectUserByNickname(value.getValue());
+
+        if(token != null) {
+            int userId = jwtService.getUserIdFromToken(token);
+            if(user.getUserId() == userId) {
+                return false;
+            }
+        }
+
         return user != null;
     }
 
