@@ -3,7 +3,7 @@ import { toast } from "sonner";
 
 import { patchAcceptFriendRequest } from "@/services/community/api";
 import type {
-  FriendRequestRequest,
+  RequestFriendRequest,
   FriendRequestsResponse,
   FriendsResponse,
   ProfileResponse,
@@ -16,7 +16,7 @@ const useAcceptFriendRequest = (userId: number) => {
 
   return useMutation({
     mutationKey: ["accept-friend-request", userId],
-    mutationFn: (request: FriendRequestRequest) =>
+    mutationFn: (request: RequestFriendRequest) =>
       patchAcceptFriendRequest(request),
     onSuccess: (data) => {
       // 친구 요청 목록에서 수락한 친구를 제거
