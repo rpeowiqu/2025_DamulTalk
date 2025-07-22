@@ -30,6 +30,7 @@
         SELECT
             u.nickname,
             u.profile_image_url AS profileImageUrl,
+            u.background_image_url AS backgroundImageUrl,
             u.status_message AS statusMessage,
             (
                 SELECT COUNT(*)
