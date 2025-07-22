@@ -117,6 +117,9 @@ public class UserServiceImpl implements UserService {
                 log.error("[FileService] 프로파일이미지 업로드 실패", e);
                 throw new RuntimeException("프로파일이미지 업로드 실패");
             }
+        } else {
+            if(request.getIsDefaultProfile())
+                userInfo.setProfileImageUrl(null);
         }
 
         if (backgroundImage != null) {
@@ -138,6 +141,9 @@ public class UserServiceImpl implements UserService {
                 log.error("[FileService] 프로파일이미지 업로드 실패", e);
                 throw new RuntimeException("프로파일이미지 업로드 실패");
             }
+        } else {
+            if(request.getIsDefaultBackground())
+                userInfo.setBackgroundImageUrl(null);
         }
 
         userInfo.setNickname(request.getNickname());
