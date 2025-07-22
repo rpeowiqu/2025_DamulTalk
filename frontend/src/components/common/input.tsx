@@ -1,27 +1,32 @@
 import {
-  useEffect,
   useRef,
   useState,
   type ChangeEvent,
   type InputHTMLAttributes,
+  type RefObject,
 } from "react";
 import { EyeIcon, EyeOffIcon, XCircleIcon } from "lucide-react";
 
 import { cn } from "@/utils/style";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-  prefillEmail?: boolean; // type이 email일 때, 로컬스토리지에 값이 있다면 해당 값으로 초기화 할 것인지
+  ref?: RefObject<HTMLInputElement | null>;
 }
 
 const Input = ({
-  prefillEmail,
+  ref,
   type,
+  defaultValue,
   className,
   onChange,
   ...props
 }: InputProps) => {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [isEmpty, setIsEmpty] = useState(true);
+  const innerRef = useRef<HTMLInputElement>(null);
+
+  // props로 값을 넘겨줄 경우 해당 값을 사용하고 그렇지 않으면 내부에서 선언한 값을 사용
+  const inputRef = ref ?? innerRef;
+
+  const [isEmpty, setIsEmpty] = useState(!defaultValue);
   const [showPassword, setShowPassword] = useState(false);
 
   const handleShowPassword = () => {
@@ -47,29 +52,12 @@ const Input = ({
     } as ChangeEvent<HTMLInputElement>);
   };
 
-  useEffect(() => {
-    if (!inputRef.current) {
-      return;
-    }
-
-    // 타입이 이메일이고, prefillEmail prop이 true인 경우에 로컬 스토리지에 저장되어 있다면 값을 가져온다.
-    if (type === "email" && prefillEmail) {
-      const savedEmail = localStorage.getItem("saved-email");
-      if (savedEmail) {
-        inputRef.current.value = savedEmail;
-        setIsEmpty(false);
-        return;
-      }
-    }
-
-    setIsEmpty(!!inputRef.current.value);
-  }, []);
-
   return (
     <div className="focus-within:ring-damul-main-300 flex items-center gap-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 ring-inset focus-within:ring-2">
       <input
         ref={inputRef}
         type={type === "password" ? (showPassword ? "text" : "password") : type}
+        defaultValue={defaultValue}
         className={cn(
           "flex-1 placeholder:text-neutral-300 focus:outline-none",
           className,

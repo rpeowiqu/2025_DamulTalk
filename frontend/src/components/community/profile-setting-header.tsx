@@ -3,6 +3,7 @@ import {
   useState,
   type ChangeEvent,
   type Dispatch,
+  type RefObject,
   type SetStateAction,
 } from "react";
 import { EditIcon } from "lucide-react";
@@ -22,6 +23,7 @@ interface ProfileSettingHeaderProps {
   profile: Profile;
   formData: ProfileSetting;
   setFormData: Dispatch<SetStateAction<ProfileSetting>>;
+  nicknameInputRef: RefObject<HTMLInputElement | null>;
   backgroundImageFile: UploadFile | null;
   setBackgroundImageFile: Dispatch<SetStateAction<UploadFile | null>>;
   profileImageFile: UploadFile | null;
@@ -32,6 +34,7 @@ const ProfileSettingHeader = ({
   profile,
   formData,
   setFormData,
+  nicknameInputRef,
   backgroundImageFile,
   setBackgroundImageFile,
   profileImageFile,
@@ -149,7 +152,7 @@ const ProfileSettingHeader = ({
 
           <div className="relative w-80">
             <Input
-              defaultValue={formData.nickname}
+              ref={nicknameInputRef}
               className={cn(
                 "w-full",
                 messageType === "valid" || formData.nickname.length === 0

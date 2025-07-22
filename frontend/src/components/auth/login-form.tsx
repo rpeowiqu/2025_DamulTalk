@@ -41,8 +41,8 @@ const LoginForm = () => {
             id="email"
             name="email"
             type="email"
-            prefillEmail
             placeholder="이메일을 입력해 주세요"
+            defaultValue={localStorage.getItem("saved-email") ?? ""}
             autoFocus
             autoCapitalize="off"
             required

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import type { ProfileSetting } from "@/types/community/type";
 import useCurrentUser from "@/hooks/auth/use-current-user";
@@ -14,21 +14,22 @@ const SettingPage = () => {
   const { data: user } = useCurrentUser();
   const { data, isLoading } = useProfile(Number(user?.userId));
 
-  const { mutate: updateProfile } = useUpdateProfile(Number(user?.userId));
   const [formData, setFormData] = useState<ProfileSetting>({
     nickname: "",
     statusMessage: "",
     isDefaultBackground: false,
     isDefaultProfile: false,
   });
+  const nicknameInputRef = useRef<HTMLInputElement>(null);
   const [backgroundImageFile, setBackgroundImageFile] =
     useState<UploadFile | null>(null);
   const [profileImageFile, setProfileImageFile] = useState<UploadFile | null>(
     null,
   );
+  const { mutate: updateProfile } = useUpdateProfile(Number(user?.userId));
 
   const handleReset = () => {
-    if (!data) {
+    if (!data || !nicknameInputRef.current) {
       return;
     }
 
@@ -38,6 +39,8 @@ const SettingPage = () => {
       isDefaultBackground: !data.backgroundImageUrl,
       isDefaultProfile: !data.profileImageUrl,
     });
+    nicknameInputRef.current.value = data.nickname;
+    console.log(nicknameInputRef.current.value);
     setBackgroundImageFile(null);
     setProfileImageFile(null);
   };
@@ -72,6 +75,7 @@ const SettingPage = () => {
             profile={data}
             formData={formData}
             setFormData={setFormData}
+            nicknameInputRef={nicknameInputRef}
             backgroundImageFile={backgroundImageFile}
             setBackgroundImageFile={setBackgroundImageFile}
             profileImageFile={profileImageFile}
