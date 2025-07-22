@@ -136,7 +136,7 @@ public class UserServiceImpl implements UserService {
 
                 s3Client.putObject(profileRequest, RequestBody.fromInputStream(backgroundImage.getInputStream(), backgroundImage.getSize()));
                 String backgroundImageUrl = "https://" + bucketName + ".s3.amazonaws.com/" + backgroundImageKey;
-                userInfo.setProfileImageUrl(backgroundImageUrl);
+                userInfo.setBackgroundImageUrl(backgroundImageUrl);
             } catch (Exception e) {
                 log.error("[FileService] 프로파일이미지 업로드 실패", e);
                 throw new RuntimeException("프로파일이미지 업로드 실패");
