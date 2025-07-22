@@ -22,7 +22,7 @@ const ProfileHeader = ({ profile, isRefetching }: ProfileHeaderProps) => {
       <div className="flex h-16 justify-between px-10">
         <div className="flex items-end gap-4">
           <UserPortrait
-            className="size-28"
+            className="size-28 border-2"
             profileImageUrl={profile.profileImageUrl}
           />
 

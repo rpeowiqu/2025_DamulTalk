@@ -13,8 +13,12 @@ const UserPortrait = ({
   className,
 }: UserPortraitProps) => {
   return (
-    <div className={cn("relative size-12 rounded-full", className)}>
-      <div className="size-full overflow-hidden rounded-full border border-neutral-200">
+    <div
+      className={cn(
+        "relative size-12 rounded-full border border-neutral-200",
+        className,
+      )}>
+      <div className="size-full overflow-hidden rounded-full">
         <img
           src={profileImageUrl || defaultPortraitImage}
           alt="프로필 이미지"
