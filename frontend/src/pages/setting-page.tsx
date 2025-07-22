@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 
 import type { ProfileSetting } from "@/types/community/type";
 import useCurrentUser from "@/hooks/auth/use-current-user";
@@ -29,8 +27,6 @@ const SettingPage = () => {
     null,
   );
 
-  const navigate = useNavigate();
-
   const handleReset = () => {
     if (!data) {
       return;
@@ -57,10 +53,6 @@ const SettingPage = () => {
       backgroundImage: backgroundImageFile?.file ?? null,
       profileImage: profileImageFile?.file ?? null,
     });
-
-    // 프로필 페이지로 이동
-    navigate(`/profiles/${user.userId}`);
-    toast.success("프로필이 수정되었어요");
   };
 
   useEffect(() => {
