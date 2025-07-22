@@ -6,9 +6,9 @@ import WebSocketProvider from "@/contexts/chat/web-socket-provider";
 const MainLayout = () => {
   return (
     <WebSocketProvider>
-      <div className="flex min-h-dvh bg-white">
+      <div className="flex bg-white">
         <SideBar />
-        <main className="flex-1">
+        <main className="h-dvh flex-1">
           <Outlet />
         </main>
       </div>
