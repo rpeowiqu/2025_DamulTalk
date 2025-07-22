@@ -27,6 +27,8 @@ export interface Profile {
 export interface ProfileSetting {
   nickname: string;
   statusMessage: string;
+  isDefaultBackground: boolean;
+  isDefaultProfile: boolean;
 }
 
 // Request ==========================================================================================================================
@@ -46,8 +48,7 @@ export interface DeleteFriendRequest {
 
 export interface UpdateProfileRequest {
   userId: number;
-  nickname: string;
-  statusMesasge: string;
+  profileSetting: ProfileSetting;
   backgroundImage: File | null;
   profileImage: File | null;
 }

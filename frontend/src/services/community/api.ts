@@ -75,8 +75,10 @@ export const putUpdateProfile = async (request: UpdateProfileRequest) => {
   const jsonBlob = new Blob(
     [
       JSON.stringify({
-        nickname: request.nickname,
-        statusMessage: request.statusMesasge,
+        nickname: request.profileSetting.nickname,
+        statusMessage: request.profileSetting.statusMessage,
+        isDefaultBackground: request.profileSetting.isDefaultBackground,
+        isDefaultProfile: request.profileSetting.isDefaultProfile,
       }),
     ],
     { type: "application/json" },

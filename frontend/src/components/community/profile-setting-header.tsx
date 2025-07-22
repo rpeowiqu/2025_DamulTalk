@@ -13,6 +13,7 @@ import defaultProfileBackground from "@/assets/images/profile-background.png";
 import UserPortrait from "@/components/community/user-portrait";
 import Input from "@/components/common/input";
 import FileUploadButton from "@/components/common/file-upload-button";
+import ProfileImageDeleteButton from "@/components/community/profile-image-delete-button";
 import type { Profile, ProfileSetting } from "@/types/community/type";
 import type { UploadFile } from "@/types/chat/type";
 import useCheckNicknameDuplication from "@/hooks/auth/use-check-nickname-duplication";
@@ -58,6 +59,24 @@ const ProfileSettingHeader = ({
     updateFormData(e.target.value);
   };
 
+  const handleChangeBackground = () => {
+    setFormData((prev) => ({ ...prev, isDefaultBackground: false }));
+  };
+
+  const handleDeleteBackground = () => {
+    setFormData((prev) => ({ ...prev, isDefaultBackground: true }));
+    setBackgroundImageFile(null);
+  };
+
+  const handleChangeProfile = () => {
+    setFormData((prev) => ({ ...prev, isDefaultProfile: false }));
+  };
+
+  const handleDeleteProfile = () => {
+    setFormData((prev) => ({ ...prev, isDefaultProfile: true }));
+    setProfileImageFile(null);
+  };
+
   return (
     <div>
       <div
@@ -67,8 +86,9 @@ const ProfileSettingHeader = ({
         <img
           src={
             backgroundImageFile?.objectUrl ??
-            profile.backgroundImageUrl ??
-            defaultProfileBackground
+            (formData.isDefaultBackground
+              ? (profile.backgroundImageUrl ?? defaultProfileBackground)
+              : defaultProfileBackground)
           }
           alt="프로필 배경"
           className={cn(
@@ -78,15 +98,17 @@ const ProfileSettingHeader = ({
         />
 
         {isHoverBackground && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-white">
+          <div className="text-damul-main-300 absolute inset-0 flex items-center justify-center gap-1 bg-black/50">
             <FileUploadButton
               type="button"
               uploadFile={backgroundImageFile}
               setUploadFile={setBackgroundImageFile}
-              className="text-damul-main-300 flex cursor-pointer flex-col items-center justify-center gap-1 font-bold">
-              <EditIcon />
-              <p>수정하기</p>
+              className="hover:bg-damul-main-300/20 flex cursor-pointer flex-col items-center justify-center gap-1 rounded-lg p-2 font-bold"
+              onClick={handleChangeBackground}>
+              <EditIcon className="size-5" />
+              <p className="text-sm">수정</p>
             </FileUploadButton>
+            <ProfileImageDeleteButton onClick={handleDeleteBackground} />
           </div>
         )}
       </div>
@@ -103,20 +125,24 @@ const ProfileSettingHeader = ({
                 isHoverProfile && "scale-105",
               )}
               profileImageUrl={
-                profileImageFile?.objectUrl ?? profile.profileImageUrl
+                formData.isDefaultProfile
+                  ? null
+                  : (profileImageFile?.objectUrl ?? profile.profileImageUrl)
               }
             />
 
             {isHoverProfile && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-white">
+              <div className="text-damul-main-300 absolute inset-0 flex items-center justify-center gap-1 bg-black/50">
                 <FileUploadButton
                   type="button"
                   uploadFile={profileImageFile}
                   setUploadFile={setProfileImageFile}
-                  className="text-damul-main-300 flex cursor-pointer flex-col items-center justify-center gap-1 font-bold">
-                  <EditIcon />
-                  <p>수정하기</p>
+                  className="hover:bg-damul-main-300/20 flex cursor-pointer flex-col items-center justify-center gap-1 rounded-lg p-2 font-bold"
+                  onClick={handleChangeProfile}>
+                  <EditIcon className="size-5" />
+                  <p className="text-sm">수정</p>
                 </FileUploadButton>
+                <ProfileImageDeleteButton onClick={handleDeleteProfile} />
               </div>
             )}
           </div>

@@ -27,6 +27,8 @@ const FileUploadButton = ({
   inputAttributes,
   className,
   children,
+  onClick,
+  ...props
 }: FileUploadButtonProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -64,6 +66,7 @@ const FileUploadButton = ({
   const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     inputRef.current?.click();
+    onClick?.(e);
   };
 
   return (
@@ -77,7 +80,10 @@ const FileUploadButton = ({
         readOnly
         {...inputAttributes}
       />
-      <button className={cn("cursor-pointer", className)} onClick={handleClick}>
+      <button
+        className={cn("cursor-pointer", className)}
+        onClick={handleClick}
+        {...props}>
         {children}
       </button>
     </div>

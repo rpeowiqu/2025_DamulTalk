@@ -20,6 +20,8 @@ const SettingPage = () => {
   const [formData, setFormData] = useState<ProfileSetting>({
     nickname: "",
     statusMessage: "",
+    isDefaultBackground: false,
+    isDefaultProfile: false,
   });
   const [backgroundImageFile, setBackgroundImageFile] =
     useState<UploadFile | null>(null);
@@ -34,11 +36,12 @@ const SettingPage = () => {
       return;
     }
 
-    setFormData((prev) => ({
-      ...prev,
+    setFormData({
       nickname: data.nickname,
       statusMessage: data.statusMessage ?? "",
-    }));
+      isDefaultBackground: !data.backgroundImageUrl,
+      isDefaultProfile: !data.profileImageUrl,
+    });
     setBackgroundImageFile(null);
     setProfileImageFile(null);
   };
@@ -50,8 +53,7 @@ const SettingPage = () => {
 
     updateProfile({
       userId: user.userId,
-      nickname: formData.nickname,
-      statusMesasge: formData.statusMessage,
+      profileSetting: formData,
       backgroundImage: backgroundImageFile?.file ?? null,
       profileImage: profileImageFile?.file ?? null,
     });
