@@ -87,8 +87,8 @@ const ProfileSettingHeader = ({
           src={
             backgroundImageFile?.objectUrl ??
             (formData.isDefaultBackground
-              ? (profile.backgroundImageUrl ?? defaultProfileBackground)
-              : defaultProfileBackground)
+              ? defaultProfileBackground
+              : (profile.backgroundImageUrl ?? defaultProfileBackground))
           }
           alt="프로필 배경"
           className={cn(
