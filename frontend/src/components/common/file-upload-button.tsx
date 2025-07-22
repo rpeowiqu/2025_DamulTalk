@@ -19,6 +19,7 @@ interface FileUploadButtonProps
   uploadFile: UploadFile | null;
   setUploadFile: Dispatch<SetStateAction<UploadFile | null>>;
   inputAttributes?: InputHTMLAttributes<HTMLInputElement>;
+  onChangeFile?: () => void;
 }
 
 const FileUploadButton = ({
@@ -27,7 +28,7 @@ const FileUploadButton = ({
   inputAttributes,
   className,
   children,
-  onClick,
+  onChangeFile,
   ...props
 }: FileUploadButtonProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -60,13 +61,14 @@ const FileUploadButton = ({
         file,
         objectUrl,
       });
+
+      onChangeFile?.();
     }
   };
 
   const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     inputRef.current?.click();
-    onClick?.(e);
   };
 
   return (

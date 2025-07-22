@@ -104,7 +104,7 @@ const ProfileSettingHeader = ({
               uploadFile={backgroundImageFile}
               setUploadFile={setBackgroundImageFile}
               className="hover:bg-damul-main-300/20 flex cursor-pointer flex-col items-center justify-center gap-1 rounded-lg p-2 font-bold"
-              onClick={handleChangeBackground}>
+              onChangeFile={handleChangeBackground}>
               <EditIcon className="size-5" />
               <p className="text-sm">수정</p>
             </FileUploadButton>
@@ -138,7 +138,7 @@ const ProfileSettingHeader = ({
                   uploadFile={profileImageFile}
                   setUploadFile={setProfileImageFile}
                   className="hover:bg-damul-main-300/20 flex cursor-pointer flex-col items-center justify-center gap-1 rounded-lg p-2 font-bold"
-                  onClick={handleChangeProfile}>
+                  onChangeFile={handleChangeProfile}>
                   <EditIcon className="size-5" />
                   <p className="text-sm">수정</p>
                 </FileUploadButton>
