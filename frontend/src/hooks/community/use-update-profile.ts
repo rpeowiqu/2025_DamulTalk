@@ -20,11 +20,12 @@ const useUpdateProfile = (userId: number) => {
         (prev) => (prev ? data : prev),
       );
 
-      // 사이드 바에서 내 프로필 사진을 변경
+      // 사이드 바에서 프로필을 갱신
       queryClient.setQueryData<User>(["current-user"], (prev) =>
         prev
           ? {
               ...prev,
+              nickname: data.nickname,
               profileImageUrl: data.profileImageUrl,
             }
           : prev,
