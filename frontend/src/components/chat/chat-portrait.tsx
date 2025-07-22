@@ -11,13 +11,12 @@ const ChatPortrait = ({
 }: ChatPortraitProps) => {
   return (
     <div className="relative flex size-12 shrink-0 flex-wrap items-center justify-center">
-      {profileImageUrls.length === 1 ? (
-        <UserPortrait />
+      {profileImageUrls.length <= 1 ? (
+        <UserPortrait profileImageUrl={profileImageUrls[0] ?? null} />
       ) : (
         [0, 1].map((row) =>
           [0, 1].map((col) => {
             const index = 2 * row + col;
-
             return (
               index <= profileImageUrls.length - 1 && (
                 <UserPortrait
