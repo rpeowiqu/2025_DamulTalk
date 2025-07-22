@@ -77,12 +77,7 @@ const FileUploadButton = ({
         readOnly
         {...inputAttributes}
       />
-      <button
-        className={cn(
-          "cursor-pointer rounded-lg p-2 text-neutral-500 hover:bg-neutral-100 hover:text-neutral-600",
-          className,
-        )}
-        onClick={handleClick}>
+      <button className={cn("cursor-pointer", className)} onClick={handleClick}>
         {children}
       </button>
     </div>

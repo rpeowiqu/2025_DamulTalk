@@ -120,7 +120,8 @@ const ChatInput = ({ sendMessage }: ChatInputProps) => {
         <div className="flex items-end justify-between">
           <FileUploadButton
             uploadFile={uploadFile}
-            setUploadFile={setUploadFile!}>
+            setUploadFile={setUploadFile!}
+            className="rounded-lg p-2 text-neutral-500 hover:bg-neutral-100 hover:text-neutral-600">
             <MultiMediaIcon className="size-5" />
           </FileUploadButton>
           <Button className="py-2 text-base" onClick={handleSendMessage}>
