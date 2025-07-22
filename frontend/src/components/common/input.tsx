@@ -48,16 +48,21 @@ const Input = ({
   };
 
   useEffect(() => {
-    // 타입이 이메일이고, prefillEmail prop이 true인 경우에 로컬 스토리지에 저장되어 있다면 값을 가져온다.
-    if (!inputRef.current || !(type === "email") || !prefillEmail) {
+    if (!inputRef.current) {
       return;
     }
 
-    const savedEmail = localStorage.getItem("saved-email");
-    if (savedEmail) {
-      inputRef.current.value = savedEmail;
-      setIsEmpty(false);
+    // 타입이 이메일이고, prefillEmail prop이 true인 경우에 로컬 스토리지에 저장되어 있다면 값을 가져온다.
+    if (type === "email" && prefillEmail) {
+      const savedEmail = localStorage.getItem("saved-email");
+      if (savedEmail) {
+        inputRef.current.value = savedEmail;
+        setIsEmpty(false);
+        return;
+      }
     }
+
+    setIsEmpty(!!inputRef.current.value);
   }, []);
 
   return (
