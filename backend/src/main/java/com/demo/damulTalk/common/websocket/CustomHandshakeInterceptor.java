@@ -31,7 +31,6 @@ public class CustomHandshakeInterceptor implements HandshakeInterceptor {
 
         URI uri = request.getURI();
         String query = uri.getQuery();
-        log.info("[CustomHandshakeInterceptor] query: {}", query);
 
         if (query != null && query.contains("token=")) {
             String token = Arrays.stream(query.split("&"))
@@ -39,8 +38,6 @@ public class CustomHandshakeInterceptor implements HandshakeInterceptor {
                     .map(param -> param.substring("token=".length()))
                     .findFirst()
                     .orElse(null);
-
-            log.info("[CustomHandshakeInterceptor] token={}", token);
 
             if (token != null) {
                 try {
@@ -52,8 +49,6 @@ public class CustomHandshakeInterceptor implements HandshakeInterceptor {
                                 new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
                         attributes.put("user", authToken);  // 이걸 WebSocket 세션에 저장
-                        log.info("[CustomHandshakeInterceptor] is attributes contained user: {}", attributes.containsKey("user"));
-                        log.info("[JwtHandshakeInterceptor] WebSocket 인증 성공 - 사용자: {}", username);
                     }
                 } catch (Exception e) {
                     log.error("[JwtHandshakeInterceptor] WebSocket 인증 실패: {}", e.getMessage());

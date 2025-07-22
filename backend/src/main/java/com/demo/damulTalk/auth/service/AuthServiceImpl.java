@@ -73,8 +73,6 @@ public class AuthServiceImpl implements AuthService {
         log.info("[AuthService] 로그인 시작 - username: {}", loginRequest.getUsername());
 
         User user = userMapper.selectUserByUsername(loginRequest.getUsername());
-        log.info("[AuthService] loginPassword: {}", passwordEncoder.encode(loginRequest.getPassword()));
-        log.info("[AuthService] savedPassword: {}", user.getPassword());
         if(user == null) {
             log.info("[AuthService] 존재하지 않는 유저입니다.");
             throw new BusinessException(

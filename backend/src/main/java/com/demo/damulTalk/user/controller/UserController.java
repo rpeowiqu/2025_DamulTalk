@@ -1,6 +1,5 @@
 package com.demo.damulTalk.user.controller;
 
-import com.demo.damulTalk.auth.dto.ValidValue;
 import com.demo.damulTalk.common.scroll.ScrollResponse;
 import com.demo.damulTalk.friend.dto.FriendDto;
 import com.demo.damulTalk.user.dto.ProfileUpdateRequest;

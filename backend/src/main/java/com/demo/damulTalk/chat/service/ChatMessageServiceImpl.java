@@ -211,7 +211,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                 lastDate = lastMessage.getSendTime().toLocalDate();
             LocalDate nowDate = message.getSendTime().toLocalDate();
 
-//            if(lastDate == null || !lastDate.equals(nowDate)) {
+            if(lastDate == null || !lastDate.equals(nowDate)) {
                 ChatMessage systemMessage = ChatMessage.builder()
                         .messageId(UUID.randomUUID().toString())
                         .roomId(messageRequest.getRoomId())
@@ -234,7 +234,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                                 .sendTime(systemMessage.getSendTime())
                                 .build())
                         .build()));
-//            }
+            }
 
             message.setSendTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
 
