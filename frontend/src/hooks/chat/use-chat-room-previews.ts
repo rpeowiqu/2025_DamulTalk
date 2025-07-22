@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { getChatRoomPreviews } from "@/services/chat/api";
 import type { ChatRoomPreviewsResponse } from "@/types/chat/type";
+import { handleJsonResponse } from "@/utils/http-common";
 
 const useChatRoomPreviews = () => {
   return useQuery({
@@ -13,11 +14,10 @@ const useChatRoomPreviews = () => {
         return [];
       }
 
-      const data = await response.json<ChatRoomPreviewsResponse>();
-      return data;
+      return await handleJsonResponse<ChatRoomPreviewsResponse>(response);
     },
-    staleTime: 30 * 60 * 1_000,
-    gcTime: 30 * 60 * 1_000,
+    staleTime: 5 * 1_000 * 60,
+    gcTime: 3 * 1_000 * 60,
     refetchOnWindowFocus: false,
     retry: 0,
   });

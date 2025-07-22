@@ -7,7 +7,6 @@ import type {
   NewPasswordReqeust,
   CheckEmailRequest,
 } from "@/types/auth/type";
-import type { User } from "@/types/community/type";
 
 // 회원 가입
 export const postSignup = async (request: SignupRequest) => {
@@ -51,8 +50,8 @@ export const postCheckNicknameDuplication = async (
 
 // 로그인 한 유저 정보 조회
 export const getCurrentUser = async () => {
-  const data = await apiClient.get("auth/info").json<User>();
-  return data;
+  const response = await apiClient.get("auth/info");
+  return response;
 };
 
 // 비밀번호 찾기 - 이메일로 인증코드 받기

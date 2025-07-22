@@ -1,5 +1,4 @@
 import type {
-  ChatRoomResponse,
   CreateChatRoomRequest,
   MessagesRequest,
   ReadMessageRequest,
@@ -26,8 +25,8 @@ export const postCreateChatRoom = async (request: CreateChatRoomRequest) => {
 
 // 채팅방 정보 불러오기
 export const getChatRoom = async (roomId: number) => {
-  const data = await apiClient.get(`chats/${roomId}`).json<ChatRoomResponse>();
-  return data;
+  const response = await apiClient.get(`chats/${roomId}`);
+  return response;
 };
 
 // 채팅 내역 불러오기

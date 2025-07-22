@@ -8,6 +8,7 @@ import type {
   UpdateProfileRequest,
   User,
 } from "@/types/community/type";
+import { handleJsonResponse } from "@/utils/http-common";
 
 const useUpdateProfile = (userId: number) => {
   const queryClient = useQueryClient();
@@ -15,7 +16,10 @@ const useUpdateProfile = (userId: number) => {
 
   return useMutation({
     mutationKey: ["update-profile", userId],
-    mutationFn: (request: UpdateProfileRequest) => putUpdateProfile(request),
+    mutationFn: async (request: UpdateProfileRequest) => {
+      const response = await putUpdateProfile(request);
+      return await handleJsonResponse<ProfileResponse>(response);
+    },
     onSuccess: (data, request) => {
       // 내 프로필을 갱신
       queryClient.setQueryData<ProfileResponse>(

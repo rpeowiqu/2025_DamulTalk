@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { getFriends } from "@/services/community/api";
 import type { FriendsResponse } from "@/types/community/type";
+import { handleJsonResponse } from "@/utils/http-common";
 
 const useFriends = (userId: number) => {
   return useQuery({
@@ -14,11 +15,10 @@ const useFriends = (userId: number) => {
         return [];
       }
 
-      const data = await response.json<FriendsResponse>();
-      return data;
+      return await handleJsonResponse<FriendsResponse>(response);
     },
-    staleTime: 30 * 1_000 * 60,
-    gcTime: 30 * 1_000 * 60,
+    staleTime: 5 * 1_000 * 60,
+    gcTime: 3 * 1_000 * 60,
     refetchOnWindowFocus: false,
     retry: 1,
     enabled: !!userId,

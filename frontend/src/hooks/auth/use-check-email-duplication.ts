@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
 import { postCheckEmailDuplication } from "@/services/auth/api";
+import type { DamulError } from "@/types/common/type";
 
 const useCheckEmailDuplication = (email: string) => {
   const [messageType, setMessageType] = useState<"valid" | "invalid">("valid");
@@ -12,6 +13,9 @@ const useCheckEmailDuplication = (email: string) => {
       const response = await postCheckEmailDuplication({ value: email });
       if (response.status === 200) {
         throw new Error("이미 사용 중인 이메일이에요");
+      } else if (!response.ok) {
+        const errorBody = await response.json<DamulError>();
+        throw new Error(errorBody.message);
       }
       return response;
     },

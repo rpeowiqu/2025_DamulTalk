@@ -3,13 +3,22 @@ import { toast } from "sonner";
 
 import { postLogout } from "@/services/auth/api";
 import useSideBarTabStore from "@/store/side-bar-tab-store";
+import type { DamulError } from "@/types/common/type";
 
 const useLogout = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationKey: ["logout"],
-    mutationFn: () => postLogout(),
+    mutationFn: async () => {
+      const response = await postLogout();
+      if (!response.ok) {
+        const errorBody = await response.json<DamulError>();
+        throw new Error(errorBody.message);
+      }
+      return response;
+    },
+
     onSuccess: () => {
       // 모든 캐시 삭제
       queryClient.removeQueries();

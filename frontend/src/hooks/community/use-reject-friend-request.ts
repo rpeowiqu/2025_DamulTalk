@@ -3,13 +3,21 @@ import { toast } from "sonner";
 
 import { deleteFriendRequest } from "@/services/community/api";
 import type { FriendRequestsResponse } from "@/types/community/type";
+import type { DamulError } from "@/types/common/type";
 
 const useRejectFriendRequest = (userId: number) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationKey: ["reject-friend-request", userId],
-    mutationFn: (userId: number) => deleteFriendRequest(userId),
+    mutationFn: async (userId: number) => {
+      const response = await deleteFriendRequest(userId);
+      if (!response.ok) {
+        const errorBody = await response.json<DamulError>();
+        throw new Error(errorBody.message);
+      }
+      return response;
+    },
     onSuccess: () => {
       // 친구 요청 목록해서 해당 친구를 삭제
       queryClient.setQueryData<FriendRequestsResponse>(

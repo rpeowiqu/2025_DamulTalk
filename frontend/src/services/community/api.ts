@@ -2,9 +2,7 @@ import apiClient from "@/utils/http-common";
 import type {
   DeleteFriendRequest,
   UserSearchRequest,
-  ProfileResponse,
   RequestFriendRequest,
-  User,
   UpdateProfileRequest,
 } from "@/types/community/type";
 import { getQueryString } from "@/utils/url";
@@ -33,12 +31,10 @@ export const postFriendRequest = async (request: RequestFriendRequest) => {
 export const patchAcceptFriendRequest = async (
   request: RequestFriendRequest,
 ) => {
-  const data = await apiClient
-    .patch("friends/requests", {
-      json: request,
-    })
-    .json<User>();
-  return data;
+  const response = await apiClient.patch("friends/requests", {
+    json: request,
+  });
+  return response;
 };
 
 // 친구 추가 요청 취소/거절
@@ -64,10 +60,8 @@ export const deleteFriend = async (request: DeleteFriendRequest) => {
 
 // 프로필 정보 조회
 export const getProfile = async (userId: number) => {
-  const data = await apiClient
-    .get(`users/profiles/${userId}`)
-    .json<ProfileResponse>();
-  return data;
+  const response = await apiClient.get(`users/profiles/${userId}`);
+  return response;
 };
 
 // 프로필 정보 수정
@@ -93,10 +87,8 @@ export const putUpdateProfile = async (request: UpdateProfileRequest) => {
     formData.append("profileImage", request.profileImage);
   }
 
-  const data = await apiClient
-    .put(`users/profiles/${request.userId}`, {
-      body: formData,
-    })
-    .json<ProfileResponse>();
-  return data;
+  const response = await apiClient.put(`users/profiles/${request.userId}`, {
+    body: formData,
+  });
+  return response;
 };

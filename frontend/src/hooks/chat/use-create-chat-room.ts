@@ -4,6 +4,7 @@ import { toast } from "sonner";
 
 import { postCreateChatRoom } from "@/services/chat/api";
 import type { CreateChatRoomRequest } from "@/types/chat/type";
+import type { DamulError } from "@/types/common/type";
 
 const useCreateChatRoom = () => {
   const queryClient = useQueryClient();
@@ -11,7 +12,14 @@ const useCreateChatRoom = () => {
 
   return useMutation({
     mutationKey: ["create-chat-room"],
-    mutationFn: (request: CreateChatRoomRequest) => postCreateChatRoom(request),
+    mutationFn: async (request: CreateChatRoomRequest) => {
+      const response = await postCreateChatRoom(request);
+      if (!response.ok) {
+        const errorBody = await response.json<DamulError>();
+        throw new Error(errorBody.message);
+      }
+      return response;
+    },
     onSuccess: async (response) => {
       const data = await response.json<{ id: number }>();
 

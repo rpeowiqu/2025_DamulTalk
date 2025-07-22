@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { deleteExitChatRoom } from "@/services/chat/api";
 import type { ChatRoomPreviewsResponse } from "@/types/chat/type";
 import useCurrentUser from "@/hooks/auth/use-current-user";
+import type { DamulError } from "@/types/common/type";
 
 const useExitChatRoom = () => {
   const queryClient = useQueryClient();
@@ -13,7 +14,14 @@ const useExitChatRoom = () => {
 
   return useMutation({
     mutationKey: ["exit-chat-room"],
-    mutationFn: (roomId: number) => deleteExitChatRoom(roomId),
+    mutationFn: async (roomId: number) => {
+      const response = await deleteExitChatRoom(roomId);
+      if (!response.ok) {
+        const errorBody = await response.json<DamulError>();
+        throw new Error(errorBody.message);
+      }
+      return response;
+    },
     onSuccess: (_, roomId) => {
       // 사이드 바의 채팅방 목록에서 방금 나간 채팅방을 제거하도록 캐시에 저장된 상태를 변경
       queryClient.setQueryData<ChatRoomPreviewsResponse>(

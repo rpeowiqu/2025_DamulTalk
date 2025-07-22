@@ -40,7 +40,7 @@ export const handleJsonResponse = async <T>(response: KyResponse<T>) => {
 const apiClient = ky.create({
   prefixUrl: "/api",
   timeout: 1_000 * 10, // 10초
-  // throwHttpErrors: false, // ky가 자동으로 예외를 던지지 않도록 설정
+  throwHttpErrors: false, // ky가 자동으로 예외를 던지지 않도록 설정
   hooks: {
     beforeRequest: [
       (request) => {

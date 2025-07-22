@@ -13,8 +13,11 @@ import type {
   FriendRequestType,
   FriendsResponse,
   ProfileResponse,
+  User,
 } from "@/types/community/type";
 import useCurrentUser from "@/hooks/auth/use-current-user";
+import type { DamulError } from "@/types/common/type";
+import { handleJsonResponse } from "@/utils/http-common";
 
 const useHandleFriendRequest = (
   userId: number,
@@ -27,7 +30,14 @@ const useHandleFriendRequest = (
   // 친구 추가 요청
   const requestMutation = useMutation({
     mutationKey: ["request-friend", userId],
-    mutationFn: (request: RequestFriendRequest) => postFriendRequest(request),
+    mutationFn: async (request: RequestFriendRequest) => {
+      const response = await postFriendRequest(request);
+      if (!response.ok) {
+        const errorBody = await response.json<DamulError>();
+        throw new Error(errorBody.message);
+      }
+      return response;
+    },
     onMutate: () => {
       setOptimisticState("PENDING_REQUEST");
       toast.success("친구 요청을 보냈어요");
@@ -41,8 +51,17 @@ const useHandleFriendRequest = (
   // 친구 추가 요청 취소, 친구 삭제
   const cancelMutation = useMutation({
     mutationKey: ["cancel-request-friend", userId],
-    mutationFn: (request: { userId: number; status: FriendRequestType }) =>
-      deleteFriendRequest(request.userId),
+    mutationFn: async (request: {
+      userId: number;
+      status: FriendRequestType;
+    }) => {
+      const response = await deleteFriendRequest(request.userId);
+      if (!response.ok) {
+        const errorBody = await response.json<DamulError>();
+        throw new Error(errorBody.message);
+      }
+      return response;
+    },
     onMutate: () => {
       setOptimisticState("NONE");
     },
@@ -94,8 +113,10 @@ const useHandleFriendRequest = (
   // 친구 요청 수락
   const acceptMutation = useMutation({
     mutationKey: ["accept-friend-request", userId],
-    mutationFn: (request: RequestFriendRequest) =>
-      patchAcceptFriendRequest(request),
+    mutationFn: async (request: RequestFriendRequest) => {
+      const response = await patchAcceptFriendRequest(request);
+      return await handleJsonResponse<User>(response);
+    },
     onMutate: () => {
       setOptimisticState("ACCEPTED");
     },
@@ -143,7 +164,14 @@ const useHandleFriendRequest = (
   // 친구 요청 거절
   const rejectMutation = useMutation({
     mutationKey: ["reject-friend-request", userId],
-    mutationFn: (userId: number) => deleteFriendRequest(userId),
+    mutationFn: async (userId: number) => {
+      const response = await deleteFriendRequest(userId);
+      if (!response.ok) {
+        const errorBody = await response.json<DamulError>();
+        throw new Error(errorBody.message);
+      }
+      return response;
+    },
     onMutate: () => {
       setOptimisticState("NONE");
     },

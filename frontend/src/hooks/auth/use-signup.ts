@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 
 import { postSignup } from "@/services/auth/api";
 import type { SignupRequest } from "@/types/auth/type";
+import type { DamulError } from "@/types/common/type";
 
 interface UseSignupOptions {
   onSuccess?: () => void;
@@ -10,7 +11,14 @@ interface UseSignupOptions {
 const useSignup = ({ onSuccess }: UseSignupOptions) => {
   return useMutation({
     mutationKey: ["signup"],
-    mutationFn: (request: SignupRequest) => postSignup(request),
+    mutationFn: async (request: SignupRequest) => {
+      const response = await postSignup(request);
+      if (!response.ok) {
+        const errorBody = await response.json<DamulError>();
+        throw new Error(errorBody.message);
+      }
+      return response;
+    },
     onSuccess: () => {
       onSuccess?.();
     },

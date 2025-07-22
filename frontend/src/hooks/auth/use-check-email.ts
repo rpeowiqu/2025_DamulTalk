@@ -7,6 +7,7 @@ import {
   postReceiveCode,
 } from "@/services/auth/api";
 import type { CheckValueRequest } from "@/types/auth/type";
+import type { DamulError } from "@/types/common/type";
 
 const useCheckEmail = (email: string) => {
   const [messageType, setMessageType] = useState<"valid" | "invalid">("valid");
@@ -18,6 +19,9 @@ const useCheckEmail = (email: string) => {
       const response = await postCheckEmailDuplication(request);
       if (response.status === 204) {
         throw new Error("존재하지 않는 계정이에요");
+      } else if (!response.ok) {
+        const errorBody = await response.json<DamulError>();
+        throw new Error(errorBody.message);
       }
       return response;
     },

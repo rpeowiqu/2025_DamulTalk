@@ -3,6 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 
 import type { CheckCodeReqeust } from "@/types/auth/type";
 import { postCheckCode } from "@/services/auth/api";
+import type { DamulError } from "@/types/common/type";
 
 const useCheckCode = (email: string, code: string) => {
   const [messageType, setMessageType] = useState<"valid" | "invalid">("valid");
@@ -10,7 +11,14 @@ const useCheckCode = (email: string, code: string) => {
 
   const { mutate } = useMutation({
     mutationKey: ["check-code", email, code],
-    mutationFn: (request: CheckCodeReqeust) => postCheckCode(request),
+    mutationFn: async (request: CheckCodeReqeust) => {
+      const response = await postCheckCode(request);
+      if (!response.ok) {
+        const errorBody = await response.json<DamulError>();
+        throw new Error(errorBody.message);
+      }
+      return response;
+    },
     onSuccess: () => {
       setMessageType("valid");
       setMessage("인증코드가 일치해요");

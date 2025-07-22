@@ -7,8 +7,10 @@ import type {
   FriendRequestsResponse,
   FriendsResponse,
   ProfileResponse,
+  User,
 } from "@/types/community/type";
 import useCurrentUser from "@/hooks/auth/use-current-user";
+import { handleJsonResponse } from "@/utils/http-common";
 
 const useAcceptFriendRequest = (userId: number) => {
   const { data: user } = useCurrentUser();
@@ -16,8 +18,10 @@ const useAcceptFriendRequest = (userId: number) => {
 
   return useMutation({
     mutationKey: ["accept-friend-request", userId],
-    mutationFn: (request: RequestFriendRequest) =>
-      patchAcceptFriendRequest(request),
+    mutationFn: async (request: RequestFriendRequest) => {
+      const response = await patchAcceptFriendRequest(request);
+      return handleJsonResponse<User>(response);
+    },
     onSuccess: (data) => {
       // 친구 요청 목록에서 수락한 친구를 제거
       queryClient.setQueryData<FriendRequestsResponse>(
