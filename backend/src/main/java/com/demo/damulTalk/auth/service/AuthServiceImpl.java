@@ -151,6 +151,7 @@ public class AuthServiceImpl implements AuthService {
         User user = userMapper.selectUserByNickname(value.getValue());
 
         if(token != null) {
+            token = token.substring(7);
             jwtService.isExpiredToken(token);
             int userId = jwtService.getUserIdFromToken(token);
             if(user != null && user.getUserId() == userId) {
