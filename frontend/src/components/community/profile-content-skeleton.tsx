@@ -2,7 +2,7 @@ import UserItemSkeleton from "@/components/community/user-item-skeleton";
 
 const ProfileContentSkeleton = () => {
   return (
-    <div className="flex min-h-0 flex-1 gap-4">
+    <div className="flex gap-4">
       <div className="flex min-w-120 flex-1 flex-col gap-4">
         <div className="h-6 w-16 animate-pulse rounded-xl bg-neutral-200" />
         <div className="flex flex-col gap-4 pl-5">

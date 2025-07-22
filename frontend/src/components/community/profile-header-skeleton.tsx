@@ -1,6 +1,6 @@
 const ProfileHeaderSkeleton = () => {
   return (
-    <div>
+    <header>
       <div className="h-54 animate-pulse rounded-xl bg-neutral-200 object-cover" />
 
       <div className="flex h-16 items-end gap-4 px-10">
@@ -11,7 +11,7 @@ const ProfileHeaderSkeleton = () => {
           <div className="h-4 w-16 animate-pulse rounded-xl bg-neutral-200 font-bold" />
         </div>
       </div>
-    </div>
+    </header>
   );
 };
 
