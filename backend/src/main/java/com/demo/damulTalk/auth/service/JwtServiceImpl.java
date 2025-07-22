@@ -47,6 +47,7 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public boolean isValid(String token, UserDetails user) {
         String username = extractUsername(token);
+
         if(!username.equals(user.getUsername())) {
             throw new BusinessException(
                     ErrorCode.INVALID_USER,
@@ -54,6 +55,18 @@ public class JwtServiceImpl implements JwtService {
             );
         }
 
+        if(isTokenExpired(token)) {
+            throw new BusinessException(
+                    ErrorCode.EXPIRED_TOKEN,
+                    "만료된 토큰입니다."
+            );
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean isExpiredToken(String token) {
         if(isTokenExpired(token)) {
             throw new BusinessException(
                     ErrorCode.EXPIRED_TOKEN,
