@@ -8,7 +8,7 @@ import {
   postFriendRequest,
 } from "@/services/community/api";
 import type {
-  FriendRequestRequest,
+  RequestFriendRequest,
   FriendRequestsResponse,
   FriendRequestType,
   FriendsResponse,
@@ -27,7 +27,7 @@ const useHandleFriendRequest = (
   // 친구 추가 요청
   const requestMutation = useMutation({
     mutationKey: ["request-friend", userId],
-    mutationFn: (request: FriendRequestRequest) => postFriendRequest(request),
+    mutationFn: (request: RequestFriendRequest) => postFriendRequest(request),
     onMutate: () => {
       setOptimisticState("PENDING_REQUEST");
       toast.success("친구 요청을 보냈어요");
@@ -94,7 +94,7 @@ const useHandleFriendRequest = (
   // 친구 요청 수락
   const acceptMutation = useMutation({
     mutationKey: ["accept-friend-request", userId],
-    mutationFn: (request: FriendRequestRequest) =>
+    mutationFn: (request: RequestFriendRequest) =>
       patchAcceptFriendRequest(request),
     onMutate: () => {
       setOptimisticState("ACCEPTED");

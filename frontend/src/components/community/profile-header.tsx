@@ -10,10 +10,10 @@ interface ProfileHeaderProps {
 
 const ProfileHeader = ({ profile, isRefetching }: ProfileHeaderProps) => {
   return (
-    <div>
+    <header>
       <div className="h-54">
         <img
-          src={defaultProfileBackground}
+          src={profile.backgroundImageUrl ?? defaultProfileBackground}
           alt="프로필 배경"
           className="size-full rounded-xl object-cover"
         />
@@ -48,7 +48,7 @@ const ProfileHeader = ({ profile, isRefetching }: ProfileHeaderProps) => {
           </div>
         )}
       </div>
-    </div>
+    </header>
   );
 };
 

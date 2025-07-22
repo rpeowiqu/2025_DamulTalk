@@ -17,14 +17,20 @@ export type FriendRequestType =
 export interface Profile {
   nickname: string;
   profileImageUrl: string;
+  backgroundImageUrl: string;
   statusMessage: string;
   friendCount: number;
   joinedAt: string;
   isFriend: FriendRequestType;
 }
 
+export interface ProfileSetting {
+  nickname: string;
+  statusMessage: string;
+}
+
 // Request ==========================================================================================================================
-export interface FriendRequestRequest {
+export interface RequestFriendRequest {
   id: number;
 }
 
@@ -34,8 +40,16 @@ export interface UserSearchRequest {
   size?: number;
 }
 
-export interface FriendDeleteRequest {
+export interface DeleteFriendRequest {
   id: number;
+}
+
+export interface UpdateProfileRequest {
+  userId: number;
+  nickname: string;
+  statusMesasge: string;
+  backgroundImage: File | null;
+  profileImage: File | null;
 }
 
 // Response ==========================================================================================================================

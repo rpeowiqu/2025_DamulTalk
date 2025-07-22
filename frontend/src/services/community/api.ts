@@ -1,10 +1,11 @@
 import apiClient from "@/utils/http-common";
 import type {
-  FriendDeleteRequest,
+  DeleteFriendRequest,
   UserSearchRequest,
   ProfileResponse,
-  FriendRequestRequest,
+  RequestFriendRequest,
   User,
+  UpdateProfileRequest,
 } from "@/types/community/type";
 import { getQueryString } from "@/utils/url";
 
@@ -21,7 +22,7 @@ export const getFriendRequests = async () => {
 };
 
 // 친구 추가 요청
-export const postFriendRequest = async (request: FriendRequestRequest) => {
+export const postFriendRequest = async (request: RequestFriendRequest) => {
   const response = await apiClient.post("friends/requests", {
     json: request,
   });
@@ -30,7 +31,7 @@ export const postFriendRequest = async (request: FriendRequestRequest) => {
 
 // 친구 추가 요청 수락
 export const patchAcceptFriendRequest = async (
-  request: FriendRequestRequest,
+  request: RequestFriendRequest,
 ) => {
   const data = await apiClient
     .patch("friends/requests", {
@@ -54,7 +55,7 @@ export const getUserSearch = async (request: UserSearchRequest) => {
 };
 
 // 친구 삭제
-export const deleteFriend = async (request: FriendDeleteRequest) => {
+export const deleteFriend = async (request: DeleteFriendRequest) => {
   const response = await apiClient.delete("friends", {
     json: request,
   });
@@ -65,6 +66,35 @@ export const deleteFriend = async (request: FriendDeleteRequest) => {
 export const getProfile = async (userId: number) => {
   const data = await apiClient
     .get(`users/profiles/${userId}`)
+    .json<ProfileResponse>();
+  return data;
+};
+
+// 프로필 정보 수정
+export const putUpdateProfile = async (request: UpdateProfileRequest) => {
+  const jsonBlob = new Blob(
+    [
+      JSON.stringify({
+        nickname: request.nickname,
+        statusMessage: request.statusMesasge,
+      }),
+    ],
+    { type: "application/json" },
+  );
+
+  const formData = new FormData();
+  formData.append("profileUpdateRequest", jsonBlob);
+  if (request.backgroundImage) {
+    formData.append("backgroundImage", request.backgroundImage);
+  }
+  if (request.profileImage) {
+    formData.append("profileImage", request.profileImage);
+  }
+
+  const data = await apiClient
+    .put(`users/profiles/${request.userId}`, {
+      body: formData,
+    })
     .json<ProfileResponse>();
   return data;
 };

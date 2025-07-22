@@ -13,14 +13,16 @@ const UserPortrait = ({
   className,
 }: UserPortraitProps) => {
   return (
-    <div className={cn("relative size-12", className)}>
-      <div className="overflow-hidden rounded-full border border-neutral-200">
-        <img
-          src={profileImageUrl || defaultPortraitImage}
-          alt="프로필 이미지"
-          className="size-full bg-white object-cover"
-        />
-      </div>
+    <div
+      className={cn(
+        "relative size-12 overflow-hidden rounded-full border border-neutral-200",
+        className,
+      )}>
+      <img
+        src={profileImageUrl || defaultPortraitImage}
+        alt="프로필 이미지"
+        className="size-full bg-white object-cover"
+      />
 
       {online !== undefined && (
         <div
