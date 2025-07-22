@@ -188,10 +188,30 @@ const ChatPage = () => {
           case "CHAT_SYSTEM_MESSAGE":
             {
               const casted = response as WsResponse<WsSystemMessageResponse>;
-              // 수신한 메시지를 상태에 추가
-              setMessages((prev) =>
-                prev
-                  ? [
+              switch (casted.data.messageType) {
+                case "DATE":
+                  setMessages((prev) => {
+                    if (!prev || prev.length === 0) {
+                      return prev;
+                    }
+
+                    // 마지막 메시지의 발신자가 나였다면, 시스템 메시지와 마지막 메시지의 순서를 뒤바꾼다.
+                    const lastIndex = prev.length - 1;
+                    if (prev[lastIndex].senderId === user.userId) {
+                      return [
+                        ...prev.slice(0, lastIndex),
+                        {
+                          ...casted.data,
+                          messageStatus: "SENT",
+                          messageType: "TEXT",
+                          unReadCount: 0,
+                        },
+                        prev[prev.length - 1],
+                      ];
+                    }
+
+                    // 발신자가 아니었다면, 뒤에 추가한다.
+                    return [
                       ...prev,
                       {
                         ...casted.data,
@@ -199,12 +219,25 @@ const ChatPage = () => {
                         messageType: "TEXT",
                         unReadCount: 0,
                       },
-                    ]
-                  : [],
-              );
-
-              switch (casted.data.messageType) {
+                    ];
+                  });
+                  break;
                 case "EXIT":
+                  // 수신한 메시지를 상태에 추가
+                  setMessages((prev) =>
+                    prev
+                      ? [
+                          ...prev,
+                          {
+                            ...casted.data,
+                            messageStatus: "SENT",
+                            messageType: "TEXT",
+                            unReadCount: 0,
+                          },
+                        ]
+                      : [],
+                  );
+
                   // 채팅방 헤더에서 나간 사람을 제외하고 인원수 갱신
                   queryClient.setQueryData<ChatRoom>(
                     ["chat-room", Number(roomId)],
@@ -213,6 +246,9 @@ const ChatPage = () => {
                         ? {
                             ...prev,
                             roomSize: prev.roomSize - 1,
+                            roomMembers: prev.roomMembers.filter(
+                              (item) => item.userId !== casted.data.userId,
+                            ),
                           }
                         : prev,
                   );

@@ -66,8 +66,9 @@ export type SystemMessageType = "DATE" | "EXIT";
 
 export interface WsSystemMessageResponse {
   messageId: string;
+  messageType: SystemMessageType;
   senderId: number;
   sendTime: string;
   content: string;
-  messageType: SystemMessageType;
+  userId?: number;
 }
