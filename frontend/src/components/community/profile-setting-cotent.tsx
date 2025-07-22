@@ -1,4 +1,5 @@
 import type { ChangeEvent, Dispatch, SetStateAction } from "react";
+import { motion } from "framer-motion";
 
 import type { Profile, ProfileSetting } from "@/types/community/type";
 import Button from "@/components/common/button";
@@ -52,25 +53,42 @@ const ProfileSettingContent = ({
         </ul>
       </div>
 
-      <div className="sticky bottom-0 flex justify-center">
-        <div className="border-damul-main-300 flex w-120 items-center justify-between rounded-xl border bg-white px-5 py-3 shadow-lg">
-          <p className="text-damul-main-300 font-bold">
-            프로필을 수정하고 있어요!
-          </p>
+      <motion.div
+        className="sticky bottom-0 flex justify-center"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2, duration: 0.5 }}>
+        <motion.div
+          animate={{
+            y: [0, -3, 0, 3, 0],
+          }}
+          transition={{
+            duration: 2,
+            ease: "easeInOut",
+            repeat: Infinity,
+          }}>
+          <div className="border-damul-main-300 flex w-120 items-center justify-between rounded-xl border bg-white px-5 py-3 shadow-lg">
+            <p className="text-damul-main-300 font-bold">
+              프로필을 수정하고 있어요!
+            </p>
 
-          <div className="flex gap-3">
-            <Button
-              type="button"
-              className="bg-neutral-300 py-2 text-base hover:bg-neutral-400"
-              onClick={onReset}>
-              되돌리기
-            </Button>
-            <Button type="button" className="py-2 text-base" onClick={onSubmit}>
-              저장하기
-            </Button>
+            <div className="flex gap-3">
+              <Button
+                type="button"
+                className="bg-neutral-300 py-2 text-base hover:bg-neutral-400"
+                onClick={onReset}>
+                되돌리기
+              </Button>
+              <Button
+                type="button"
+                className="py-2 text-base"
+                onClick={onSubmit}>
+                저장하기
+              </Button>
+            </div>
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 };
