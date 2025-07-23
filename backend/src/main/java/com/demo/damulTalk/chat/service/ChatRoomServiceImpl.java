@@ -249,7 +249,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
                     redisTemplate.opsForList().rightPush(redisKey, objectMapper.writeValueAsString(message));
                     chatMessageFlushService.tryFlush(redisKey);
 
-                    redisTemplate.convertAndSend("chats", objectMapper.writeValueAsString(CommonWrapperDto.<ChatSystemMessage>builder()
+                    redisTemplate.convertAndSend("chats", objectMapper.writeValueAsString(CommonWrapperDto.<ChatExitSystemMessage>builder()
                             .roomId(roomId)
                             .type(NotificationType.CHAT_SYSTEM_MESSAGE)
                             .data(ChatExitSystemMessage.of(ChatSystemMessage.builder()

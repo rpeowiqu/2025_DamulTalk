@@ -42,7 +42,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers(
                             "/ws/**",
-//                            "/api/v1/**"
                             "/api/v1/auth/signup",
                             "/api/v1/auth/login",
                             "/api/v1/auth/refresh",
@@ -78,10 +77,8 @@ public class SecurityConfig {
 
                             CorsConfiguration configuration = new CorsConfiguration();
                             configuration.setAllowedOrigins(List.of(frontendUrl));
-//                            configuration.setAllowedOriginPatterns(List.of(frontendUrl));
                             configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
                             configuration.setAllowCredentials(true);
-//                            configuration.addAllowedHeader("*");
                             configuration.setExposedHeaders(Arrays.asList(
                                     "Authorization",
                                     "Set-Cookie",

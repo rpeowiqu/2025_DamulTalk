@@ -73,8 +73,6 @@ public class AuthServiceImpl implements AuthService {
         log.info("[AuthService] 로그인 시작 - username: {}", loginRequest.getUsername());
 
         User user = userMapper.selectUserByUsername(loginRequest.getUsername());
-        log.info("[AuthService] loginPassword: {}", passwordEncoder.encode(loginRequest.getPassword()));
-        log.info("[AuthService] savedPassword: {}", user.getPassword());
         if(user == null) {
             log.info("[AuthService] 존재하지 않는 유저입니다.");
             throw new BusinessException(
@@ -151,8 +149,10 @@ public class AuthServiceImpl implements AuthService {
         User user = userMapper.selectUserByNickname(value.getValue());
 
         if(token != null) {
+            token = token.substring(7);
+            jwtService.isExpiredToken(token);
             int userId = jwtService.getUserIdFromToken(token);
-            if(user.getUserId() == userId) {
+            if(user != null && user.getUserId() == userId) {
                 return false;
             }
         }
