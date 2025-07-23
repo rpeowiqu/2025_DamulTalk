@@ -197,23 +197,23 @@ jobs:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
         run: |
           echo "$SSH_PRIVATE_KEY" > private_key.pem
-        chmod 600 private_key.pem
+          chmod 600 private_key.pem
 
-        ssh -o StrictHostKeyChecking=no -i private_key.pem $EC2_USER@$EC2_HOST << EOF
-          cd /home/$EC2_USER/damulTalk
+          ssh -o StrictHostKeyChecking=no -i private_key.pem $EC2_USER@$EC2_HOST << EOF
+            cd /home/$EC2_USER/damulTalk
 
-          echo "[+] Logging in to Docker Hub"
-          docker login -u $DOCKERHUB_USERNAME
+            echo "[+] Logging in to Docker Hub"
+            docker login -u $DOCKERHUB_USERNAME
+ 
+            echo "[+] Pulling new backend image"
+            docker compose pull backend
+ 
+            echo "[+] Restarting backend container"
+            docker compose up -d backend
+  
+            echo "[+] Testing nginx config"
+            sudo nginx -t
 
-          echo "[+] Pulling new backend image"
-          docker compose pull backend
-
-          echo "[+] Restarting backend container"
-          docker compose up -d backend
-
-          echo "[+] Testing nginx config"
-          sudo nginx -t
-
-          echo "[+] Reloading nginx"
-          sudo systemctl reload nginx
-        EOF
+            echo "[+] Reloading nginx"
+            sudo systemctl reload nginx
+          EOF
