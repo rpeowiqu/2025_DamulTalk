@@ -81,6 +81,7 @@
             cr.room_type AS roomType,
             crm.room_name AS roomName,
             cr.room_size AS roomSize,
+            cr.name_changed AS isNameChanged,
             cr.created_at AS createdAt
         FROM chat_rooms cr
         JOIN chat_room_members crm

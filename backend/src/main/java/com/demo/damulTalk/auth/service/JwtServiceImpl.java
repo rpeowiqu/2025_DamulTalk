@@ -47,6 +47,7 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public boolean isValid(String token, UserDetails user) {
         String username = extractUsername(token);
+
         if(!username.equals(user.getUsername())) {
             throw new BusinessException(
                     ErrorCode.INVALID_USER,
@@ -54,6 +55,18 @@ public class JwtServiceImpl implements JwtService {
             );
         }
 
+        if(isTokenExpired(token)) {
+            throw new BusinessException(
+                    ErrorCode.EXPIRED_TOKEN,
+                    "만료된 토큰입니다."
+            );
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean isExpiredToken(String token) {
         if(isTokenExpired(token)) {
             throw new BusinessException(
                     ErrorCode.EXPIRED_TOKEN,
@@ -140,7 +153,7 @@ public class JwtServiceImpl implements JwtService {
         return temporaryToken;
     }
 
-    private String generateTempToken(String email, long expireTime) { // 임시 토큰 생성 로직
+    private String generateTempToken(String email, long expireTime) {
         return Jwts
                 .builder()
                 .subject(email)
@@ -150,18 +163,18 @@ public class JwtServiceImpl implements JwtService {
                 .compact();
     }
 
-    private String generateToken(User user, long expireTime) { // JWT 토큰 생성 (사용자 정보와 만료 시간 포함)
+    private String generateToken(User user, long expireTime) {
         return Jwts
                 .builder()
                 .subject(user.getUsername())
-                .claim("userId", user.getUserId()) // 토큰에 id 저장
+                .claim("userId", user.getUserId())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expireTime))
                 .signWith(getSigninKey())
                 .compact();
     }
 
-    private void saveRefreshToken(String email, String refreshToken) { // 리프레시 토큰을 Redis에 저장
+    private void saveRefreshToken(String email, String refreshToken) {
         redisTemplate.opsForValue().set(
                 REFRESH_TOKEN_PREFIX + email,
                 refreshToken,
@@ -170,7 +183,7 @@ public class JwtServiceImpl implements JwtService {
         );
     }
 
-    private SecretKey getSigninKey() { // JWT 서명에 사용할 키 생성
+    private SecretKey getSigninKey() {
         byte[] keyBytes = Decoders.BASE64URL.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }

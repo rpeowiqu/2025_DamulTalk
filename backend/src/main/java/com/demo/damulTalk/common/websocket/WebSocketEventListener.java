@@ -66,7 +66,6 @@ public class WebSocketEventListener {
                     .filter(friendId -> redisTemplate.hasKey("user:online:" + friendId))
                     .forEach(friendId -> {
                         try {
-                            log.info("@@@@@@@@@@@@@@@@@@@@@@@@" + friendId);
                             redisTemplate.convertAndSend("notifications", objectMapper.writeValueAsString(CommonWrapperDto.<ConnectionDto>builder()
                                     .userId(friendId)
                                     .type(NotificationType.ONLINE_STATUS)

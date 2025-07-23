@@ -13,4 +13,8 @@ public class ProfileUpdateRequest {
 
     private String statusMessage;
 
+    private Boolean isDefaultProfile;
+
+    private Boolean isDefaultBackground;
+
 }
