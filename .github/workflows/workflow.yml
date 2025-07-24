@@ -195,6 +195,7 @@ jobs:
           EC2_HOST: ${{ secrets.EC2_HOST }}
           EC2_USER: ${{ secrets.EC2_USER }}
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+	  DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
         run: |
           echo "$SSH_PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
@@ -203,13 +204,13 @@ jobs:
             cd /home/$EC2_USER/damulTalk
 
             echo "[+] Logging in to Docker Hub"
-            docker login -u $DOCKERHUB_USERNAME
+            docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
  
             echo "[+] Pulling new backend image"
-            docker compose pull backend
+            docker compose pull damultalk-backend
  
             echo "[+] Restarting backend container"
-            docker compose up -d backend
+            docker compose up -d damultalk-backend
   
             echo "[+] Testing nginx config"
             sudo nginx -t
