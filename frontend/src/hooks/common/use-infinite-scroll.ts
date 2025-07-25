@@ -23,7 +23,7 @@ const useInfiniteScroll = <T>({
   rootMargin,
   threshold,
   fetchDelay = 0,
-  enabled,
+  enabled = true,
   ...props
 }: UseInfiniteScrollOptions<T>) => {
   const containerRef = useRef<HTMLDivElement>(null);
