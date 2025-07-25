@@ -8,7 +8,7 @@ import BlankLayout from "@/components/layout/blank-layout";
 import LoginPage from "@/pages/login-page";
 import LoginForm from "@/components/auth/login-form";
 import PasswordResetForm from "@/components/auth/password-reset-form";
-import ProtectedRoute from "@/components/route/ProtectedRoute";
+import ProtectedRoute from "@/components/route/protected-route";
 import NotFoundPage from "@/pages/not-found-page";
 import SettingPage from "@/pages/setting-page";
 
