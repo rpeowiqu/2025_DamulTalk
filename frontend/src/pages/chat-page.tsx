@@ -134,7 +134,7 @@ const ChatPage = () => {
                         };
                       }
                       return item;
-                    }) ?? [],
+                    }) ?? prev,
                 );
               }
               // 다른 사람이 발신한 메시지를 수신한 경우
@@ -181,7 +181,7 @@ const ChatPage = () => {
                               : item.unReadMessageCount + 1,
                         }
                       : item,
-                  ) ?? [],
+                  ) ?? prev,
               );
             }
             break;
@@ -235,7 +235,7 @@ const ChatPage = () => {
                             unReadCount: 0,
                           },
                         ]
-                      : [],
+                      : prev,
                   );
 
                   // 채팅방 헤더에서 나간 사람을 제외하고 인원수 갱신
@@ -264,7 +264,7 @@ const ChatPage = () => {
                               roomSize: item.roomSize - 1,
                             }
                           : item,
-                      ) ?? [],
+                      ) ?? prev,
                   );
                   break;
               }

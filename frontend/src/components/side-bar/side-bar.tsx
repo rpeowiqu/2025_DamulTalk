@@ -71,7 +71,7 @@ const SideBar = () => {
 
                         return item;
                       })
-                    : [],
+                    : prev,
               );
 
               if (!isFetched) {
@@ -90,7 +90,7 @@ const SideBar = () => {
               const casted = response as WsResponse<User>;
               queryClient.setQueryData<FriendRequestsResponse>(
                 ["friend-requests"],
-                (prev) => (prev ? [...prev, casted.data] : []),
+                (prev) => (prev ? [...prev, casted.data] : prev),
               );
 
               // 수신한 유저의 프로필 무효화
@@ -113,7 +113,7 @@ const SideBar = () => {
                 ["friend-requests"],
                 (prev) =>
                   prev?.filter((item) => item.userId !== casted.data.userId) ??
-                  [],
+                  prev,
               );
 
               // 수신한 유저의 프로필 무효화
@@ -129,7 +129,7 @@ const SideBar = () => {
               // 수신한 유저를 친구 목록에 추가
               queryClient.setQueryData<FriendsResponse>(
                 ["friends", data.userId],
-                (prev) => (prev ? [...prev, casted.data] : []),
+                (prev) => (prev ? [...prev, casted.data] : prev),
               );
 
               // 내 프로필의 친구수를 1 증가
@@ -169,7 +169,7 @@ const SideBar = () => {
                 ["friends", data.userId],
                 (prev) =>
                   prev?.filter((item) => item.userId !== casted.data.userId) ??
-                  [],
+                  prev,
               );
 
               // 내 프로필의 친구수를 1 감소
@@ -206,7 +206,7 @@ const SideBar = () => {
                           online: casted.data.online,
                         }
                       : item,
-                  ) ?? [],
+                  ) ?? prev,
               );
             }
             break;

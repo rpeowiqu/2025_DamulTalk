@@ -26,7 +26,7 @@ const useAcceptFriendRequest = (userId: number) => {
       // 친구 요청 목록에서 수락한 친구를 제거
       queryClient.setQueryData<FriendRequestsResponse>(
         ["friend-requests"],
-        (prev) => prev?.filter((item) => item.userId !== userId) ?? [],
+        (prev) => prev?.filter((item) => item.userId !== userId) ?? prev,
       );
 
       // 해당 친구를 친구 목록에 추가

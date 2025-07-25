@@ -26,7 +26,7 @@ const useExitChatRoom = () => {
       // 사이드 바의 채팅방 목록에서 방금 나간 채팅방을 제거하도록 캐시에 저장된 상태를 변경
       queryClient.setQueryData<ChatRoomPreviewsResponse>(
         ["chat-room-previews"],
-        (prev) => prev?.filter((item) => item.roomId !== roomId) ?? [],
+        (prev) => prev?.filter((item) => item.roomId !== roomId) ?? prev,
       );
       toast.success("해당 채팅방에서 빠져 나왔어요");
 

@@ -93,7 +93,7 @@ const useHandleFriendRequest = (
             queryClient.setQueryData<FriendsResponse>(
               ["friends", data?.userId],
               (prev) =>
-                prev?.filter((item) => item.userId !== request.userId) ?? [],
+                prev?.filter((item) => item.userId !== request.userId) ?? prev,
             );
 
             toast.success("친구를 삭제했어요");
@@ -124,7 +124,7 @@ const useHandleFriendRequest = (
       // 친구 요청 목록에서 수락한 친구를 제거
       queryClient.setQueryData<FriendRequestsResponse>(
         ["friend-requests"],
-        (prev) => prev?.filter((item) => item.userId !== userId) ?? [],
+        (prev) => prev?.filter((item) => item.userId !== userId) ?? prev,
       );
 
       // 해당 친구를 친구 목록에 추가
@@ -179,7 +179,7 @@ const useHandleFriendRequest = (
       // 친구 요청 목록해서 해당 친구를 삭제
       queryClient.setQueryData<FriendRequestsResponse>(
         ["friend-requests"],
-        (prev) => prev?.filter((user) => user.userId !== userId) ?? [],
+        (prev) => prev?.filter((user) => user.userId !== userId) ?? prev,
       );
 
       // 해당 친구의 프로필과 친구 목록을 무효화

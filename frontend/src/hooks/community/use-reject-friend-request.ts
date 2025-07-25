@@ -22,7 +22,7 @@ const useRejectFriendRequest = (userId: number) => {
       // 친구 요청 목록해서 해당 친구를 삭제
       queryClient.setQueryData<FriendRequestsResponse>(
         ["friend-requests"],
-        (prev) => prev?.filter((user) => user.userId !== userId) ?? [],
+        (prev) => prev?.filter((user) => user.userId !== userId) ?? prev,
       );
 
       // 해당 친구의 프로필과 친구 목록을 무효화

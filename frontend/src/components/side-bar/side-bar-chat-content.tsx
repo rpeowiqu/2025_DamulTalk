@@ -52,7 +52,7 @@ const SideBarChatContent = () => {
                 unReadMessageCount: 0,
               }
             : item,
-        ) ?? [],
+        ) ?? prev,
     );
     navigate(`/chats/${room.roomId}`);
   };
