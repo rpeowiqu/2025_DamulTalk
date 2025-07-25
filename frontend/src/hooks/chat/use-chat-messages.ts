@@ -2,8 +2,9 @@ import { useParams } from "react-router-dom";
 
 import useInfiniteScroll from "@/hooks/common/use-infinite-scroll";
 import { getMessages } from "@/services/chat/api";
-import type { InfiniteScrollType } from "@/types/common/type";
-import type { Message } from "@/types/chat/type";
+import type { DamulError } from "@/types/common/type";
+import type { MessagesResponse } from "@/types/chat/type";
+import { handleJsonResponse } from "@/utils/http-common";
 
 const useChatMessages = () => {
   const { roomId } = useParams();
@@ -24,10 +25,12 @@ const useChatMessages = () => {
             nextCursor: "",
           },
         };
+      } else if (!response.ok) {
+        const errorBody = await response.json<DamulError>();
+        throw new Error(errorBody.message);
       }
 
-      const data = await response.json<InfiniteScrollType<Message>>();
-      return data;
+      return handleJsonResponse<MessagesResponse>(response);
     },
     initialPageParam: null,
     getNextPageParam: (lastPage) =>

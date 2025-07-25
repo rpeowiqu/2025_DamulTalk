@@ -6,6 +6,8 @@ import AutocompleteSearchBar from "@/components/common/auto-complete-search-bar"
 import { getUserSearch } from "@/services/community/api";
 import type { User, FriendSearchResponse } from "@/types/community/type";
 import UserSearchItem from "@/components/community/user-search-item";
+import type { DamulError } from "@/types/common/type";
+import { handleJsonResponse } from "@/utils/http-common";
 
 interface UserSearchModalProps extends DialogProps {
   keyword: string;
@@ -34,10 +36,12 @@ const UserSearchModal = ({
           nextCursor: "",
         },
       };
+    } else if (!response.ok) {
+      const errorBody = await response.json<DamulError>();
+      throw new Error(errorBody.message);
     }
 
-    const data = await response.json<FriendSearchResponse>();
-    return data;
+    return handleJsonResponse<FriendSearchResponse>(response);
   };
 
   return (
