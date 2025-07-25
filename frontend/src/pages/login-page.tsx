@@ -1,7 +1,7 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 
-import backgroundIamge from "@/assets/images/food-pattern.png";
+import backgroundImage from "@/assets/images/food-pattern.png";
 
 const LoginPage = () => {
   const location = useLocation();
@@ -9,7 +9,7 @@ const LoginPage = () => {
   return (
     <div className="h-dvh overflow-y-scroll p-12">
       <img
-        src={backgroundIamge}
+        src={backgroundImage}
         alt="배경 이미지"
         className="pointer-events-none fixed inset-0 z-0 object-cover pr-[15px] opacity-10"
       />
