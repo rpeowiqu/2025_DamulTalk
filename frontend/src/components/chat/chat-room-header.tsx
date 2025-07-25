@@ -1,7 +1,7 @@
 import type { ChatRoom } from "@/types/chat/type";
 import ChatPortrait from "@/components/chat/chat-portrait";
 import ChatRoomHeadCountButton from "@/components/chat/chat-room-head-count-button";
-import ChatRoomSearchButton from "@/components/chat/chat-room-search-button";
+// import ChatRoomSearchButton from "@/components/chat/chat-room-search-button";
 import ChatRoomExitButton from "@/components/chat/chat-room-exit-button";
 import useCurrentUser from "@/hooks/auth/use-current-user";
 
@@ -28,7 +28,7 @@ const ChatRoomHeader = ({ room }: ChatRoomHeaderProps) => {
       </div>
 
       <div className="flex items-center gap-5 text-neutral-500">
-        <ChatRoomSearchButton />
+        {/* <ChatRoomSearchButton /> */}
         <ChatRoomExitButton room={room} />
       </div>
     </div>
