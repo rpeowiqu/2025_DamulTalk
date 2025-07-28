@@ -63,3 +63,6 @@ frontend:
 logo:
     image:
         url: "${LOGO_URL}"
+
+cookie:
+    secure-flag: true
