@@ -59,7 +59,3 @@ cloud:
 
 frontend:
     url: "${FRONTEND_URL}"
-
-logo:
-    image:
-        url: "${LOGO_URL}"
