@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 
 import MainLayout from "@/components/layout/main-layout";
 import ProfilePage from "@/pages/profile-page";
@@ -11,12 +11,12 @@ import PasswordResetForm from "@/components/auth/password-reset-form";
 import ProtectedRoute from "@/components/route/protected-route";
 import NotFoundPage from "@/pages/not-found-page";
 import SettingPage from "@/pages/setting-page";
+import IntroPage from "@/pages/intro-page";
 
 const router = createBrowserRouter([
-  // 온보딩 페이지를 만들기 전까지 "/"에 접속하면 로그인 페이지로 리다이렉트 하도록 설정
   {
     path: "/",
-    element: <Navigate to={"/login"} />,
+    element: <IntroPage />,
   },
 
   {
@@ -64,6 +64,7 @@ const router = createBrowserRouter([
       },
     ],
   },
+
   {
     path: "*",
     element: <NotFoundPage />,
