@@ -11,8 +11,8 @@ const useChatRoom = (roomId: number) => {
       const response = await getChatRoom(Number(roomId));
       return await handleJsonResponse<ChatRoomResponse>(response);
     },
-    staleTime: 10 * 1_000 * 60,
-    gcTime: 3 * 1_000 * 60,
+    staleTime: 5 * 1_000 * 60,
+    gcTime: 0,
     refetchOnWindowFocus: false,
     retry: 0,
     enabled: !!roomId,
