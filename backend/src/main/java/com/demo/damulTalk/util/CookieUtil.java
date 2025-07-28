@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class CookieUtil {
 
-    @Value("${cookie.secure-flag:false}")
+    @Value("${cookie.secure-flag:true}")
     private boolean secureCookie;
 
     public void addCookie(HttpServletResponse response, String name, String value, int maxAge) {
