@@ -144,7 +144,7 @@ const IntroPage = () => {
           transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
           viewport={{ once: true }}>
           <video
-            src="/public/chat-simulation.mp4"
+            src={`${import.meta.env.VITE_VIDEO_BASE_URL}chat-simulation.mp4`}
             autoPlay
             muted
             loop
@@ -180,7 +180,7 @@ const IntroPage = () => {
           transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
           viewport={{ once: true }}>
           <video
-            src="/public/profile-simulation.mp4"
+            src={`${import.meta.env.VITE_VIDEO_BASE_URL}profile-simulation.mp4`}
             autoPlay
             muted
             loop
