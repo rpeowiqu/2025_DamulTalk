@@ -1,19 +1,15 @@
-import { useParams } from "react-router-dom";
-
 import useInfiniteScroll from "@/hooks/common/use-infinite-scroll";
 import { getMessages } from "@/services/chat/api";
 import type { DamulError } from "@/types/common/type";
 import type { MessagesResponse } from "@/types/chat/type";
 import { handleJsonResponse } from "@/utils/http-common";
 
-const useChatMessages = () => {
-  const { roomId } = useParams();
-
+const useChatMessages = (roomId: number) => {
   return useInfiniteScroll({
-    queryKey: ["chat-messages", Number(roomId)],
+    queryKey: ["chat-messages", roomId],
     queryFn: async ({ pageParam }) => {
       const response = await getMessages({
-        roomId: Number(roomId),
+        roomId: roomId,
         cursor: typeof pageParam === "string" ? pageParam : undefined,
         size: pageParam ? 50 : undefined,
       });

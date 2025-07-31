@@ -25,7 +25,7 @@ const ChatMessageList = ({
   const { roomId } = useParams();
   const { data: user } = useCurrentUser();
 
-  const { containerRef, targetRef, data } = useChatMessages();
+  const { containerRef, targetRef, data } = useChatMessages(Number(roomId));
   const lastReadRef = useRef<HTMLDivElement>(null);
   const { bottomRef, triggerScroll } = useMoveScroll();
 
