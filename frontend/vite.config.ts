@@ -35,12 +35,14 @@ export default defineConfig(({ mode }) => {
         },
       },
     },
-    minify: "terser",
-    terserOptions: {
-      compress: {
-        pure_funcs: ["console.log"],
-        drop_debugger: true,
-        passes: 2,
+    build: {
+      minify: "terser",
+      terserOptions: {
+        compress: {
+          pure_funcs: ["console.log"],
+          drop_debugger: true,
+          passes: 2,
+        },
       },
     },
   };
