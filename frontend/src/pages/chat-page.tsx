@@ -300,8 +300,18 @@ const ChatPage = () => {
     );
     console.log(`/sub/chats/${Number(roomId)} 구독을 시작합니다.`);
 
+    // roomId가 바뀔 경우, 낙관적 업데이트로 저장하는 상태도 초기화 한다.
+    setMessages([]);
+
     return () => {
       subscription?.unsubscribe({ userId: `${user.userId}` });
+      tempMessageMap.current.forEach((item) => {
+        if (item.objectUrl) {
+          URL.revokeObjectURL(item.objectUrl);
+        }
+      });
+      tempMessageMap.current.clear();
+
       console.log(`/sub/chats/${Number(roomId)} 구독을 종료합니다.`);
     };
   }, [roomId, client, isConnected, user]);
