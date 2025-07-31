@@ -52,13 +52,11 @@ public class CustomHandshakeInterceptor implements HandshakeInterceptor {
                     }
                 } catch (Exception e) {
                     log.error("[JwtHandshakeInterceptor] WebSocket 인증 실패: {}", e.getMessage());
-                    response.setStatusCode(HttpStatus.UNAUTHORIZED);
-                    return false;
                 }
             }
         }
-
-        return true;
+        response.setStatusCode(HttpStatus.UNAUTHORIZED);
+        return false;
     }
 
     @Override
