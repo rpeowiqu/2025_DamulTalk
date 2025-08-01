@@ -41,6 +41,11 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers(
+                            "/",
+                            "/index.html",
+                            "/favicon.ico",
+                            "/assets/**",
+                            "/static/**",
                             "/ws/**",
                             "/api/v1/auth/signup",
                             "/api/v1/auth/login",
