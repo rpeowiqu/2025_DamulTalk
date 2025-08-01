@@ -73,7 +73,7 @@ const AutocompleteSearchBar = <T,>({
       />
 
       {isFocused && (!isEmpty || isLoading) && (
-        <div className="absolute top-full left-0 mt-2 flex h-fit max-h-44 w-full flex-col gap-1 overflow-y-auto rounded-md border border-neutral-100 bg-white p-2 pt-3 shadow-md">
+        <div className="absolute top-full left-0 mt-2 flex h-fit max-h-44 w-full flex-col gap-1 overflow-y-auto rounded-md bg-neutral-50 p-2 pt-3 shadow-md dark:bg-neutral-700">
           {isLoading
             ? Array.from({ length: 3 }).map((_, index) => {
                 const Skeleton = renderSkeleton;

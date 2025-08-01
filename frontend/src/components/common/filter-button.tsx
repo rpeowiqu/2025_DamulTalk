@@ -27,7 +27,7 @@ const FilterButton = ({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button type="button" className="cursor-pointer">
+        <button type="button" className="cursor-pointer dark:text-neutral-200">
           <FilterIcon />
         </button>
       </DropdownMenuTrigger>
@@ -38,9 +38,10 @@ const FilterButton = ({
           <DropdownMenuItem
             key={item.value}
             className={cn(
+              "hover:bg-neutral-50 dark:hover:bg-neutral-600",
               item.value === selected
-                ? "text-damul-main-500 bg-damul-main-50"
-                : "text-neutral-500",
+                ? "text-damul-main-500 dark:text-damul-main-300"
+                : "text-neutral-500 dark:text-neutral-200",
             )}
             onClick={() => onSelect?.(item.value)}>
             {item.label}

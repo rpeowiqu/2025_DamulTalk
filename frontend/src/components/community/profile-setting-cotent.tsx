@@ -34,7 +34,7 @@ const ProfileSettingContent = ({
         <ul className="flex min-h-0 flex-1 list-disc flex-col gap-4 pl-8">
           <li>
             <p className="font-bold">가입일</p>
-            <p className="text-neutral-500">
+            <p className="text-neutral-500 dark:text-neutral-200">
               {new Date(profile.joinedAt).toLocaleDateString()}
             </p>
           </li>
@@ -67,7 +67,7 @@ const ProfileSettingContent = ({
             ease: "easeInOut",
             repeat: Infinity,
           }}>
-          <div className="border-damul-main-300 flex w-120 items-center justify-between rounded-xl border bg-white px-5 py-3 shadow-lg">
+          <div className="border-damul-main-300 flex w-120 items-center justify-between rounded-xl border-2 bg-white px-5 py-3 shadow-lg dark:bg-neutral-700">
             <p className="text-damul-main-300 font-bold">
               프로필을 수정하고 있어요!
             </p>
@@ -75,7 +75,7 @@ const ProfileSettingContent = ({
             <div className="flex gap-3">
               <Button
                 type="button"
-                className="bg-neutral-300 py-2 text-base hover:bg-neutral-400"
+                className="bg-neutral-400 py-2 text-base hover:bg-neutral-500 dark:bg-neutral-400 dark:hover:bg-neutral-500"
                 onClick={onReset}>
                 되돌리기
               </Button>

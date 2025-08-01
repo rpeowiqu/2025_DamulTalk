@@ -20,7 +20,7 @@ const SignupCompletionForm = ({
           delay={0.2}
         />
 
-        <div className="text-center">
+        <div className="text-center dark:text-white">
           <h1 className="text-2xl leading-9 font-bold">
             회원가입이 완료되었어요!
           </h1>

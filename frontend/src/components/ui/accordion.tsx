@@ -37,7 +37,7 @@ const AccordionTrigger = ({
           className,
         )}
         {...props}>
-        <RightDirectionIcon className="text-muted-foreground pointer-events-none size-4 shrink-0 transition-transform duration-200" />
+        <RightDirectionIcon className="text-muted-foreground pointer-events-none size-4 shrink-0 transition-transform duration-200 dark:text-neutral-200" />
         {children}
       </AccordionPrimitive.Trigger>
     </AccordionPrimitive.Header>

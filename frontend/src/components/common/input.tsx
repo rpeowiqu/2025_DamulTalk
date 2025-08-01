@@ -53,7 +53,7 @@ const Input = ({
   };
 
   return (
-    <div className="focus-within:ring-damul-main-300 flex items-center gap-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 ring-inset focus-within:ring-2">
+    <div className="focus-within:ring-damul-main-300 flex items-center gap-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 ring-inset focus-within:border-transparent focus-within:ring-2 dark:border-neutral-500 dark:bg-neutral-700 dark:text-white">
       <input
         ref={inputRef}
         type={type === "password" ? (showPassword ? "text" : "password") : type}
@@ -71,7 +71,7 @@ const Input = ({
           {type === "password" && (
             <button
               type="button"
-              className="cursor-pointer text-neutral-300"
+              className="cursor-pointer text-neutral-300 dark:text-white"
               onClick={handleShowPassword}>
               {showPassword ? (
                 <EyeIcon className="size-5" />
@@ -83,9 +83,9 @@ const Input = ({
 
           <button
             type="button"
-            className="cursor-pointer text-neutral-300"
+            className="cursor-pointer text-neutral-300 dark:text-white"
             onClick={handleClear}>
-            <XCircleIcon className="size-5 fill-neutral-300 stroke-white" />
+            <XCircleIcon className="size-5 fill-neutral-300 stroke-white dark:fill-neutral-600" />
           </button>
         </div>
       )}

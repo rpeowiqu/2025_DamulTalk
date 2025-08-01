@@ -95,8 +95,8 @@ const ChatInput = ({ sendMessage }: ChatInputProps) => {
   };
 
   return (
-    <div className="bg-neutral-50 p-6 pt-0">
-      <div className="focus-within:ring-damul-main-300 flex h-40 flex-col gap-2 rounded-xl border border-neutral-200 bg-white p-4 transition-all duration-200 focus-within:ring-2">
+    <div className="z-10 bg-neutral-50 p-6 pt-0 dark:bg-neutral-700">
+      <div className="focus-within:ring-damul-main-300 flex h-40 flex-col gap-2 rounded-xl border border-neutral-200 bg-white p-4 focus-within:ring-2 dark:border-neutral-500 dark:bg-neutral-600">
         <div className="relative flex-1">
           {uploadFile && (
             <div className="absolute top-0 left-0">
@@ -109,7 +109,7 @@ const ChatInput = ({ sendMessage }: ChatInputProps) => {
 
           <textarea
             ref={textareaRef}
-            className="h-full w-full resize-none bg-white outline-none placeholder:text-neutral-300"
+            className="h-full w-full resize-none bg-white outline-none placeholder:text-neutral-300 dark:bg-neutral-600"
             placeholder={uploadFile ? "" : "메시지를 입력해 주세요"}
             onKeyDown={handleKeyDown}
             maxLength={500}
@@ -121,7 +121,7 @@ const ChatInput = ({ sendMessage }: ChatInputProps) => {
           <FileUploadButton
             uploadFile={uploadFile}
             setUploadFile={setUploadFile!}
-            className="rounded-lg p-2 text-neutral-500 hover:bg-neutral-100 hover:text-neutral-600">
+            className="rounded-lg p-2 text-neutral-500 hover:bg-neutral-100 hover:text-neutral-600 dark:text-neutral-200 dark:hover:bg-neutral-500 dark:hover:text-white">
             <MultiMediaIcon className="size-5" />
           </FileUploadButton>
           <Button className="py-2 text-base" onClick={handleSendMessage}>

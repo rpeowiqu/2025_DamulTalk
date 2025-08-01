@@ -13,7 +13,7 @@ const ChatRoomHeader = ({ room }: ChatRoomHeaderProps) => {
   const { data } = useCurrentUser();
 
   return (
-    <div className="flex items-center gap-6 border-b border-neutral-200 bg-white px-6 py-4">
+    <div className="flex items-center gap-6 border-b border-neutral-200 bg-white px-6 py-4 dark:border-neutral-500 dark:bg-neutral-800">
       <div className="flex flex-1 items-center gap-4">
         <ChatPortrait
           profileImageUrls={room.roomMembers
@@ -27,7 +27,7 @@ const ChatRoomHeader = ({ room }: ChatRoomHeaderProps) => {
         </div>
       </div>
 
-      <div className="flex items-center gap-5 text-neutral-500">
+      <div className="flex items-center gap-5 text-neutral-500 dark:text-white">
         {/* <ChatRoomSearchButton /> */}
         <ChatRoomExitButton room={room} />
       </div>

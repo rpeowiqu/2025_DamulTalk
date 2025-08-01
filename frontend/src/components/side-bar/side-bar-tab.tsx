@@ -20,7 +20,7 @@ const SideBarTab = () => {
   };
 
   return (
-    <div className="bg-damul-main-300 flex flex-col gap-7 px-4 py-6">
+    <div className="bg-damul-main-300 dark:bg-damul-main-500 flex flex-col gap-7 px-4 py-6">
       {tabs.map((tab) => {
         const Icon = tab.icon;
 

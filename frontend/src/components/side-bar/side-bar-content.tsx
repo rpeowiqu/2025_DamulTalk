@@ -8,6 +8,7 @@ import LogoutButton from "@/components/auth/logout-button";
 import useCurrentUser from "@/hooks/auth/use-current-user";
 import UserItemSkeleton from "@/components/community/user-item-skeleton";
 import useSideBarTabStore from "@/store/side-bar-tab-store";
+import ThemeChangeButton from "@/components/theme/theme-change-button";
 
 const SideBarContent = () => {
   const currentTab = useSideBarTabStore((state) => state.currentTab);
@@ -24,15 +25,18 @@ const SideBarContent = () => {
   };
 
   return (
-    <div className="flex w-90 flex-col gap-4 bg-white p-6">
+    <div className="flex w-90 flex-col gap-4 bg-white p-6 dark:bg-neutral-800">
       <div className="flex items-center justify-between">
         <h1 className="text-damul-main-300 text-4xl font-extrabold select-none">
           DamulTalk
         </h1>
-        <SettingButton />
+        <div className="flex gap-4">
+          <ThemeChangeButton className="text-neutral-500 dark:text-neutral-100" />
+          <SettingButton />
+        </div>
       </div>
 
-      <div className="flex items-center justify-between border-b border-neutral-300 pb-1">
+      <div className="flex items-center justify-between border-b border-neutral-300 pb-1 dark:border-neutral-500">
         {isLoading ? (
           <UserItemSkeleton visibleStatus={true} />
         ) : data ? (

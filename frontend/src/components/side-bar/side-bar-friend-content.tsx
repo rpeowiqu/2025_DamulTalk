@@ -82,7 +82,7 @@ const SideBarFriendContent = ({ user }: SideBarFriendContentProps) => {
         defaultValue={["friends", "friend-request"]}
         className="scroll-hidden flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto">
         <AccordionItem value="friend-request" className="flex flex-col gap-4">
-          <AccordionTrigger>
+          <AccordionTrigger className="dark:text-white">
             친구 요청 {friendRequests?.length ?? 0}건
           </AccordionTrigger>
           <AccordionContent>
@@ -95,7 +95,7 @@ const SideBarFriendContent = ({ user }: SideBarFriendContentProps) => {
         </AccordionItem>
 
         <AccordionItem value="friends" className="flex flex-col gap-4">
-          <AccordionTrigger>
+          <AccordionTrigger className="dark:text-white">
             친구 {sortedFriends.length ?? 0}명
           </AccordionTrigger>
           <AccordionContent className="flex flex-col gap-4">

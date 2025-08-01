@@ -224,7 +224,7 @@ const SideBar = () => {
   }, [data, client, isConnected]);
 
   return (
-    <aside className="sticky top-0 flex h-dvh border-r border-neutral-200">
+    <aside className="sticky top-0 flex h-dvh border-r border-neutral-200 dark:border-neutral-500">
       <SideBarTab />
       <SideBarContent />
     </aside>

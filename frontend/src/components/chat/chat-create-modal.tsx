@@ -23,7 +23,7 @@ const ChatCreateModal = ({
       open={open}
       onOpenChange={onOpenChange}
       title="채팅방 만들기"
-      titleClassName="text-damul-main-300 border-b border-damul-main-500 pb-4 mb-2"
+      titleClassName="text-damul-main-300 border-b border-damul-main-300 pb-4 mb-2"
       {...props}>
       <ChatCreateForm
         chatCreateInfo={chatCreateInfo}

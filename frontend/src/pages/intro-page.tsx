@@ -7,6 +7,7 @@ import Button from "@/components/common/button";
 import messageImage from "@/assets/images/message.png";
 import backgroundImage from "@/assets/images/food-pattern.png";
 import { cn } from "@/utils/style";
+import ThemeChangeButton from "@/components/theme/theme-change-button";
 
 const IntroPage = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -48,14 +49,16 @@ const IntroPage = () => {
       <img
         src={backgroundImage}
         alt="배경 이미지"
-        className="pointer-events-none absolute z-0 size-full object-cover pr-[15px] opacity-2.5"
+        className="pointer-events-none absolute z-0 size-full object-cover opacity-2.5 dark:opacity-5"
       />
 
       <div className="pointer-events-none sticky top-0 z-9999 h-20 w-full shrink-0 snap-start">
         <header
           className={cn(
-            "flex w-full justify-center border-b border-neutral-200 transition-all duration-200",
-            isScrolled ? "h-16 bg-white" : "bg-damul-main-300 h-full",
+            "flex w-full justify-center shadow-sm transition-all duration-200",
+            isScrolled
+              ? "h-16 bg-white dark:bg-neutral-800"
+              : "bg-damul-main-300 dark:bg-damul-main-500 h-full",
           )}>
           <div className="flex min-w-[80rem] items-center justify-between">
             <h1
@@ -65,14 +68,23 @@ const IntroPage = () => {
               )}>
               DamulTalk
             </h1>
-            <Button
-              className={cn(
-                "pointer-events-auto rounded-full bg-transparent",
-                isScrolled && "text-damul-main-300 hover:text-white",
-              )}
-              onClick={handleClick}>
-              시작하기
-            </Button>
+            <div className="flex items-center gap-5">
+              <ThemeChangeButton
+                className={cn(
+                  "pointer-events-auto",
+                  isScrolled && "text-damul-main-300",
+                )}
+              />
+              <Button
+                className={cn(
+                  "dark:hover:bg-damul-main-400 pointer-events-auto rounded-full bg-transparent dark:bg-transparent",
+                  isScrolled &&
+                    "text-damul-main-300 dark:hover:bg-damul-main-400 py-2 hover:text-white dark:hover:text-white",
+                )}
+                onClick={handleClick}>
+                시작하기
+              </Button>
+            </div>
           </div>
         </header>
       </div>
@@ -87,10 +99,12 @@ const IntroPage = () => {
             ease: "easeInOut",
           }}
           className="flex flex-col gap-2">
-          <p className="text-damul-main-400 text-2xl font-bold">
+          <p className="text-damul-main-400 dark:text-damul-main-300 text-2xl font-bold">
             팀50일의 멤버가 다시 모여 개발한
           </p>
-          <h1 className="text-5xl font-black">웹소켓 기반의 메신저 서비스</h1>
+          <h1 className="text-5xl font-black dark:text-white">
+            웹소켓 기반의 메신저 서비스
+          </h1>
         </motion.div>
 
         <motion.div
@@ -126,12 +140,12 @@ const IntroPage = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
           viewport={{ amount: 1, once: true }}>
-          <h1 className="text-4xl font-black">💬 채팅 기능</h1>
+          <h1 className="text-4xl font-black dark:text-white">💬 채팅 기능</h1>
           <ul className="flex flex-col gap-1 pl-12">
-            <li className="list-disc text-xl text-neutral-500">
+            <li className="list-disc text-xl text-neutral-500 dark:text-neutral-200">
               텍스트, 이미지, 비디오 등 다양한 메시지를 주고 받을 수 있어요
             </li>
-            <li className="list-disc text-xl text-neutral-500">
+            <li className="list-disc text-xl text-neutral-500 dark:text-neutral-200">
               나에게 온 메시지를 알림으로 알려줘요
             </li>
           </ul>
@@ -161,12 +175,14 @@ const IntroPage = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
           viewport={{ amount: 1, once: true }}>
-          <h1 className="text-4xl font-black">🏠️ 당신만의 소통 공간</h1>
+          <h1 className="text-4xl font-black dark:text-white">
+            🏠️ 당신만의 소통 공간
+          </h1>
           <ul className="flex flex-col gap-1 pl-12">
-            <li className="list-disc text-xl text-neutral-500">
+            <li className="list-disc text-xl text-neutral-500 dark:text-neutral-200">
               다양한 사람들과 친구를 맺고 대화를 시작해 보세요
             </li>
-            <li className="list-disc text-xl text-neutral-500">
+            <li className="list-disc text-xl text-neutral-500 dark:text-neutral-200">
               프로필 이미지, 배경 이미지, 상태 메시지를 설정하고 자유롭게
               프로필을 꾸며보세요
             </li>
@@ -190,7 +206,7 @@ const IntroPage = () => {
         </motion.div>
       </section>
 
-      <footer className="z-9999 mt-52 flex w-full items-center justify-center bg-neutral-50 py-12">
+      <footer className="z-9999 mt-52 flex w-full items-center justify-center bg-neutral-50 py-12 dark:bg-neutral-800">
         <div className="flex w-[80rem] flex-col gap-4">
           <h1
             className={cn(
@@ -200,7 +216,7 @@ const IntroPage = () => {
             DamulTalk
           </h1>
 
-          <div className="flex flex-1 items-center justify-between text-sm text-neutral-400">
+          <div className="flex flex-1 items-center justify-between text-sm text-neutral-400 dark:text-neutral-100">
             <p>© All rights reserved to 50DAYS 2025</p>
 
             <div className="flex gap-4">

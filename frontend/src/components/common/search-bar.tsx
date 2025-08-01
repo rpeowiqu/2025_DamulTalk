@@ -61,7 +61,7 @@ const SearchBar = ({
   };
 
   return (
-    <div className="group focus-within:ring-damul-main-300 flex items-center gap-3 rounded-xl bg-neutral-100 px-4 py-3 ring-inset focus-within:bg-white focus-within:ring-2">
+    <div className="group focus-within:ring-damul-main-300 flex items-center gap-3 rounded-xl bg-neutral-100 px-4 py-3 ring-inset focus-within:bg-white focus-within:ring-2 dark:bg-neutral-600 dark:text-white dark:focus-within:bg-neutral-800">
       <SearchIcon
         className={cn(
           "group-focus-within:text-damul-main-300 shrink-0 text-neutral-300",
@@ -80,9 +80,9 @@ const SearchBar = ({
       {!isEmpty && (
         <button
           type="button"
-          className="shrink-0 cursor-pointer text-neutral-300"
+          className="shrink-0 cursor-pointer text-neutral-300 dark:text-white"
           onClick={handleClear}>
-          <XCircleIcon className="size-5 fill-neutral-300 stroke-white" />
+          <XCircleIcon className="size-5 fill-neutral-300 stroke-white dark:fill-neutral-600" />
         </button>
       )}
     </div>

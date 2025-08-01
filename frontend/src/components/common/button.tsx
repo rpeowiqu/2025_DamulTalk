@@ -4,11 +4,12 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/utils/style";
 
 const buttonVariants = cva(
-  "cursor-pointer rounded-xl px-5 py-3 text-lg font-bold text-white transition-color duration-300 disabled:bg-neutral-200",
+  "cursor-pointer rounded-xl px-5 py-3 text-lg font-bold text-white dark:text-white transition-color duration-300 disabled:bg-neutral-200 dark:disabled:bg-neutral-300",
   {
     variants: {
       variant: {
-        default: "bg-damul-main-300 hover:bg-damul-main-400",
+        default:
+          "bg-damul-main-300 dark:bg-damul-main-400 hover:bg-damul-main-400 dark:hover:bg-damul-main-500",
         dangerous: "bg-red-400 hover:bg-red-500",
       },
     },

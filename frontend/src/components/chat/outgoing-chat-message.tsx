@@ -38,19 +38,19 @@ const OutgoingChatMessage = ({ ref, message, onClick }: ChatMessageProps) => {
 
       <div className="flex shrink-0 flex-col items-end text-[0.675rem]">
         {message.unReadCount > 0 && (
-          <p className="text-damul-main-500">
+          <p className="text-damul-main-500 dark:text-damul-main-200">
             {message.unReadCount > 99 ? "99+" : message.unReadCount}
           </p>
         )}
         {/* 전송 중인 메시지는 날짜를 표시하지 않는다. */}
         {message.messageStatus !== "SENDING" && (
-          <p className="text-neutral-500">
+          <p className="text-neutral-500 dark:text-neutral-200">
             {getFormattedDate(message.sendTime)}
           </p>
         )}
       </div>
 
-      <div className="bg-damul-main-50 flex max-w-96 flex-col gap-2 rounded-xl p-3">
+      <div className="bg-damul-main-100 dark:bg-damul-main-500 flex max-w-96 flex-col gap-2 rounded-xl p-3">
         {renderContent()}
       </div>
     </div>

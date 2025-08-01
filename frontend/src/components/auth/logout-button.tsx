@@ -12,7 +12,7 @@ const LogoutButton = () => {
 
   return (
     <button
-      className="shrink-0 cursor-pointer text-xs text-neutral-300"
+      className="shrink-0 cursor-pointer text-xs text-neutral-300 dark:text-neutral-100"
       onClick={handleClick}>
       로그아웃
     </button>

@@ -27,9 +27,11 @@ const ProfileHeader = ({ profile, isRefetching }: ProfileHeaderProps) => {
           />
 
           <div>
-            <h1 className="text-2xl font-bold">{profile.nickname}</h1>
-            <p className="text-neutral-500">
-              <span className="font-bold text-black">
+            <h1 className="text-2xl font-bold dark:text-white">
+              {profile.nickname}
+            </h1>
+            <p className="text-neutral-500 dark:text-neutral-200">
+              <span className="font-bold text-black dark:text-white">
                 {profile.friendCount}
               </span>{" "}
               친구

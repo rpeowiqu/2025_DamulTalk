@@ -15,14 +15,14 @@ const UserPortrait = ({
   return (
     <div
       className={cn(
-        "relative size-12 rounded-full border border-neutral-200",
+        "relative size-12 rounded-full border border-neutral-200 dark:border-neutral-500",
         className,
       )}>
       <div className="size-full overflow-hidden rounded-full">
         <img
           src={profileImageUrl || defaultPortraitImage}
           alt="프로필 이미지"
-          className="size-full bg-white object-cover"
+          className="size-full bg-white object-cover dark:bg-neutral-600"
         />
       </div>
 

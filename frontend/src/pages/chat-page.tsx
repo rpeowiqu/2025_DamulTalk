@@ -316,19 +316,15 @@ const ChatPage = () => {
     };
   }, [roomId, client, isConnected, user]);
 
-  if (isLoading) {
-    return (
-      <div className="h-dvh">
-        <ChatRoomHeaderSkeleton />
-        <ChatRoomContentSkeleton />
-      </div>
-    );
-  }
-
   return (
     <FileUploadProvider>
-      <div className="flex h-full flex-col bg-neutral-50">
-        {chatRoom ? (
+      <div className="flex h-full flex-col bg-neutral-50 dark:bg-neutral-700">
+        {isLoading ? (
+          <>
+            <ChatRoomHeaderSkeleton />
+            <ChatRoomContentSkeleton />
+          </>
+        ) : chatRoom ? (
           <>
             <ChatRoomHeader room={chatRoom} />
             <ChatRoomContent

@@ -33,7 +33,7 @@ const ChatRoomHeadCountButton = ({
   return (
     <>
       <button
-        className="flex cursor-pointer items-center gap-1 text-neutral-500"
+        className="flex cursor-pointer items-center gap-1 text-neutral-500 dark:text-neutral-200"
         {...props}
         onClick={handleClick}>
         <UserIcon className="size-4" />

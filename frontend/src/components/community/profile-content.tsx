@@ -26,27 +26,27 @@ const ProfileContent = ({ profile }: ProfileContentProps) => {
     : [];
 
   return (
-    <div className="flex h-full gap-4">
+    <div className="flex h-full gap-4 dark:text-white">
       <div className="flex min-w-120 flex-1 flex-col gap-4">
         <h1 className="text-xl font-bold">상세 정보</h1>
         <ul className="flex list-disc flex-col gap-4 pl-8">
           <li>
             <p className="font-bold">가입일</p>
-            <p className="text-neutral-500">
+            <p className="text-neutral-500 dark:text-neutral-200">
               {new Date(profile.joinedAt).toLocaleDateString()}
             </p>
           </li>
 
           <li>
             <p className="font-bold">상태 메시지</p>
-            <p className="whitespace-pre-wrap text-neutral-500">
+            <p className="whitespace-pre-wrap text-neutral-500 dark:text-neutral-200">
               {profile.statusMessage}
             </p>
           </li>
         </ul>
       </div>
 
-      <div className="h-full w-0.5 bg-neutral-50"></div>
+      <div className="h-full w-0.5 bg-neutral-50 dark:bg-neutral-600"></div>
 
       <div className="flex w-72 flex-col gap-4">
         <h1 className="text-xl font-bold">친구</h1>

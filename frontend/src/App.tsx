@@ -4,16 +4,19 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import router from "@/routes/router";
 import { Toaster } from "@/components/ui/sonner";
+import ThemeProvider from "@/contexts/theme/theme-provider";
 
 const queryClient = new QueryClient();
 
 const App = () => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router}></RouterProvider>
-      <Toaster position="top-center" richColors />
-      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
-    </QueryClientProvider>
+    <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router}></RouterProvider>
+        <Toaster position="top-center" richColors />
+        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 };
 

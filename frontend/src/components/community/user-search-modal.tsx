@@ -65,7 +65,7 @@ const UserSearchModal = ({
           <UserSearchItem key={item.userId} user={item} keyword={keyword} />
         )}
         renderSkeleton={() => (
-          <div className="h-5 animate-pulse rounded-lg bg-neutral-200" />
+          <div className="h-5 animate-pulse rounded-sm bg-neutral-200 dark:bg-neutral-500" />
         )}
       />
     </Dialog>

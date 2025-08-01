@@ -56,11 +56,11 @@ const PasswordResetForm = () => {
   };
 
   return (
-    <div className="flex h-full flex-col gap-10 bg-white">
+    <div className="flex h-full flex-col gap-10">
       <StepProgress
         value={Math.floor(100 / (PasswordResetStep.LENGTH - 1)) * step}
         stepCount={PasswordResetStep.LENGTH}
-        className="h-1 bg-neutral-200"
+        className="h-1 bg-neutral-200 dark:bg-neutral-50"
         indicatorClassName="bg-damul-main-300"
         stepClassName="size-7"
         stepLabels={["이메일", "인증코드", "새 비밀번호", "변경 완료"]}

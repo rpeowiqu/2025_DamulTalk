@@ -63,7 +63,7 @@ const SettingPage = () => {
   }, [data]);
 
   return (
-    <div className="flex h-full flex-col gap-12 overflow-y-scroll bg-white p-6">
+    <div className="flex h-full flex-col gap-12 overflow-y-scroll p-6">
       {isLoading ? (
         <>
           <ProfileHeaderSkeleton />

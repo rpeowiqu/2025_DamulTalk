@@ -72,7 +72,7 @@ const PasswordResetCodeForm = ({
       onSubmit={handleSubmit}
       className="flex h-full flex-col justify-between gap-6">
       <div className="flex flex-col gap-4">
-        <h1 className="text-2xl leading-9 font-bold">
+        <h1 className="text-2xl leading-9 font-bold dark:text-white">
           이메일에 전송된 인증코드를
           <br />
           입력해주세요
@@ -105,7 +105,7 @@ const PasswordResetCodeForm = ({
               {message}
             </p>
 
-            <p className="mr-1 text-sm text-neutral-500">
+            <p className="mr-1 text-sm text-neutral-500 dark:text-neutral-200">
               {getFormattedTime(remainingTime)}
             </p>
           </div>

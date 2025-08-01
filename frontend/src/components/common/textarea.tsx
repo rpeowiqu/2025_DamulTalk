@@ -9,7 +9,7 @@ const TextArea = ({
   ...props
 }: TextareaHTMLAttributes<HTMLTextAreaElement>) => {
   return (
-    <div className="focus-within:ring-damul-main-300 mt-2 flex h-52 w-full flex-col gap-3 rounded-xl p-4 ring-2 ring-neutral-100">
+    <div className="focus-within:ring-damul-main-300 mt-2 flex h-52 w-full flex-col gap-3 rounded-xl border border-neutral-200 p-4 ring-neutral-100 ring-inset focus-within:border-transparent focus-within:ring-2 dark:border-neutral-500 dark:bg-neutral-700">
       <textarea
         value={value}
         className={cn(
@@ -22,7 +22,7 @@ const TextArea = ({
       {value && (
         <p
           className={cn(
-            "text-end text-sm text-neutral-400",
+            "text-end text-sm text-neutral-400 dark:text-neutral-200",
             maxLength &&
               value.toString().length >= maxLength &&
               "font-bold text-red-400",

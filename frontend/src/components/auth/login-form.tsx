@@ -31,10 +31,10 @@ const LoginForm = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex h-full flex-col justify-between bg-white">
+      className="flex h-full flex-col justify-between">
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-2">
-          <label htmlFor="email" className="text-lg font-bold">
+          <label htmlFor="email" className="text-lg font-bold dark:text-white">
             이메일
           </label>
           <Input
@@ -59,7 +59,9 @@ const LoginForm = () => {
         </div>
 
         <div className="flex flex-col gap-2">
-          <label htmlFor="password" className="text-lg font-bold">
+          <label
+            htmlFor="password"
+            className="text-lg font-bold dark:text-white">
             비밀번호
           </label>
           <Input
@@ -86,7 +88,7 @@ const LoginForm = () => {
       <div className="flex flex-col gap-3">
         <Button>로그인</Button>
 
-        <div>
+        <div className="dark:text-white">
           다믈톡이 처음이신가요?{" "}
           <Link
             to="signup"

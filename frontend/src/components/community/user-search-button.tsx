@@ -25,7 +25,10 @@ const UserSearchButton = () => {
 
   return (
     <>
-      <button type="button" className="cursor-pointer" onClick={handleClick}>
+      <button
+        type="button"
+        className="cursor-pointer dark:text-neutral-200"
+        onClick={handleClick}>
         <UserSearchIcon />
       </button>
 

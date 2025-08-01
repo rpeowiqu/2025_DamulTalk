@@ -38,11 +38,15 @@ const ChatRoomExitModal = ({
       <div className="flex flex-col items-center gap-8">
         <div className="flex flex-1 flex-col items-center justify-center gap-3">
           <h1 className="text-lg font-bold">{room.roomName}</h1>
-          <p className="text-neutral-600">정말 이 채팅방을 나갈까요?</p>
+          <p className="text-neutral-600 dark:text-neutral-200">
+            정말 이 채팅방을 나갈까요?
+          </p>
         </div>
 
         <div className="flex w-full gap-4">
-          <Button className="w-full" onClick={handleCancel}>
+          <Button
+            className="w-full bg-neutral-400 hover:bg-neutral-500 dark:bg-neutral-400 dark:hover:bg-neutral-500"
+            onClick={handleCancel}>
             돌아가기
           </Button>
           <Button variant="dangerous" className="w-full" onClick={handleExit}>

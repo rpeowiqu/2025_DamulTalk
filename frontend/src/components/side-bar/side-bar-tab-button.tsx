@@ -24,7 +24,7 @@ const SideBarTabButton = ({
         onClick={onClick}
         className={cn(
           "flex cursor-pointer flex-col items-center gap-0.5 transition-colors duration-300",
-          selected ? "text-white" : "text-neutral-500",
+          selected ? "text-white" : "text-neutral-500 dark:text-neutral-700",
           className,
         )}
         {...props}>

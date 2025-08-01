@@ -44,17 +44,17 @@ const IncomingChatMessage = ({ ref, message, onClick }: ChatMessageProps) => {
           {message.nickname}
         </Link>
         <div className="flex items-end gap-1 break-all whitespace-pre-wrap">
-          <div className="flex max-w-96 flex-col gap-2 rounded-xl bg-white p-3">
+          <div className="flex max-w-96 flex-col gap-2 rounded-xl bg-white p-3 dark:bg-neutral-500">
             {renderContent()}
           </div>
 
           <div className="flex shrink-0 flex-col text-[0.675rem]">
             {message.unReadCount > 0 && (
-              <p className="text-damul-main-500">
+              <p className="text-damul-main-500 dark:text-damul-main-200">
                 {message.unReadCount > 99 ? "99+" : message.unReadCount}
               </p>
             )}
-            <p className="text-neutral-500">
+            <p className="text-neutral-500 dark:text-neutral-200">
               {getFormattedDate(message.sendTime)}
             </p>
           </div>

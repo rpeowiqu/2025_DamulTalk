@@ -15,7 +15,7 @@ const LoginPage = () => {
       />
 
       <div className="flex size-full min-h-fit items-center justify-center">
-        <div className="border-damul-main-300 z-10 flex w-120 flex-col gap-7 rounded-2xl border-2 bg-white p-10">
+        <div className="border-damul-main-300 z-10 flex w-120 flex-col gap-7 rounded-2xl border-2 bg-white p-10 dark:bg-neutral-800">
           <h1 className="text-damul-main-300 text-center text-4xl font-extrabold select-none">
             DamulTalk
           </h1>

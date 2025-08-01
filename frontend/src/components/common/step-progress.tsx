@@ -42,7 +42,7 @@ const StepProgress = ({
                   "absolute top-full left-1/2 mt-0.5 -translate-x-1/2 text-sm whitespace-nowrap",
                   value !== null && (100 / stepCount) * index <= value
                     ? "text-damul-main-300"
-                    : "text-neutral-300",
+                    : "text-neutral-300 dark:text-white",
                   stepLabelClassName,
                 )}>
                 {stepLabels[index]}

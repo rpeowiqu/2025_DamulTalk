@@ -93,7 +93,7 @@ const SideBarChatContent = () => {
         defaultValue={["chats"]}
         className="scroll-hidden flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto">
         <AccordionItem value="chats" className="flex flex-col gap-4">
-          <AccordionTrigger>
+          <AccordionTrigger className="dark:text-white">
             채팅 {sortedChatrooms.length ?? 0}건
           </AccordionTrigger>
           <AccordionContent className="flex flex-col gap-4">

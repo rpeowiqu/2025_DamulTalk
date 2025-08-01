@@ -15,11 +15,6 @@ import IntroPage from "@/pages/intro-page";
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <IntroPage />,
-  },
-
-  {
     element: <ProtectedRoute />,
     children: [
       {
@@ -45,6 +40,10 @@ const router = createBrowserRouter([
     element: <BlankLayout />,
     children: [
       {
+        path: "/",
+        element: <IntroPage />,
+      },
+      {
         path: "/login",
         element: <LoginPage />,
         children: [
@@ -62,12 +61,11 @@ const router = createBrowserRouter([
           },
         ],
       },
+      {
+        path: "*",
+        element: <NotFoundPage />,
+      },
     ],
-  },
-
-  {
-    path: "*",
-    element: <NotFoundPage />,
   },
 ]);
 

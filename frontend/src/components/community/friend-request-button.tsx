@@ -35,7 +35,8 @@ const FriendRequestButton = ({
       case "ACCEPTED":
         return (
           <Button
-            className="flex items-center justify-center gap-2 self-center bg-red-400 py-2 hover:bg-red-500"
+            variant="dangerous"
+            className="flex items-center justify-center gap-2 self-center py-2"
             {...props}
             onClick={deleteFriend}>
             <UserRoundMinus />
@@ -45,7 +46,7 @@ const FriendRequestButton = ({
       case "PENDING_REQUEST":
         return (
           <Button
-            className="flex items-center justify-center gap-2 bg-neutral-300 py-2 hover:bg-neutral-400"
+            className="flex items-center justify-center gap-2 bg-neutral-400 py-2 hover:bg-neutral-500 dark:bg-neutral-400 dark:hover:bg-neutral-500"
             {...props}
             onClick={deleteFriend}>
             <UserRoundCogIcon />
@@ -55,7 +56,7 @@ const FriendRequestButton = ({
       case "PENDING_RESPONSE":
         return (
           <div className="flex items-center gap-4">
-            <p className="text-neutral-500">
+            <p className="text-neutral-500 dark:text-neutral-300">
               이 유저는 회원님께 친구 추가 요청을 했어요
             </p>
 
@@ -68,7 +69,8 @@ const FriendRequestButton = ({
             </Button>
 
             <Button
-              className="flex items-center justify-center gap-2 bg-red-400 py-2 hover:bg-red-500"
+              variant="dangerous"
+              className="flex items-center justify-center gap-2 py-2"
               {...props}
               onClick={rejectFriend}>
               <XIcon />

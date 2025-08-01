@@ -22,8 +22,10 @@ const UserItem = ({
   return (
     <div
       className={cn(
-        "flex w-full cursor-pointer items-center gap-3 rounded-xl p-2 hover:bg-neutral-50",
-        selected ? "bg-damul-main-50" : "bg-white",
+        "flex w-full cursor-pointer items-center gap-3 rounded-xl p-2 hover:bg-neutral-50 dark:hover:bg-neutral-700",
+        selected
+          ? "bg-damul-main-50 dark:bg-damul-main-600"
+          : "bg-white dark:bg-neutral-800",
         className,
       )}
       onClick={onClick}>
@@ -38,7 +40,9 @@ const UserItem = ({
           <p
             className={cn(
               "line-clamp-1",
-              selected ? "text-damul-main-500" : "text-black",
+              selected
+                ? "text-damul-main-500 dark:text-damul-main-50"
+                : "text-black dark:text-white",
             )}>
             {user.nickname}
           </p>
@@ -46,7 +50,9 @@ const UserItem = ({
             <p
               className={cn(
                 "line-clamp-1 text-xs",
-                user.online ? "text-green-400" : "text-neutral-400",
+                user.online
+                  ? "text-green-400"
+                  : "text-neutral-400 dark:text-neutral-200",
               )}>
               {user.online ? "온라인" : "오프라인"}
             </p>
