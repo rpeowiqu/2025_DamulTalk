@@ -28,11 +28,6 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, "/api/v1"),
         },
-        "/ws": {
-          target: env.VITE_WS_BASE_URL,
-          ws: true,
-          changeOrigin: true,
-        },
       },
     },
     build: {
