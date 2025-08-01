@@ -11,7 +11,7 @@ const LoginPage = () => {
       <img
         src={backgroundImage}
         alt="배경 이미지"
-        className="pointer-events-none fixed inset-0 z-0 object-cover pr-[15px] opacity-10"
+        className="pointer-events-none fixed inset-0 z-0 object-cover pr-[var(--scrollbar-width)] opacity-10"
       />
 
       <div className="flex size-full min-h-fit items-center justify-center">

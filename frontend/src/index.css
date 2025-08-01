@@ -137,6 +137,7 @@ body {
 
 @layer base {
   html {
+    --scrollbar-width: 8px;
     --scrollbar-thumb: #a1a1a1;
     --scrollbar-thumb-hover: #737373;
     --scrollbar-track: #d4d4d4;
@@ -159,7 +160,7 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
+  width: var(--scrollbar-width);
 }
 
 ::-webkit-scrollbar-thumb {

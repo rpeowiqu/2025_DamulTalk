@@ -49,7 +49,7 @@ const IntroPage = () => {
       <img
         src={backgroundImage}
         alt="배경 이미지"
-        className="pointer-events-none absolute z-0 size-full object-cover opacity-2.5 dark:opacity-5"
+        className="pointer-events-none absolute z-0 size-full object-cover pr-[var(--scrollbar-width)] opacity-2.5 dark:opacity-5"
       />
 
       <div className="pointer-events-none sticky top-0 z-9999 h-20 w-full shrink-0 snap-start">
@@ -79,7 +79,7 @@ const IntroPage = () => {
                 className={cn(
                   "dark:hover:bg-damul-main-400 pointer-events-auto rounded-full bg-transparent dark:bg-transparent",
                   isScrolled &&
-                    "text-damul-main-300 dark:hover:bg-damul-main-400 py-2 hover:text-white dark:hover:text-white",
+                    "text-damul-main-300 dark:text-damul-main-300 dark:hover:bg-damul-main-400 py-2 hover:text-white dark:hover:text-white",
                 )}
                 onClick={handleClick}>
                 시작하기
