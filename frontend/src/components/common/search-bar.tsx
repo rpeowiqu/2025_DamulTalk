@@ -25,12 +25,22 @@ const SearchBar = ({
   const [isEmpty, setIsEmpty] = useState(true);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    // Mac에서 한글이 두 번 입력되는 문제 방지
+    if ((e.nativeEvent as InputEvent).isComposing) {
+      return;
+    }
+
     const keyword = e.target.value;
     setIsEmpty(keyword.length === 0);
     onChangeKeyword?.(keyword);
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    // Mac에서 두 번 입력되는 문제 방지
+    if (e.nativeEvent.isComposing) {
+      return;
+    }
+
     if (e.key === "Enter") {
       e.preventDefault();
 

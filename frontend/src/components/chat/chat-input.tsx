@@ -80,6 +80,11 @@ const ChatInput = ({ sendMessage }: ChatInputProps) => {
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    // Mac에서 두 번 입력되는 문제 방지
+    if (e.nativeEvent.isComposing) {
+      return;
+    }
+
     if (!e.shiftKey && e.key === "Enter") {
       e.preventDefault();
       handleSendMessage();

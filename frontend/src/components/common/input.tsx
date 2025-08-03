@@ -34,6 +34,11 @@ const Input = ({
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    // Mac에서 한글이 두 번 입력되는 문제 방지
+    if ((e.nativeEvent as InputEvent).isComposing) {
+      return;
+    }
+
     setIsEmpty(e.target.value.length === 0);
     onChange?.(e);
   };
