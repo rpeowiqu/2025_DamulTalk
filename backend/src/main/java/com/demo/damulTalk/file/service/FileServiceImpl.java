@@ -28,6 +28,7 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -86,7 +87,7 @@ public class FileServiceImpl implements FileService {
                     .messageType(type == ContentType.IMAGE ? MessageType.IMAGE : MessageType.VIDEO)
                     .content(type == ContentType.IMAGE ? "이미지를 보냈습니다." : "동영상을 보냈습니다.")
                     .fileUrl(fileUrl)
-                    .sendTime(LocalDateTime.now())
+                    .sendTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                     .unReadCount(0)
                     .build();
 
@@ -104,7 +105,7 @@ public class FileServiceImpl implements FileService {
                             .senderId(0)
                             .messageType(MessageType.DATE)
                             .content(nowDate.toString())
-                            .sendTime(LocalDateTime.now())
+                            .sendTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                             .build();
 
                     redisTemplate.opsForList().rightPush(redisKey, objectMapper.writeValueAsString(systemMessage));
