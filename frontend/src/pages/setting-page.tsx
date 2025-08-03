@@ -40,7 +40,7 @@ const SettingPage = () => {
       isDefaultProfile: !data.profileImageUrl,
     });
     nicknameInputRef.current.value = data.nickname;
-    console.log(nicknameInputRef.current.value);
+
     setBackgroundImageFile(null);
     setProfileImageFile(null);
   };
