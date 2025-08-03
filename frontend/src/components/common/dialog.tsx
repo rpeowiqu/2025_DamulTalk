@@ -26,7 +26,7 @@ const Dialog = ({
 }: DialogProps) => {
   return (
     <ShadcnDialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="dark:text-white">
         <DialogHeader>
           <DialogTitle className={titleClassName}>{title}</DialogTitle>
           <DialogDescription className={descriptionClassName}>

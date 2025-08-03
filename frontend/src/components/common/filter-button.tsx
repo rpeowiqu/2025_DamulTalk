@@ -27,7 +27,9 @@ const FilterButton = ({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button type="button" className="cursor-pointer dark:text-neutral-200">
+        <button
+          type="button"
+          className="cursor-pointer text-neutral-500 dark:text-neutral-200">
           <FilterIcon />
         </button>
       </DropdownMenuTrigger>

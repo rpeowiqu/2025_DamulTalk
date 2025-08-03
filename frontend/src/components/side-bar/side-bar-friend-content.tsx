@@ -67,7 +67,7 @@ const SideBarFriendContent = ({ user }: SideBarFriendContentProps) => {
 
   return (
     <>
-      <div className="flex justify-end gap-4 text-neutral-500">
+      <div className="flex justify-end gap-4">
         <UserSearchButton />
         <FilterButton
           title="친구 목록 정렬 방식"

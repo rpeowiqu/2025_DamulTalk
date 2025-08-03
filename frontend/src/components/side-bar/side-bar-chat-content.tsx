@@ -78,7 +78,7 @@ const SideBarChatContent = () => {
 
   return (
     <>
-      <div className="flex justify-end gap-4 text-neutral-500">
+      <div className="flex justify-end gap-4">
         <ChatCreateButton />
         <FilterButton
           title="채팅 목록 정렬 방식"

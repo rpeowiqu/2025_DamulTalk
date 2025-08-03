@@ -32,7 +32,7 @@ const ChatCreateButton = () => {
     <>
       <button
         type="button"
-        className="cursor-pointer dark:text-neutral-200"
+        className="cursor-pointer text-neutral-500 dark:text-neutral-200"
         onClick={handleClick}>
         <ChatCreateIcon />
       </button>
