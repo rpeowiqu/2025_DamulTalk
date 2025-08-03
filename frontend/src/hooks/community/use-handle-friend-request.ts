@@ -7,13 +7,14 @@ import {
   patchAcceptFriendRequest,
   postFriendRequest,
 } from "@/services/community/api";
-import type {
-  RequestFriendRequest,
-  FriendRequestsResponse,
-  FriendRequestType,
-  FriendsResponse,
-  ProfileResponse,
-  User,
+import {
+  type RequestFriendRequest,
+  type FriendRequestsResponse,
+  type FriendRequestType,
+  type FriendsResponse,
+  type ProfileResponse,
+  type User,
+  type Profile,
 } from "@/types/community/type";
 import useCurrentUser from "@/hooks/auth/use-current-user";
 import type { DamulError } from "@/types/common/type";
@@ -42,6 +43,16 @@ const useHandleFriendRequest = (
       setOptimisticState("PENDING_REQUEST");
       toast.success("친구 요청을 보냈어요");
     },
+    onSuccess: (_, request) => {
+      queryClient.setQueryData<Profile>(["profile", request.id], (prev) =>
+        prev
+          ? {
+              ...prev,
+              isFriend: "PENDING_REQUEST",
+            }
+          : prev,
+      );
+    },
     onError: () => {
       setOptimisticState(initState);
       toast.error("친구 요청이 실패했어요");
@@ -69,14 +80,6 @@ const useHandleFriendRequest = (
       switch (request.status) {
         case "ACCEPTED":
           {
-            // 삭제 요청이 성공했다면, 해당 유저의 프로필을 무효화한다.
-            queryClient.invalidateQueries({
-              queryKey: ["profile", request.userId],
-            });
-            queryClient.invalidateQueries({
-              queryKey: ["friends", request.userId],
-            });
-
             // 삭제 요청이 성공했다면, 내 프로필의 친구수를 1 감소
             queryClient.setQueryData<ProfileResponse>(
               ["profile", data?.userId],
@@ -96,10 +99,28 @@ const useHandleFriendRequest = (
                 prev?.filter((item) => item.userId !== request.userId) ?? prev,
             );
 
+            // 삭제 요청이 성공했다면, 해당 유저의 프로필을 무효화한다.
+            queryClient.invalidateQueries({
+              queryKey: ["profile", request.userId],
+            });
+            queryClient.invalidateQueries({
+              queryKey: ["friends", request.userId],
+            });
+
             toast.success("친구를 삭제했어요");
           }
           break;
         case "PENDING_REQUEST":
+          queryClient.setQueryData<Profile>(
+            ["profile", request.userId],
+            (prev) =>
+              prev
+                ? {
+                    ...prev,
+                    isFriend: "NONE",
+                  }
+                : prev,
+          );
           toast.success("친구 요청을 취소했어요");
           break;
       }
@@ -120,11 +141,11 @@ const useHandleFriendRequest = (
     onMutate: () => {
       setOptimisticState("ACCEPTED");
     },
-    onSuccess: (data) => {
+    onSuccess: (data, request) => {
       // 친구 요청 목록에서 수락한 친구를 제거
       queryClient.setQueryData<FriendRequestsResponse>(
         ["friend-requests"],
-        (prev) => prev?.filter((item) => item.userId !== userId) ?? prev,
+        (prev) => prev?.filter((item) => item.userId !== request.id) ?? prev,
       );
 
       // 해당 친구를 친구 목록에 추가
@@ -147,10 +168,10 @@ const useHandleFriendRequest = (
 
       // 수신한 유저의 프로필과 친구 목록을 무효화
       queryClient.invalidateQueries({
-        queryKey: ["friends", userId],
+        queryKey: ["profile", userId],
       });
       queryClient.invalidateQueries({
-        queryKey: ["profile", userId],
+        queryKey: ["friends", userId],
       });
 
       toast.success("새로운 친구를 추가했어요");
@@ -175,17 +196,21 @@ const useHandleFriendRequest = (
     onMutate: () => {
       setOptimisticState("NONE");
     },
-    onSuccess: () => {
+    onSuccess: (_, id: number) => {
       // 친구 요청 목록해서 해당 친구를 삭제
       queryClient.setQueryData<FriendRequestsResponse>(
         ["friend-requests"],
-        (prev) => prev?.filter((user) => user.userId !== userId) ?? prev,
+        (prev) => prev?.filter((user) => user.userId !== id) ?? prev,
       );
 
-      // 해당 친구의 프로필과 친구 목록을 무효화
-      queryClient.invalidateQueries({
-        queryKey: ["profile", userId],
-      });
+      queryClient.setQueryData<Profile>(["profile", id], (prev) =>
+        prev
+          ? {
+              ...prev,
+              isFriend: "NONE",
+            }
+          : prev,
+      );
 
       toast.success("친구 요청을 거절했어요");
     },
