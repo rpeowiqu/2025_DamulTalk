@@ -34,7 +34,11 @@ const FileUploadButton = ({
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (!uploadFile && inputRef.current) {
+    if (!inputRef.current) {
+      return;
+    }
+
+    if (!uploadFile) {
       inputRef.current.value = "";
     }
   }, [uploadFile]);
@@ -79,7 +83,6 @@ const FileUploadButton = ({
         onChange={handleChange}
         accept="image/*,video/*"
         hidden
-        readOnly
         {...inputAttributes}
       />
       <button
