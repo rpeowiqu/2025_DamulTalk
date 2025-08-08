@@ -34,30 +34,32 @@ const ChatMessageList = ({
 
   const unreadCountMap = useMemo(() => {
     const result = new Map<string, number>();
+    const sortedReatAts = roomMembers
+      .map((item) => new Date(item.lastReadAt))
+      .sort();
+    const memberCount = roomMembers.length;
+    let index = 0;
+    let readAt = new Date(sortedReatAts[index]);
 
     data?.pages.forEach((page) =>
-      page.data.forEach((message) => {
-        let count = 0;
-        roomMembers.forEach((item) => {
-          const readAt = new Date(item.lastReadAt);
-          const sentAt = new Date(message.sendTime);
-          if (sentAt > readAt) {
-            count++;
-          }
-        });
-        result.set(message.messageId, count);
+      page.data.forEach((item) => {
+        const sentAt = new Date(item.sendTime);
+        while (index < memberCount && sentAt >= readAt) {
+          readAt = new Date(sortedReatAts[++index]);
+        }
+        result.set(item.messageId, index);
       }),
     );
-    messages.forEach((message) => {
-      let count = 0;
-      roomMembers.forEach((item) => {
-        const readAt = new Date(item.lastReadAt);
-        const sentAt = new Date(message.sendTime);
-        if (sentAt > readAt) {
-          count++;
-        }
-      });
-      result.set(message.messageId, count);
+
+    index = 0;
+    readAt = new Date(sortedReatAts[index]);
+
+    messages.forEach((item) => {
+      const sentAt = new Date(item.sendTime);
+      while (index < memberCount && sentAt >= readAt) {
+        readAt = new Date(sortedReatAts[++index]);
+      }
+      result.set(item.messageId, index);
     });
 
     return result;
