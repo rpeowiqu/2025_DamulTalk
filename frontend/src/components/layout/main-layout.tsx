@@ -8,7 +8,7 @@ const MainLayout = () => {
     <WebSocketProvider>
       <div className="flex bg-white dark:bg-neutral-800">
         <SideBar />
-        <main className="h-dvh flex-1">
+        <main className="h-dvh w-full flex-1">
           <Outlet />
         </main>
       </div>

@@ -18,14 +18,14 @@ const PasswordResetCompletionForm = ({
         />
 
         <div className="text-center">
-          <h1 className="text-2xl leading-9 font-bold dark:text-white">
+          <h1 className="text-xl leading-9 font-bold md:text-2xl dark:text-white">
             비밀번호가 재설정 되었어요!
           </h1>
         </div>
       </div>
 
       <Button className="w-full" type="button" onClick={onNext}>
-        로그인 화면
+        로그인
       </Button>
     </div>
   );

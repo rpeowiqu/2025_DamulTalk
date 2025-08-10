@@ -62,7 +62,7 @@ const PasswordResetForm = () => {
         stepCount={PasswordResetStep.LENGTH}
         className="h-1 bg-neutral-200 dark:bg-neutral-50"
         indicatorClassName="bg-damul-main-300"
-        stepClassName="size-7"
+        stepClassName="size-6 md:size-7"
         stepLabels={["이메일", "인증코드", "새 비밀번호", "변경 완료"]}
       />
 

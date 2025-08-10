@@ -21,17 +21,17 @@ const SignupCompletionForm = ({
         />
 
         <div className="text-center dark:text-white">
-          <h1 className="text-2xl leading-9 font-bold">
+          <h1 className="text-xl leading-9 font-bold md:text-2xl">
             회원가입이 완료되었어요!
           </h1>
-          <p className="text-lg">
+          <p className="md:text-lg">
             <span className="font-bold">{signupInfo.nickname}</span> 님 반가워요
           </p>
         </div>
       </div>
 
       <Button className="w-full" type="button" onClick={onNext}>
-        로그인 화면
+        로그인
       </Button>
     </div>
   );

@@ -58,13 +58,13 @@ const Input = ({
   };
 
   return (
-    <div className="focus-within:ring-damul-main-300 flex items-center gap-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 ring-inset focus-within:border-transparent focus-within:ring-2 dark:border-neutral-500 dark:bg-neutral-700 dark:text-white">
+    <div className="focus-within:ring-damul-main-300 flex w-full items-center gap-2 rounded-xl border border-neutral-200 bg-white px-4 py-3 ring-inset focus-within:border-transparent focus-within:ring-2 dark:border-neutral-500 dark:bg-neutral-700 dark:text-white">
       <input
         ref={inputRef}
         type={type === "password" ? (showPassword ? "text" : "password") : type}
         defaultValue={defaultValue}
         className={cn(
-          "flex-1 placeholder:text-neutral-300 focus:outline-none",
+          "w-full placeholder:text-neutral-300 focus:outline-none",
           className,
         )}
         onChange={handleChange}
