@@ -77,7 +77,7 @@ const IntroPage = () => {
               />
               <Button
                 className={cn(
-                  "dark:hover:bg-damul-main-400 pointer-events-auto rounded-full bg-transparent text-base md:text-lg dark:bg-transparent",
+                  "dark:hover:bg-damul-main-400 pointer-events-auto rounded-full bg-transparent px-3 text-base md:text-lg dark:bg-transparent",
                   isScrolled &&
                     "text-damul-main-300 dark:text-damul-main-300 dark:hover:bg-damul-main-400 py-2 hover:text-white dark:hover:text-white",
                 )}
