@@ -18,7 +18,7 @@ const ThemeChangeButton = ({ className }: ThemeChangeButtonProps) => {
   return (
     <button
       className={cn(
-        "cursor-pointer rounded-lg text-white transition-colors duration-200",
+        "flex cursor-pointer items-center justify-center rounded-lg text-white transition-colors duration-200",
         className,
       )}
       onClick={toggleTheme}>
