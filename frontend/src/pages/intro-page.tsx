@@ -60,24 +60,24 @@ const IntroPage = () => {
               ? "h-16 bg-white dark:bg-neutral-800"
               : "bg-damul-main-300 dark:bg-damul-main-500 h-full",
           )}>
-          <div className="flex min-w-[80rem] items-center justify-between">
+          <nav className="flex w-full max-w-[80rem] items-center justify-between px-6">
             <h1
               className={cn(
-                "text-4xl font-extrabold select-none",
+                "text-2xl font-extrabold select-none md:text-4xl",
                 isScrolled ? "text-damul-main-300" : "text-white",
               )}>
               DamulTalk
             </h1>
-            <div className="flex items-center gap-5">
+            <div className="flex items-center gap-4">
               <ThemeChangeButton
                 className={cn(
-                  "pointer-events-auto",
+                  "pointer-events-auto size-5 md:size-6",
                   isScrolled && "text-damul-main-300",
                 )}
               />
               <Button
                 className={cn(
-                  "dark:hover:bg-damul-main-400 pointer-events-auto rounded-full bg-transparent dark:bg-transparent",
+                  "dark:hover:bg-damul-main-400 pointer-events-auto rounded-full bg-transparent text-base md:text-lg dark:bg-transparent",
                   isScrolled &&
                     "text-damul-main-300 dark:text-damul-main-300 dark:hover:bg-damul-main-400 py-2 hover:text-white dark:hover:text-white",
                 )}
@@ -85,11 +85,11 @@ const IntroPage = () => {
                 시작하기
               </Button>
             </div>
-          </div>
+          </nav>
         </header>
       </div>
 
-      <section className="z-10 flex h-220 w-full shrink-0 flex-col items-center justify-center gap-12">
+      <section className="z-10 flex h-dvh min-h-fit w-full shrink-0 flex-col items-center justify-center gap-12">
         <motion.div
           animate={{
             opacity: [0, 1],
@@ -99,10 +99,10 @@ const IntroPage = () => {
             ease: "easeInOut",
           }}
           className="flex flex-col gap-2">
-          <p className="text-damul-main-400 dark:text-damul-main-300 text-2xl font-bold">
+          <p className="text-damul-main-400 dark:text-damul-main-300 font-bold sm:text-xl lg:text-2xl">
             팀50일의 멤버가 다시 모여 개발한
           </p>
-          <h1 className="text-5xl font-black dark:text-white">
+          <h1 className="text-2xl font-black sm:text-4xl lg:text-5xl dark:text-white">
             웹소켓 기반의 메신저 서비스
           </h1>
         </motion.div>
@@ -128,31 +128,33 @@ const IntroPage = () => {
             }}
             src={messageImage}
             alt="메시지 이미지"
-            className="size-96 object-cover select-none"
+            className="size-64 object-cover select-none sm:size-80 lg:size-96"
           />
         </motion.div>
       </section>
 
-      <section className="z-20 flex h-240 shrink-0 snap-start flex-col gap-8 pt-28">
+      <section className="z-10 flex h-dvh min-h-fit shrink-0 snap-start flex-col justify-center gap-8 px-6 pt-28">
         <motion.div
           className="flex flex-col gap-6"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
           viewport={{ amount: 1, once: true }}>
-          <h1 className="text-4xl font-black dark:text-white">💬 채팅 기능</h1>
+          <h1 className="text-xl font-black sm:text-3xl lg:text-4xl dark:text-white">
+            💬 채팅 기능
+          </h1>
           <ul className="flex flex-col gap-1 pl-12">
-            <li className="list-disc text-xl text-neutral-500 dark:text-neutral-200">
+            <li className="list-disc text-sm text-neutral-500 sm:text-base lg:text-xl dark:text-neutral-200">
               텍스트, 이미지, 비디오 등 다양한 메시지를 주고 받을 수 있어요
             </li>
-            <li className="list-disc text-xl text-neutral-500 dark:text-neutral-200">
+            <li className="list-disc text-sm text-neutral-500 sm:text-base lg:text-xl dark:text-neutral-200">
               나에게 온 메시지를 알림으로 알려줘요
             </li>
           </ul>
         </motion.div>
 
         <motion.div
-          className="w-[64rem]"
+          className="w-full max-w-[64rem]"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
@@ -168,21 +170,21 @@ const IntroPage = () => {
         </motion.div>
       </section>
 
-      <section className="z-20 flex h-240 snap-start flex-col gap-8 pt-28">
+      <section className="z-10 flex h-dvh min-h-fit shrink-0 snap-start flex-col justify-center gap-8 px-6 pt-28">
         <motion.div
           className="flex flex-col gap-6"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
           viewport={{ amount: 1, once: true }}>
-          <h1 className="text-4xl font-black dark:text-white">
+          <h1 className="text-xl font-black sm:text-3xl lg:text-4xl dark:text-white">
             🏠️ 당신만의 소통 공간
           </h1>
           <ul className="flex flex-col gap-1 pl-12">
-            <li className="list-disc text-xl text-neutral-500 dark:text-neutral-200">
+            <li className="list-disc text-sm text-neutral-500 sm:text-base lg:text-xl dark:text-neutral-200">
               다양한 사람들과 친구를 맺고 대화를 시작해 보세요
             </li>
-            <li className="list-disc text-xl text-neutral-500 dark:text-neutral-200">
+            <li className="list-disc text-sm text-neutral-500 sm:text-base lg:text-xl dark:text-neutral-200">
               프로필 이미지, 배경 이미지, 상태 메시지를 설정하고 자유롭게
               프로필을 꾸며보세요
             </li>
@@ -190,7 +192,7 @@ const IntroPage = () => {
         </motion.div>
 
         <motion.div
-          className="w-[64rem]"
+          className="w-full max-w-[64rem]"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
@@ -206,17 +208,17 @@ const IntroPage = () => {
         </motion.div>
       </section>
 
-      <footer className="z-9999 mt-52 flex w-full items-center justify-center bg-neutral-50 py-12 dark:bg-neutral-800">
+      <footer className="z-9999 mt-52 flex w-full items-center justify-center bg-neutral-50 px-6 py-12 dark:bg-neutral-800">
         <div className="flex w-[80rem] flex-col gap-4">
           <h1
             className={cn(
-              "text-4xl font-extrabold select-none",
+              "text-2xl font-extrabold select-none md:text-4xl",
               isScrolled ? "text-damul-main-300" : "text-white",
             )}>
             DamulTalk
           </h1>
 
-          <div className="flex flex-1 items-center justify-between text-sm text-neutral-400 dark:text-neutral-100">
+          <div className="flex flex-1 flex-col items-start justify-between gap-2 text-sm text-neutral-400 md:flex-row md:items-center md:gap-0 dark:text-neutral-100">
             <p>© All rights reserved to 50DAYS 2025</p>
 
             <div className="flex gap-4">
