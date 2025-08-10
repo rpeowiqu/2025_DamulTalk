@@ -55,7 +55,7 @@ const SignupEmailForm = ({
       onSubmit={handleSubmit}
       className="flex h-full flex-col justify-between gap-6">
       <div className="flex flex-col gap-4">
-        <h1 className="text-2xl leading-9 font-bold dark:text-white">
+        <h1 className="text-xl leading-9 font-bold md:text-2xl dark:text-white">
           사용하실 이메일을
           <br />
           입력해주세요
@@ -90,7 +90,7 @@ const SignupEmailForm = ({
 
       <div className="flex gap-3">
         <Button className="w-full" type="button" onClick={onPrev}>
-          로그인 화면
+          로그인
         </Button>
         <Button className="w-full" disabled={messageType === "invalid"}>
           다음

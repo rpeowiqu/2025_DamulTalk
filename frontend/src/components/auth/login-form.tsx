@@ -31,9 +31,9 @@ const LoginForm = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex h-full flex-col justify-between">
-      <div className="flex flex-col gap-6">
-        <div className="flex flex-col gap-2">
+      className="flex h-full w-full flex-col justify-between">
+      <div className="flex w-full flex-col gap-6">
+        <div className="flex w-full flex-col gap-2">
           <label htmlFor="email" className="text-lg font-bold dark:text-white">
             이메일
           </label>

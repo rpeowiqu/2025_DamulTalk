@@ -63,9 +63,9 @@ const SignupForm = () => {
       <StepProgress
         value={Math.floor(100 / (SignupStep.LENGTH - 1)) * step}
         stepCount={SignupStep.LENGTH}
-        className="h-1 bg-neutral-200"
+        className="h-1 bg-neutral-200 dark:bg-neutral-50"
         indicatorClassName="bg-damul-main-300"
-        stepClassName="size-7"
+        stepClassName="size-6 md:size-7"
         stepLabels={["이메일", "비밀번호", "닉네임", "가입 완료"]}
       />
 
