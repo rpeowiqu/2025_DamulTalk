@@ -22,7 +22,7 @@ const ChatPortrait = ({
                 <UserPortrait
                   key={index}
                   profileImageUrl={profileImageUrls[index]}
-                  className="size-6"
+                  className="size-5"
                 />
               )
             );

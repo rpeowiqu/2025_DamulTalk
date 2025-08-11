@@ -22,7 +22,11 @@ const ThemeChangeButton = ({ className }: ThemeChangeButtonProps) => {
         className,
       )}
       onClick={toggleTheme}>
-      {mode === "LIGHT" ? <SunIcon /> : <MoonIcon />}
+      {mode === "LIGHT" ? (
+        <SunIcon className="size-5" />
+      ) : (
+        <MoonIcon className="size-5" />
+      )}
     </button>
   );
 };

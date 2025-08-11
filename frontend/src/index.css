@@ -138,9 +138,14 @@ body {
 @layer base {
   html {
     --scrollbar-width: 8px;
+    --scrollbar-height: 8px;
     --scrollbar-thumb: #a1a1a1;
     --scrollbar-thumb-hover: #737373;
     --scrollbar-track: #d4d4d4;
+
+    --intro-header-height: 80px;
+
+    --sidebar-height: 64px;
   }
 
   html.dark {
@@ -161,6 +166,7 @@ body {
 
 ::-webkit-scrollbar {
   width: var(--scrollbar-width);
+  height: var(--scrollbar-height);
 }
 
 ::-webkit-scrollbar-thumb {

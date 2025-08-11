@@ -37,7 +37,9 @@ const ThemeProvider = ({ children }: ThemeProviderProps) => {
   return (
     <ThemeStateContext value={{ mode }}>
       <ThemeDispatchContext value={{ toggleTheme }}>
-        <div className="dark:text-white">{children}</div>
+        <div className="h-dvh bg-white dark:bg-neutral-800 dark:text-white">
+          {children}
+        </div>
       </ThemeDispatchContext>
     </ThemeStateContext>
   );

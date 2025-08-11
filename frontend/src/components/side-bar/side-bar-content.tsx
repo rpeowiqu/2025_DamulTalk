@@ -1,3 +1,4 @@
+import type { Dispatch, SetStateAction } from "react";
 import { useNavigate } from "react-router-dom";
 
 import UserItem from "@/components/community/user-item";
@@ -9,8 +10,13 @@ import useCurrentUser from "@/hooks/auth/use-current-user";
 import UserItemSkeleton from "@/components/community/user-item-skeleton";
 import useSideBarTabStore from "@/store/side-bar-tab-store";
 import ThemeChangeButton from "@/components/theme/theme-change-button";
+import SideBarCloseButton from "@/components/side-bar/side-bar-close-button";
 
-const SideBarContent = () => {
+interface SideBarContentProps {
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+}
+
+const SideBarContent = ({ setIsOpen }: SideBarContentProps) => {
   const currentTab = useSideBarTabStore((state) => state.currentTab);
   const { data, isLoading } = useCurrentUser();
   const navigate = useNavigate();
@@ -25,14 +31,15 @@ const SideBarContent = () => {
   };
 
   return (
-    <div className="flex w-90 flex-col gap-4 bg-white p-6 dark:bg-neutral-800">
+    <div className="flex w-full flex-col gap-4 bg-white px-3 py-4 dark:bg-neutral-800">
       <div className="flex items-center justify-between">
-        <h1 className="text-damul-main-300 text-4xl font-extrabold select-none">
+        <h1 className="text-damul-main-300 text-2xl font-extrabold select-none">
           DamulTalk
         </h1>
-        <div className="flex gap-4">
+        <div className="flex items-center gap-3">
           <ThemeChangeButton className="text-neutral-500 dark:text-neutral-100" />
           <SettingButton />
+          <SideBarCloseButton onClick={() => setIsOpen(false)} />
         </div>
       </div>
 

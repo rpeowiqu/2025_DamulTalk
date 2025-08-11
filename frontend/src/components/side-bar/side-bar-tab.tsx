@@ -31,7 +31,7 @@ const SideBarTab = () => {
             selected={currentTab === tab.type}
             hasNewNotification={tabNotifications[tab.type]}
             onClick={() => handleClick(tab.type)}>
-            <Icon className="size-8" />
+            <Icon className="size-7" />
           </SideBarTabButton>
         );
       })}

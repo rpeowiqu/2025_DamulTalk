@@ -11,7 +11,7 @@ const ProfilePage = () => {
   const { data, isLoading, isRefetching } = useProfile(Number(userId));
 
   return (
-    <div className="flex h-full flex-col gap-12 overflow-y-scroll p-6">
+    <div className="flex h-full flex-col gap-4 overflow-y-scroll p-6">
       {isLoading ? (
         <>
           <ProfileHeaderSkeleton />
