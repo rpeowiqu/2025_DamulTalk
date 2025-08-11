@@ -49,7 +49,7 @@ const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
       client = new Client({
         webSocketFactory: () =>
           new SockJS(
-            import.meta.env.VITE_WS_BASE_URL + `?token=${accessToken}`,
+            `${import.meta.env.VITE_WS_BASE_URL}?token=${accessToken}`,
             null,
             {
               transports: ["websocket"],
