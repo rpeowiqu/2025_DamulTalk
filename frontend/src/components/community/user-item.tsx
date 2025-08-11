@@ -22,7 +22,7 @@ const UserItem = ({
   return (
     <div
       className={cn(
-        "flex w-full cursor-pointer items-center gap-3 rounded-xl p-2 hover:bg-neutral-50 dark:hover:bg-neutral-700",
+        "flex w-full cursor-pointer items-center gap-2 rounded-xl p-2 hover:bg-neutral-50 dark:hover:bg-neutral-700",
         selected
           ? "bg-damul-main-50 dark:bg-damul-main-600"
           : "bg-white dark:bg-neutral-800",
@@ -59,7 +59,9 @@ const UserItem = ({
           )}
         </div>
 
-        {children && <div className="flex items-center gap-3">{children}</div>}
+        {children && (
+          <div className="flex shrink-0 items-center gap-3">{children}</div>
+        )}
       </div>
     </div>
   );

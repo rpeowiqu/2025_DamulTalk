@@ -89,7 +89,7 @@ const IntroPage = () => {
         </header>
       </div>
 
-      <section className="z-10 flex h-dvh min-h-fit w-full shrink-0 flex-col items-center justify-center gap-12">
+      <section className="z-10 flex h-dvh min-h-fit w-full shrink-0 flex-col items-center justify-center gap-12 pt-[var(--intro-header-height)]">
         <motion.div
           animate={{
             opacity: [0, 1],
@@ -133,7 +133,7 @@ const IntroPage = () => {
         </motion.div>
       </section>
 
-      <section className="z-10 flex h-dvh min-h-fit shrink-0 snap-start flex-col justify-center gap-8 px-6 pt-28">
+      <section className="z-10 flex h-dvh min-h-fit shrink-0 snap-start flex-col justify-center gap-8 px-6 pt-[var(--intro-header-height)]">
         <motion.div
           className="flex flex-col gap-6"
           initial={{ opacity: 0, y: 20 }}
@@ -170,7 +170,7 @@ const IntroPage = () => {
         </motion.div>
       </section>
 
-      <section className="z-10 flex h-dvh min-h-fit shrink-0 snap-start flex-col justify-center gap-8 px-6 pt-28">
+      <section className="z-10 flex h-dvh min-h-fit shrink-0 snap-start flex-col justify-center gap-8 px-6 pt-[var(--intro-header-height)]">
         <motion.div
           className="flex flex-col gap-6"
           initial={{ opacity: 0, y: 20 }}

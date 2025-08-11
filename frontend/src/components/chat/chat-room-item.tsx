@@ -21,7 +21,7 @@ const ChatRoomItem = ({
   return (
     <div
       className={cn(
-        "flex w-full cursor-pointer items-center gap-3 rounded-xl bg-white p-2 hover:bg-neutral-50 dark:bg-neutral-800 dark:hover:bg-neutral-700",
+        "flex w-full cursor-pointer items-center gap-2 rounded-xl bg-white p-2 hover:bg-neutral-50 dark:bg-neutral-800 dark:hover:bg-neutral-700",
         className,
       )}
       onClick={onClick}>
@@ -31,7 +31,7 @@ const ChatRoomItem = ({
       />
 
       <div className="flex flex-1 flex-col break-all">
-        <div className="flex gap-3">
+        <div className="flex gap-1">
           <h1
             className={cn(
               "line-clamp-1 flex-1 font-bold dark:text-white",

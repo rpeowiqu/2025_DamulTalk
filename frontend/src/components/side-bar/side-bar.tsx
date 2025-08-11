@@ -1,6 +1,7 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { AlignJustifyIcon } from "lucide-react";
 
 import SideBarTab from "@/components/side-bar/side-bar-tab";
 import SideBarContent from "@/components/side-bar/side-bar-content";
@@ -20,8 +21,11 @@ import type {
 import type { ChatRoomPreviewsResponse } from "@/types/chat/type";
 import useRoomId from "@/hooks/chat/use-room-id";
 import useSideBarTabStore from "@/store/side-bar-tab-store";
+import { cn } from "@/utils/style";
+import SideBarOverlay from "@/components/side-bar/side-bar-overlay";
 
 const SideBar = () => {
+  const [isOpen, setIsOpen] = useState(false);
   const { data } = useCurrentUser();
   const roomIdRef = useRoomId();
 
@@ -224,10 +228,28 @@ const SideBar = () => {
   }, [data, client, isConnected]);
 
   return (
-    <aside className="sticky top-0 flex h-dvh border-r border-neutral-200 dark:border-neutral-500">
-      <SideBarTab />
-      <SideBarContent />
-    </aside>
+    <>
+      <div className="flex h-16 items-center gap-4 border-b border-neutral-200 bg-white px-4 xl:hidden dark:border-neutral-500 dark:bg-neutral-800">
+        <button onClick={() => setIsOpen(true)} className="cursor-pointer">
+          <AlignJustifyIcon />
+        </button>
+
+        <h1 className="text-damul-main-300 text-2xl font-extrabold select-none">
+          DamulTalk
+        </h1>
+      </div>
+
+      {isOpen && <SideBarOverlay setIsOpen={setIsOpen} />}
+
+      <div
+        className={cn(
+          "xl:trnsform-none fixed top-0 left-0 z-40 flex h-dvh max-w-80 min-w-80 border-r border-neutral-200 transition-transform duration-500 ease-in-out xl:sticky xl:translate-x-0 dark:border-neutral-500",
+          isOpen ? "translate-x-0" : "-translate-x-full",
+        )}>
+        <SideBarTab />
+        <SideBarContent setIsOpen={setIsOpen} />
+      </div>
+    </>
   );
 };
 
