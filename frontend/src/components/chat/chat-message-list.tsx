@@ -36,8 +36,9 @@ const ChatMessageList = ({
     const result = new Map<string, number>();
     const sortedReatAts = roomMembers
       .map((item) => new Date(item.lastReadAt))
-      .sort();
+      .sort((a, b) => a.getTime() - b.getTime());
     const memberCount = roomMembers.length;
+
     let index = 0;
     let readAt = new Date(sortedReatAts[index]);
 
