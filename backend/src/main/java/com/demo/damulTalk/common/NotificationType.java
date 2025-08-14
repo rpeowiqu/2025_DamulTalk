@@ -5,6 +5,7 @@ public enum NotificationType {
     CHAT_NOTI,
     CHAT_MESSAGE,
     CHAT_SYSTEM_MESSAGE,
+    USERINFO_CHANGE,
     READ_TIME,
     FRIEND_REQUEST,
     FRIEND_ACCEPT,

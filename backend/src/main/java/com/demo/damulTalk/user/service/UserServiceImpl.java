@@ -1,18 +1,24 @@
 package com.demo.damulTalk.user.service;
 
+import com.demo.damulTalk.common.CommonWrapperDto;
+import com.demo.damulTalk.common.NotificationType;
 import com.demo.damulTalk.common.scroll.CursorPageMetaDto;
 import com.demo.damulTalk.common.scroll.ScrollResponse;
 import com.demo.damulTalk.friend.domain.Friend;
 import com.demo.damulTalk.friend.dto.FriendDto;
 import com.demo.damulTalk.friend.mapper.FriendMapper;
 import com.demo.damulTalk.user.dto.FriendshipStatus;
+import com.demo.damulTalk.user.dto.ProfileUpdateNotification;
 import com.demo.damulTalk.user.dto.ProfileUpdateRequest;
 import com.demo.damulTalk.user.dto.UserInfo;
 import com.demo.damulTalk.user.mapper.UserMapper;
 import com.demo.damulTalk.util.UserUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -32,6 +38,8 @@ public class UserServiceImpl implements UserService {
     private final UserUtil userUtil;
     private final FriendMapper friendMapper;
     private final S3Client s3Client;
+    private final RedisTemplate<String, String> redisTemplate;
+    private final ObjectMapper objectMapper;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
@@ -97,6 +105,8 @@ public class UserServiceImpl implements UserService {
         log.info("[UserService] 유저 프로필 업데이트 시작 - userId: {}", userId);
         UserInfo userInfo = userMapper.selectUserInfo(userId, userId);
         userInfo.setIsFriend(FriendshipStatus.ME);
+        boolean isProfileChanged = profileImage != null && !profileImage.isEmpty();
+        boolean isNicknameChanged = !userInfo.getNickname().equals(request.getNickname());
 
         if (profileImage != null) {
             String profileImageFileName = profileImage.getOriginalFilename();
@@ -150,6 +160,28 @@ public class UserServiceImpl implements UserService {
         userInfo.setStatusMessage(request.getStatusMessage());
 
         userMapper.updateProfile(userInfo, userId);
+
+        if(isNicknameChanged || isProfileChanged) {
+            List<Integer> friendIds = friendMapper.selectFriendIds(userId);
+            ProfileUpdateNotification notification = ProfileUpdateNotification.builder()
+                    .userId(userId)
+                    .nickname(userInfo.getNickname())
+                    .profileImageUrl(userInfo.getProfileImageUrl())
+                    .build();
+
+            friendIds.stream()
+                    .filter(friendId -> redisTemplate.hasKey("user:online:" + friendId))
+                    .forEach(friendId -> {
+                        try {
+                            redisTemplate.convertAndSend("notifications", objectMapper.writeValueAsString(CommonWrapperDto.builder()
+                                    .userId(friendId)
+                                    .type(NotificationType.USERINFO_CHANGE)
+                                    .data(notification)));
+                        } catch (JsonProcessingException e) {
+                            log.error("[UserService] 유저 정보 업데이트 상태 변경 실패 - userId: {}", userId);
+                        }
+                    });
+        }
         return userInfo;
     }
 }
