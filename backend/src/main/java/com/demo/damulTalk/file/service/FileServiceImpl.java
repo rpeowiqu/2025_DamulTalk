@@ -78,25 +78,12 @@ public class FileServiceImpl implements FileService {
                     .clientId(clientId)
                     .build();
 
-            ChatMessage message = ChatMessage.builder()
-                    .messageId(UUID.randomUUID().toString())
-                    .roomId(roomId)
-                    .senderId(userId)
-                    .nickname(currentUser.getNickname())
-                    .profileImageUrl(currentUser.getProfileImageUrl())
-                    .messageType(type == ContentType.IMAGE ? MessageType.IMAGE : MessageType.VIDEO)
-                    .content(type == ContentType.IMAGE ? "이미지를 보냈습니다." : "동영상을 보냈습니다.")
-                    .fileUrl(fileUrl)
-                    .sendTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
-                    .unReadCount(0)
-                    .build();
-
             String redisKey = "chat:room:" + roomId + ":messages";
 
-            ChatMessage lastMessage = findLastMessage(message.getRoomId());
+            ChatMessage lastMessage = findLastMessage(roomId);
             if(lastMessage != null) {
                 LocalDate lastDate = lastMessage.getSendTime().toLocalDate();
-                LocalDate nowDate = message.getSendTime().toLocalDate();
+                LocalDate nowDate = LocalDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDate();
 
                 if(!lastDate.equals(nowDate)) {
                     ChatMessage systemMessage = ChatMessage.builder()
@@ -123,6 +110,19 @@ public class FileServiceImpl implements FileService {
                             .build()));
                 }
             }
+
+            ChatMessage message = ChatMessage.builder()
+                    .messageId(UUID.randomUUID().toString())
+                    .roomId(roomId)
+                    .senderId(userId)
+                    .nickname(currentUser.getNickname())
+                    .profileImageUrl(currentUser.getProfileImageUrl())
+                    .messageType(type == ContentType.IMAGE ? MessageType.IMAGE : MessageType.VIDEO)
+                    .content(type == ContentType.IMAGE ? "이미지를 보냈습니다." : "동영상을 보냈습니다.")
+                    .fileUrl(fileUrl)
+                    .sendTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                    .unReadCount(0)
+                    .build();
 
             redisTemplate.opsForList().rightPush(redisKey, objectMapper.writeValueAsString(message));
             chatMessageFlushService.tryFlush(redisKey);
