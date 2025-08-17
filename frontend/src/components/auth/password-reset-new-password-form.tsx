@@ -98,7 +98,7 @@ const PasswordResetNewPasswordForm = ({
 
           <p
             className={cn(
-              "text-sm",
+              "text-xs",
               messageType === "valid" ? "text-damul-main-300" : "text-red-400",
             )}>
             {message}
