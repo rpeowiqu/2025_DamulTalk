@@ -81,9 +81,9 @@ const ProfileSettingHeader = ({
   };
 
   return (
-    <div>
+    <header>
       <div
-        className="relative h-54 overflow-hidden rounded-xl"
+        className="relative h-36 overflow-hidden rounded-xl md:h-54"
         onMouseEnter={() => setIsHoverBackground(true)}
         onMouseLeave={() => setIsHoverBackground(false)}>
         <img
@@ -101,30 +101,30 @@ const ProfileSettingHeader = ({
         />
 
         {isHoverBackground && (
-          <div className="text-damul-main-300 absolute inset-0 flex items-center justify-center gap-1 bg-black/50">
+          <div className="text-damul-main-300 absolute inset-0 flex items-center justify-center gap-2 bg-black/50">
             <FileUploadButton
               type="button"
               uploadFile={backgroundImageFile}
               setUploadFile={setBackgroundImageFile}
-              className="hover:bg-damul-main-300/20 flex cursor-pointer flex-col items-center justify-center gap-1 rounded-lg p-2 font-bold"
+              className="hover:bg-damul-main-300/20 flex cursor-pointer flex-col items-center justify-center gap-1 rounded-lg p-1 font-bold md:p-2"
               onChangeFile={handleChangeBackground}>
-              <EditIcon className="size-5" />
-              <p className="text-sm">수정</p>
+              <EditIcon className="size-4 md:size-5" />
+              <p className="hidden text-sm md:block">수정</p>
             </FileUploadButton>
             <ProfileImageDeleteButton onClick={handleDeleteBackground} />
           </div>
         )}
       </div>
 
-      <div className="flex h-16 justify-between px-10">
-        <div className="flex items-end gap-4">
+      <div className="flex h-12 justify-between px-6 md:h-16 md:px-10">
+        <div className="flex w-full items-end gap-4">
           <div
-            className="relative overflow-hidden rounded-full"
+            className="relative shrink-0 overflow-hidden rounded-full"
             onMouseEnter={() => setIsHoverProfile(true)}
             onMouseLeave={() => setIsHoverProfile(false)}>
             <UserPortrait
               className={cn(
-                "size-28 border-2 transition-transform duration-300",
+                "size-16 border-2 transition-transform duration-300 md:size-28",
                 isHoverProfile && "scale-105",
               )}
               profileImageUrl={
@@ -135,26 +135,25 @@ const ProfileSettingHeader = ({
             />
 
             {isHoverProfile && (
-              <div className="text-damul-main-300 absolute inset-0 flex items-center justify-center gap-1 bg-black/50">
+              <div className="text-damul-main-300 absolute inset-0 flex items-center justify-center gap-2 bg-black/50">
                 <FileUploadButton
                   type="button"
                   uploadFile={profileImageFile}
                   setUploadFile={setProfileImageFile}
-                  className="hover:bg-damul-main-300/20 flex cursor-pointer flex-col items-center justify-center gap-1 rounded-lg p-2 font-bold"
+                  className="hover:bg-damul-main-300/20 flex cursor-pointer flex-col items-center justify-center gap-1 rounded-lg p-1 font-bold md:p-2"
                   onChangeFile={handleChangeProfile}>
-                  <EditIcon className="size-5" />
-                  <p className="text-sm">수정</p>
+                  <EditIcon className="size-4 md:size-5" />
+                  <p className="hidden text-sm md:block">수정</p>
                 </FileUploadButton>
                 <ProfileImageDeleteButton onClick={handleDeleteProfile} />
               </div>
             )}
           </div>
 
-          <div className="relative w-80">
+          <div className="relative w-full max-w-80">
             <Input
               ref={nicknameInputRef}
               className={cn(
-                "w-full",
                 messageType === "valid" || formData.nickname.length === 0
                   ? "focus:ring-damul-main-300"
                   : "focus:ring-red-400",
@@ -165,7 +164,7 @@ const ProfileSettingHeader = ({
 
             <p
               className={cn(
-                "absolute top-full left-0 mt-2 text-sm",
+                "absolute top-full left-0 mt-2 text-xs",
                 messageType === "valid"
                   ? "text-damul-main-300"
                   : "text-red-400",
@@ -175,7 +174,7 @@ const ProfileSettingHeader = ({
           </div>
         </div>
       </div>
-    </div>
+    </header>
   );
 };
 
