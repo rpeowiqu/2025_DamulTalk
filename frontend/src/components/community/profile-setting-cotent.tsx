@@ -28,9 +28,9 @@ const ProfileSettingContent = ({
   };
 
   return (
-    <div className="flex flex-col gap-12">
-      <div className="flex min-w-120 flex-1 flex-col gap-4">
-        <h1 className="text-xl font-bold">상세 정보</h1>
+    <div className="flex flex-col gap-5">
+      <div className="flex w-full flex-1 flex-col gap-4">
+        <h1 className="text-lg font-bold md:text-xl">상세 정보</h1>
         <ul className="flex min-h-0 flex-1 list-disc flex-col gap-4 pl-8">
           <li>
             <p className="font-bold">가입일</p>
@@ -67,7 +67,7 @@ const ProfileSettingContent = ({
             ease: "easeInOut",
             repeat: Infinity,
           }}>
-          <div className="border-damul-main-300 flex w-120 items-center justify-between rounded-xl border-2 bg-white px-5 py-3 shadow-lg dark:bg-neutral-700">
+          <div className="border-damul-main-300 flex w-full flex-col items-center justify-between gap-4 rounded-xl border-2 bg-white px-5 py-3 shadow-lg md:flex-row dark:bg-neutral-700">
             <p className="text-damul-main-300 font-bold">
               프로필을 수정하고 있어요!
             </p>

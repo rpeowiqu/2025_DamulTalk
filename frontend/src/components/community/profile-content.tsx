@@ -26,7 +26,7 @@ const ProfileContent = ({ profile }: ProfileContentProps) => {
     : [];
 
   return (
-    <div className="flex h-full flex-col gap-5 md:flex-row dark:text-white">
+    <div className="flex h-full flex-col gap-5 md:flex-row">
       <div className="flex w-full flex-col gap-4 md:flex-1">
         <h1 className="text-lg font-bold md:text-xl">상세 정보</h1>
         <ul className="flex list-disc flex-col gap-4 pl-8">
