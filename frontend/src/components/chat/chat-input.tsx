@@ -104,7 +104,7 @@ const ChatInput = ({ sendMessage }: ChatInputProps) => {
       <div className="focus-within:ring-damul-main-300 flex h-40 flex-col gap-2 rounded-xl border border-neutral-200 bg-white p-4 focus-within:ring-2 dark:border-neutral-500 dark:bg-neutral-600">
         <div className="relative flex-1">
           {uploadFile && (
-            <div className="absolute top-0 left-0">
+            <div className="absolute top-0 left-0 w-full">
               <ChatUploadFileItem
                 uploadFile={uploadFile}
                 onDelete={handleDeleteFile}
