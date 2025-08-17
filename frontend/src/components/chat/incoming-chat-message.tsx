@@ -43,7 +43,7 @@ const IncomingChatMessage = ({ ref, message, onClick }: ChatMessageProps) => {
         <Link to={`/profiles/${message.senderId}`} className="w-fit font-bold">
           {message.nickname}
         </Link>
-        <div className="flex items-end gap-1 break-all whitespace-pre-wrap">
+        <div className="flex items-end gap-1 wrap-anywhere break-all whitespace-pre-wrap">
           <div className="flex max-w-96 flex-col gap-2 rounded-xl bg-white p-3 dark:bg-neutral-500">
             {renderContent()}
           </div>

@@ -19,7 +19,7 @@ const ChatCreateUserItem = ({
   return (
     <div
       className={cn(
-        "relative flex w-16 shrink-0 flex-col items-center gap-1 break-all select-none",
+        "relative flex w-16 shrink-0 flex-col items-center gap-1 wrap-anywhere break-all select-none",
         className,
       )}>
       <UserPortrait profileImageUrl={user.profileImageUrl} />

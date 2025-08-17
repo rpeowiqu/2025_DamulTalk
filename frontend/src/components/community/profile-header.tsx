@@ -27,7 +27,7 @@ const ProfileHeader = ({ profile, isRefetching }: ProfileHeaderProps) => {
               profileImageUrl={profile.profileImageUrl}
             />
 
-            <div className="break-all">
+            <div className="wrap-anywhere break-all">
               <h1 className="line-clamp-1 text-lg font-bold md:text-2xl dark:text-white">
                 {profile.nickname}
               </h1>

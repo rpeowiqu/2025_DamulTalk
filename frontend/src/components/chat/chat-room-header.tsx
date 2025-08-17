@@ -21,7 +21,7 @@ const ChatRoomHeader = ({ room }: ChatRoomHeaderProps) => {
             .slice(0, 4)
             .map((item) => item.profileImageUrl)}
         />
-        <div className="flex flex-col break-all">
+        <div className="flex flex-col wrap-anywhere break-all">
           <h1 className="line-clamp-1 text-lg font-bold">{room.roomName}</h1>
           <ChatRoomHeadCountButton room={room} />
         </div>
