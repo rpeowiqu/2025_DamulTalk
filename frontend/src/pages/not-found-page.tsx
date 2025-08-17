@@ -14,7 +14,9 @@ const NotFoundPage = () => {
           <h1 className="text-damul-main-400 text-2xl font-bold md:text-4xl">
             존재하지 않는 페이지에요
           </h1>
-          <p className="text-neutral-500 md:text-lg">URL을 확인해 주세요</p>
+          <p className="text-neutral-500 md:text-lg dark:text-neutral-300">
+            URL을 확인해 주세요
+          </p>
         </div>
       </div>
 
