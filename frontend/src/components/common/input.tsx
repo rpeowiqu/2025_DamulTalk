@@ -1,4 +1,5 @@
 import {
+  useEffect,
   useRef,
   useState,
   type ChangeEvent,
@@ -25,8 +26,8 @@ const Input = ({
 
   // props로 값을 넘겨줄 경우 해당 값을 사용하고 그렇지 않으면 내부에서 선언한 값을 사용
   const inputRef = ref ?? innerRef;
+  const [isEmpty, setIsEmpty] = useState(false);
 
-  const [isEmpty, setIsEmpty] = useState(!defaultValue);
   const [showPassword, setShowPassword] = useState(false);
 
   const handleShowPassword = () => {
@@ -34,11 +35,6 @@ const Input = ({
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    // Mac에서 한글이 두 번 입력되는 문제 방지
-    if ((e.nativeEvent as InputEvent).isComposing) {
-      return;
-    }
-
     setIsEmpty(e.target.value.length === 0);
     onChange?.(e);
   };
@@ -56,6 +52,10 @@ const Input = ({
       target: { value: "" },
     } as ChangeEvent<HTMLInputElement>);
   };
+
+  useEffect(() => {
+    setIsEmpty(!inputRef.current?.value && !defaultValue);
+  }, [defaultValue]);
 
   return (
     <div className="focus-within:ring-damul-main-300 flex w-full items-center gap-2 rounded-xl border border-neutral-200 bg-white px-4 py-3 ring-inset focus-within:border-transparent focus-within:ring-2 dark:border-neutral-500 dark:bg-neutral-700 dark:text-white">
