@@ -1,7 +1,7 @@
 const ChatRoomItemSkeleton = () => {
   return (
-    <div className="flex w-full items-center gap-3 rounded-xl bg-white p-2 dark:bg-neutral-600">
-      <div className="size-12 shrink-0 animate-pulse rounded-xl bg-neutral-200 dark:bg-neutral-500" />
+    <div className="flex w-full items-center gap-3 rounded-xl bg-neutral-50 p-2 dark:bg-neutral-600">
+      <div className="size-10 shrink-0 animate-pulse rounded-xl bg-neutral-200 dark:bg-neutral-500" />
 
       <div className="flex flex-1 flex-col gap-1">
         <div className="flex gap-3">
