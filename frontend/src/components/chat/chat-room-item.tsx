@@ -37,7 +37,7 @@ const ChatRoomItem = ({
               "line-clamp-1 flex-1 font-bold dark:text-white",
               selected && "text-damul-main-300 dark:text-damul-main-300",
             )}>
-            {/* {chatRoomPreview.roomName} */}
+            {chatRoomPreview.roomName}
           </h1>
           <div className="flex items-center gap-1 text-neutral-500 dark:text-neutral-200">
             <UserIcon className="size-3" />
