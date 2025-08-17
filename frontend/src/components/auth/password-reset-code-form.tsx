@@ -97,7 +97,7 @@ const PasswordResetCodeForm = ({
           <div className="flex items-center justify-between">
             <p
               className={cn(
-                "text-sm",
+                "text-xs",
                 messageType === "valid"
                   ? "text-damul-main-300"
                   : "text-red-400",
