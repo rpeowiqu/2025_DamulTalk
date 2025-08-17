@@ -35,7 +35,7 @@ const UserItem = ({
         className="shrink-0"
       />
 
-      <div className="flex flex-1 break-all">
+      <div className="flex flex-1 wrap-anywhere break-all">
         <div className="flex flex-1 flex-col">
           <p
             className={cn(

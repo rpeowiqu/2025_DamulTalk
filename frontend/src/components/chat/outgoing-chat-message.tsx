@@ -33,7 +33,7 @@ const OutgoingChatMessage = ({ ref, message, onClick }: ChatMessageProps) => {
   return (
     <div
       ref={ref}
-      className="flex items-end gap-2 self-end break-all whitespace-pre-wrap">
+      className="flex items-end gap-2 self-end wrap-anywhere break-all whitespace-pre-wrap">
       {message.messageStatus === "SENDING" && <Spinner />}
 
       <div className="flex shrink-0 flex-col items-end text-[0.675rem]">

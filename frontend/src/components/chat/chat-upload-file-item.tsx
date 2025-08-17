@@ -19,7 +19,7 @@ const ChatUploadFileItem = ({
         alt="업로드 파일 이미지"
         className="size-12 object-cover"
       />
-      <div className="flex flex-col gap-1 break-all">
+      <div className="flex flex-col gap-1 wrap-anywhere break-all">
         <h1 className="line-clamp-1 text-sm font-bold">
           {uploadFile.file.name}
         </h1>
