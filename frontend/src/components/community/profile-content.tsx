@@ -46,7 +46,7 @@ const ProfileContent = ({ profile }: ProfileContentProps) => {
         </ul>
       </div>
 
-      <div className="h-0.5 w-full bg-neutral-50 md:h-full md:w-0.5 dark:bg-neutral-500"></div>
+      <div className="h-0.5 w-full bg-neutral-50 md:h-full md:w-0.5 dark:bg-neutral-500" />
 
       <div className="flex w-full flex-col gap-4 md:w-72">
         <h1 className="text-lg font-bold md:text-xl">친구</h1>
