@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.damulTalk.user.mapper.UserMapper">
+
+    <select id="selectUserByUserId">
+        SELECT * FROM users WHERE user_id = #{userId}
+    </select>
+    
+    <select id="selectUserByUsername">
+        SELECT * FROM users WHERE username = #{username}
+    </select>
+
+    <select id="selectUserByNickname">
+        SELECT * FROM users WHERE nickname = #{nickname}
+    </select>
+
+    <select id="selectFollowInfoById" resultType="com.demo.damulTalk.friend.dto.FriendDto">
+        SELECT
+            user_id as userId,
+            nickname,
+            profile_image_url AS profileImageUrl
+        FROM users
+        WHERE user_id = #{userId}
+    </select>
+
+    <select id="selectUserInfo" resultType="com.demo.damulTalk.user.dto.UserInfo">
+        SELECT
+            u.nickname,
+            u.profile_image_url AS profileImageUrl,
+            u.background_image_url AS backgroundImageUrl,
+            u.status_message AS statusMessage,
+            (
+                SELECT COUNT(*)
+                FROM friends
+                WHERE status = 'ACCEPTED'
+                  AND (first_user_id = #{targetId} OR second_user_id = #{targetId})
+            ) AS friendCount,
+            u.joined_at AS joinedAt,
+            CASE
+                WHEN u.user_id = #{userId} THEN 'ME'
+                WHEN f.status IS NOT NULL THEN f.status
+                ELSE 'NONE'
+                END AS isFriend
+        FROM users u
+                 LEFT JOIN friends f
+                           ON (
+                               (f.first_user_id = #{userId} AND f.second_user_id = u.user_id)
+                                   OR (f.first_user_id = u.user_id AND f.second_user_id = #{userId})
+                               )
+        WHERE u.user_id = #{targetId}
+    </select>
+
+
+    <select id="selectMyInfo" resultType="com.demo.damulTalk.auth.dto.LoginResponseDto">
+        SELECT
+            user_id as userId,
+            nickname,
+            profile_image_url as profileImageUrl
+        FROM users
+        WHERE user_id = #{userId}
+    </select>
+
+    <select id="selectUsersByNickname" resultType="com.demo.damulTalk.friend.dto.FriendDto">
+        SELECT
+            user_id as userId,
+            nickname,
+            profile_image_url AS profileImageUrl
+        FROM users
+        WHERE nickname LIKE CONCAT('%', #{nickname}, '%')
+        <if test="cursor != null">
+            AND nickname >= #{cursor}
+        </if>
+          AND user_id != #{userId}
+        ORDER BY nickname ASC
+        LIMIT #{size}
+    </select>
+
+    <insert id="insertUser" parameterType="com.demo.damulTalk.user.domain.User">
+        INSERT INTO users (username, password, nickname, joined_at)
+        VALUES (#{username}, #{password}, #{nickname}, #{joinedAt})
+    </insert>
+
+    <insert id="insertFollowRequest">
+        INSERT INTO friends (first_user_id, second_user_id)
+        VALUES (#{userId}, #{targetId});
+    </insert>
+
+    <update id="updatePassword">
+        UPDATE users
+        SET password = #{password}
+        WHERE username = #{username}
+    </update>
+
+    <update id="updateProfile" parameterType="com.demo.damulTalk.user.dto.UserInfo">
+        UPDATE users
+        SET
+            nickname = #{userInfo.nickname},
+            status_message = #{userInfo.statusMessage},
+            profile_image_url = #{userInfo.profileImageUrl},
+            background_image_url = #{userInfo.backgroundImageUrl}
+        WHERE user_id = #{userId}
+    </update>
+
+</mapper>
